@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -60,6 +61,7 @@
         .modal-window h3 { margin-top: 0; text-align: center; color: var(--secondary-color); }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         #edit-group-member-modal, #create-member-for-group-modal { z-index: 102; }
+        #edit-contact-modal, #edit-profile-modal { z-index: 102; }
         #edit-group-member-modal .avatar-preview, #create-member-for-group-modal .avatar-preview, #add-char-modal .avatar-preview, #edit-contact-modal .avatar-preview, #create-profile-modal .avatar-preview, #edit-profile-modal .avatar-preview { width: 80px; height: 80px; border-radius: 50%; }
         .context-menu { position: fixed; z-index: 1000; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); overflow: hidden; padding: 5px 0; animation: fadeIn 0.1s ease; }
         .context-menu-item { padding: 10px 20px; cursor: pointer; }
@@ -101,6 +103,7 @@
             align-items: flex-start; 
             transition: background-color 0.2s; 
             flex-direction: column;
+            position: relative; /* For pseudo-element */
         }
         .message-wrapper.sent { align-items: flex-end; }
         .message-wrapper.received { align-items: flex-start; }
@@ -108,16 +111,16 @@
         .message-wrapper.system-notification { align-items: center; }
         .message-bubble-row { display: flex; width: 100%; align-items: flex-start; }
         .message-wrapper.sent .message-bubble-row { flex-direction: row-reverse; }
-        .message-wrapper.multi-select-selected .message-bubble,
-        .message-wrapper.multi-select-selected .image-bubble,
-        .message-wrapper.multi-select-selected .voice-bubble,
-        .message-wrapper.multi-select-selected .pv-card,
-        .message-wrapper.multi-select-selected .transfer-card,
-        .message-wrapper.multi-select-selected .red-packet-card,
-        .message-wrapper.multi-select-selected .location-card,
-        .message-wrapper.multi-select-selected .gift-card-flipper {
-            background-color: rgba(144, 202, 249, 0.35);
-            box-shadow: 0 0 0 2px rgba(144, 202, 249, 0.5);
+        .message-wrapper.multi-select-selected::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -4px;
+            right: -4px;
+            bottom: -2px;
+            background-color: rgba(144, 202, 249, 0.25);
+            border-radius: 12px;
+            pointer-events: none; /* Allow clicks to pass through */
         }
         .message-info { display: flex; flex-direction: column; align-items: center; position: relative; }
         .group-nickname { position: absolute; top: -15px; font-size: 11px; color: #888; white-space: nowrap; width: 70px; text-align: center; overflow: hidden; text-overflow: ellipsis; }
@@ -134,6 +137,25 @@
             box-shadow: 0 4px 8px rgba(183, 132, 96, 0.1);
             font-family: var(--font-family); /* FIX: Ensure chat bubbles use global font */
         }
+        .message-bubble .reply-quote-container {
+            background-color: rgba(0,0,0,0.05);
+            padding: 6px 10px;
+            margin: -2px 0 8px;
+            border-left: 3px solid var(--secondary-color);
+            border-radius: 4px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        .reply-quote-container .author {
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .reply-quote-container .text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         .message-bubble.user .content { border-radius: var(--border-radius) 8px var(--border-radius) var(--border-radius); }
         .message-bubble.ai .content { border-radius: 8px var(--border-radius) var(--border-radius) var(--border-radius); }
         .blocked-indicator { width: 16px; height: 16px; background-color: #ef5350; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; margin: auto 6px; }
@@ -414,12 +436,13 @@
         .settings-sidebar .form-group textarea { height: 100px; resize: vertical; }
         .settings-sidebar .avatar-setting { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
         .settings-sidebar .avatar-preview { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); cursor: pointer; }
-        .settings-sidebar .profile-selector { display: flex; align-items: center; background-color: #f9f9f9; border-radius: 12px; padding: 10px; margin-bottom: 10px; cursor: pointer; }
+        .settings-sidebar .profile-selector { display: flex; align-items: center; background-color: #f9f9f9; border-radius: 12px; padding: 10px; margin-bottom: 10px; }
+        .settings-sidebar .profile-selector .avatar-container { flex-shrink: 0; cursor: pointer; }
         .settings-sidebar .profile-selector img { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; }
         .settings-sidebar .profile-selector .details { flex-grow: 1; }
         .settings-sidebar .profile-selector .details p { margin: 0; font-weight: 600; color: var(--text-color); }
         .settings-sidebar .profile-selector .details span { font-size: 12px; color: #888; }
-        .settings-sidebar .profile-selector .change-btn { background-color: var(--secondary-color); color: white; border: none; padding: 6px 10px; border-radius: 8px; font-size: 12px; flex-shrink: 0; margin-left: 10px; }
+        .settings-sidebar .profile-selector .change-btn { background-color: var(--secondary-color); color: white; border: none; padding: 6px 10px; border-radius: 8px; font-size: 12px; flex-shrink: 0; margin-left: 10px; cursor: pointer; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; color: var(--secondary-color); font-weight: 600; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 2px solid var(--secondary-color); border-radius: 10px; background-color: #fff; transition: border-color 0.3s; font-family: var(--font-family); font-size: 14px; }
@@ -634,7 +657,6 @@
         <div id="create-member-for-group-modal" class="modal-overlay"></div>
         <style id="dynamic-chat-style"></style>
     </div>
-    
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -818,7 +840,7 @@ function injectHTML() {
         'world-book-selection-modal': `<div class="modal-window"><h3>选择要关联的爪印书</h3><ul id="world-book-selection-list"></ul><button class="btn btn-primary" id="save-world-book-selection-btn" style="margin-top: 20px;">确认</button></div>`,
         'character-select-modal': `<div class="modal-window"><h3>选择一个伙伴身份</h3><ul id="character-selection-list" class="list-container"></ul></div>`,
         'profile-select-modal': `<div class="modal-window"><h3>选择一个“我”的身份</h3><ul id="profile-selection-list" class="list-container"></ul></div>`,
-        'theme-select-modal': `<div class="modal-window"><h3>选择气泡主题</h3><div id="theme-selection-grid" class="theme-grid"></div></div>`,
+        'theme-select-modal': `<div class="modal-window"><h3>选择气泡主题</h3><div id="theme-selection-grid" class="theme-grid"></div><div id="custom-theme-editor" style="display:none; margin-top:20px; border-top:1px solid #eee; padding-top:15px;"><div style="display:flex; justify-content:space-around;"><div class="color-picker-group" style="flex-direction:column;"><label>我发送的</label><input type="color" id="custom-sent-color"></div><div class="color-picker-group" style="flex-direction:column;"><label>对方发送的</label><input type="color" id="custom-received-color"></div></div></div></div>`,
         'create-group-modal': `<div class="modal-window"><h3>创建群聊</h3><form id="create-group-form"><div class="form-group"><label>选择群成员</label><ul id="member-selection-list" class="member-selection-list"></ul></div><div class="form-group"><label for="group-name-input">群聊名称</label><input type="text" id="group-name-input" placeholder="给你的群聊起个名字吧" required></div><button type="submit" class="btn btn-primary">创建群聊</button></form></div>`,
         'group-settings-sidebar': `<div class="header">群聊设置</div><div class="content"><form id="group-settings-form">
             <div class="group-avatar-setting"><img src="" alt="群头像" id="setting-group-avatar-preview" class="group-avatar-preview"><input type="file" id="setting-group-avatar-upload" accept="image/*" style="display:none;"><label for="setting-group-avatar-upload" class="btn btn-primary" style="flex-grow:1;">更换群头像</label></div>
@@ -864,21 +886,18 @@ function injectHTML() {
 // --- Global Variables and Constants ---
 const colorThemesV2 = {
     'default': { name: '默认', sent: { bg: 'rgba(255,204,204,0.9)', text: '#A56767' }, received: { bg: 'rgba(255,255,255,0.9)', text: '#6D6D6D' } },
-    'pink_blue': { name: '粉蓝', sent: { bg: '#87CEFA', text: '#FFFFFF' }, received: { bg: '#FFC0CB', text: '#000000' } },
-    'blue_white': { name: '蓝白', sent: { bg: '#ADD8E6', text: '#000000' }, received: { bg: '#FFFFFF', text: '#000000' } },
-    'purple_yellow': { name: '紫黄', sent: { bg: '#DA70D6', text: '#FFFFFF' }, received: { bg: '#FFFFE0', text: '#000000' } },
-    'black_white': { name: '黑白', sent: { bg: '#333333', text: '#FFFFFF' }, received: { bg: '#F5F5F5', text: '#000000' } },
-    'yellow_white': { name: '黄白', sent: { bg: '#FFD700', text: '#000000' }, received: { bg: '#FFFFFF', text: '#000000' } },
-    'red_black': { name: '红黑', sent: { bg: '#DC143C', text: '#FFFFFF' }, received: { bg: '#36454F', text: '#FFFFFF' } },
-    'blue_yellow': { name: '蓝黄', sent: { bg: '#6495ED', text: '#FFFFFF' }, received: { bg: '#FFFACD', text: '#000000' } },
-    'pink_yellow': { name: '粉黄', sent: { bg: '#FFB6C1', text: '#000000' }, received: { bg: '#FFFFE0', text: '#000000' } },
-    'pink_purple': { name: '粉紫', sent: { bg: '#FFC0CB', text: '#000000' }, received: { bg: '#E6E6FA', text: '#000000' } },
-    'gray_white': { name: '灰白', sent: { bg: '#A9A9A9', text: '#FFFFFF' }, received: { bg: '#F5F5F5', text: '#000000' } },
-    'blue_green': { name: '蓝绿', sent: { bg: '#4682B4', text: '#FFFFFF' }, received: { bg: '#98FB98', text: '#000000' } },
-    'pink_white': { name: '粉白', sent: { bg: '#FFC0CB', text: '#000000' }, received: { bg: '#FFFFFF', text: '#000000' } },
-    'pink_black': { name: '粉黑', sent: { bg: '#FF69B4', text: '#FFFFFF' }, received: { bg: '#333333', text: '#FFFFFF' } },
-    'pink_green': { name: '粉绿', sent: { bg: '#FFC0CB', text: '#000000' }, received: { bg: '#90EE90', text: '#000000' } },
-    'green_black': { name: '绿黑', sent: { bg: '#2E8B57', text: '#FFFFFF' }, received: { bg: '#36454F', text: '#FFFFFF' } }
+    'green_tea': { name: '抹茶', sent: { bg: '#C1E1C1', text: '#3A5F0B' }, received: { bg: '#F0F8FF', text: '#4682B4' } },
+    'lavender': { name: '薰衣草', sent: { bg: '#E6E6FA', text: '#483D8B' }, received: { bg: '#FFF0F5', text: '#C71585' } },
+    'sunset': { name: '落日', sent: { bg: '#FFDAB9', text: '#8B4513' }, received: { bg: '#FFC0CB', text: '#800080' } },
+    'ocean': { name: '海洋', sent: { bg: '#B0E0E6', text: '#000080' }, received: { bg: '#ADD8E6', text: '#00008B' } },
+    'forest': { name: '森林', sent: { bg: '#90EE90', text: '#006400' }, received: { bg: '#F5DEB3', text: '#8B4513' } },
+    'rose_gold': { name: '玫瑰金', sent: { bg: '#FADADD', text: '#9B7653' }, received: { bg: '#E8E4D9', text: '#5C5858' } },
+    'night_sky': { name: '夜空', sent: { bg: '#4682B4', text: '#FFFFFF' }, received: { bg: '#36454F', text: '#FFFFFF' } },
+    'coffee': { name: '咖啡', sent: { bg: '#D2B48C', text: '#FFFFFF' }, received: { bg: '#F5F5DC', text: '#6F4E37' } },
+    'coral': { name: '珊瑚', sent: { bg: '#FF7F50', text: '#FFFFFF' }, received: { bg: '#FFE4E1', text: '#CD5C5C' } },
+    'mint': { name: '薄荷', sent: { bg: '#98FF98', text: '#008080' }, received: { bg: '#F5FFFA', text: '#2E8B57' } },
+    'sky_blue': { name: '天蓝', sent: { bg: '#87CEEB', text: '#FFFFFF' }, received: { bg: '#F0FFFF', text: '#4682B4' } },
+    'peach': { name: '蜜桃', sent: { bg: '#FFDAB9', text: '#E56717' }, received: { bg: '#FFE5B4', text: '#CD853F' } }
 };
 
 const defaultIcons = {
@@ -899,6 +918,7 @@ let selectedMessageIds = new Set();
 const MESSAGES_PER_PAGE = 50;
 let isNextClickForReply = false;
 let notificationTimeout = null;
+let isExtractingMemory = false;
 
 const sendIconSVG = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M20.25,3.76C19.33,3.07 18.06,3.2 17.2,3.93L13.82,6.77L15.23,8.18L18.61,5.34C18.96,5.05 19.47,5.05 19.82,5.34C20.18,5.64 20.18,6.11 19.82,6.4L16.44,9.25L17.86,10.66L21.24,7.82C22,7 22.18,5.77 21.39,4.76L20.25,3.76M8.18,15.23L6.77,13.82L3.93,17.2C3.2,18.06 3.07,19.33 3.76,20.25L4.76,21.39C5.77,22.18 7,22 7.82,21.24L10.66,17.86L9.25,16.44L6.4,19.82C6.11,20.18 5.64,20.18 5.34,19.82C5.05,19.47 5.05,18.96 5.34,18.61L8.18,15.23M9.59,6.66L6.5,9.75L12,15.25L17.5,9.75L14.41,6.66L12,9.06L9.59,6.66Z'/></svg>`;
 const aiReplyIconSVG = `<svg viewBox="0 0 24 24" fill="white"><path d="M12,2A10,10 0 1,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 1,1 20,12A8,8 0 0,1 12,20M16.24,7.76C15.07,6.58 13.53,6 12,6V12L7.76,16.24C10.1,18.58 13.9,18.58 16.24,16.24C18.58,13.9 18.58,10.1 16.24,7.76Z" /></svg>`;
@@ -920,7 +940,7 @@ const loadData = () => {
         userProfiles: [],
         apiSettings: {},
         themeColor: '#FFD97D',
-        wallpaper: 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/4RdD/1440X1255/IMG_20250731_170607.jpg',
+        wallpaper: 'https://i.postimg.cc/NfJyht9c/IMG-20250804-214213.jpg',
         myStickers: [],
         homeScreenMode: 'night',
         worldBooks: [],
@@ -955,10 +975,19 @@ const loadData = () => {
     db.momentsSettings = { ...defaultDb.momentsSettings, ...db.momentsSettings };
     db.memorySettings = { ...defaultDb.memorySettings, ...db.memorySettings };
     
+    const defaultTheme = 'default';
     db.characters.forEach(c => {
         const defaultProactive = { enabled: false, frequency: 'medium' };
         const defaultAutoMemory = { enabled: false, frequency: 15, lastExtractionCount: 0 };
+        
+        let baseTheme = c.baseTheme || c.theme || defaultTheme;
+        if (!colorThemesV2[baseTheme]) {
+            console.warn(`Theme '${baseTheme}' for character '${c.id}' not found. Falling back to default.`);
+            baseTheme = defaultTheme;
+        }
+
         Object.assign(c, { 
+            history: c.history || [],
             isPinned: c.isPinned || false, 
             status: c.status || '在线', 
             worldBookIds: c.worldBookIds || [], 
@@ -967,22 +996,32 @@ const loadData = () => {
             proactiveChat: { ...defaultProactive, ...(c.proactiveChat || {}) },
             autoMemory: { ...defaultAutoMemory, ...(c.autoMemory || {}) },
             fontSize: c.fontSize || 15,
-            baseTheme: c.baseTheme || c.theme || 'default', 
+            baseTheme: baseTheme, 
+            customTheme: c.customTheme || null,
             customBubbleCss: c.customBubbleCss || '',
             userProfileId: c.userProfileId || 'profile_default_user'
         });
-        // Compatibility fix for old data structure
         if(c.hasOwnProperty('isCustomCssEnabled')) delete c.isCustomCssEnabled;
         if(c.theme) delete c.theme;
     });
 
     db.groups.forEach(g => {
         const defaultProactive = { enabled: false, frequency: 'medium' };
+
+        let groupBaseTheme = g.baseTheme || g.theme || defaultTheme;
+        if (!colorThemesV2[groupBaseTheme]) {
+            console.warn(`Theme '${groupBaseTheme}' for group '${g.id}' not found. Falling back to default.`);
+            groupBaseTheme = defaultTheme;
+        }
+
         Object.assign(g, { 
+            history: g.history || [],
+            members: g.members || [],
             isPinned: g.isPinned || false, 
             unreadCount: g.unreadCount || 0,
             fontSize: g.fontSize || 15,
-            baseTheme: g.baseTheme || g.theme || 'default',
+            baseTheme: groupBaseTheme,
+            customTheme: g.customTheme || null,
             customBubbleCss: g.customBubbleCss || '' ,
             worldBookIds: g.worldBookIds || [],
             proactiveChat: { ...defaultProactive, ...(g.proactiveChat || {}) },
@@ -1062,7 +1101,10 @@ const init = () => {
 
         const openSidebar = document.querySelector('.settings-sidebar.open');
         if (openSidebar && !openSidebar.contains(e.target) && !e.target.closest('#chat-settings-btn') && !e.target.closest('#group-settings-btn')) {
-            openSidebar.classList.remove('open');
+            const isClickInsideAllowedModal = e.target.closest('#world-book-selection-modal, #character-select-modal, #profile-select-modal, #theme-select-modal');
+            if (!isClickInsideAllowedModal) {
+                 openSidebar.classList.remove('open');
+            }
         }
 
         const navLink = e.target.closest('.app-icon');
@@ -1354,10 +1396,22 @@ function updateHeaderActions(activePanelId) {
     
 function handleChatListLongPress(chatId, chatType, x, y) {
     clearTimeout(longPressTimer);
-    const chatItem = (chatType === 'private') ? db.characters.find(c => c.id === chatId) : db.groups.find(g => g.id === chatId);
-    if (!chatItem) return;
-    const itemName = chatType === 'private' ? chatItem.remarkName : chatItem.name;
-    const menuItems = [ { label: chatItem.isPinned ? '取消置顶' : '置顶聊天', action: () => { chatItem.isPinned = !chatItem.isPinned; saveData(); renderChatList(); } }, { label: (chatItem.unreadCount || 0) > 0 ? '标为已读' : '标为未读', action: () => { chatItem.unreadCount = (chatItem.unreadCount || 0) > 0 ? 0 : 1; saveData(); renderChatList(); } }, { label: '删除聊天', danger: true, action: () => { if (confirm(`确定要删除与"${itemName}"的聊天记录吗？此操作不可恢复。`)) { if (chatType === 'private') db.characters = db.characters.filter(c => c.id !== chatId); else db.groups = db.groups.filter(g => g.id !== chatId); saveData(); renderChatList(); showToast('聊天已删除'); } } } ];
+    const chat = (chatType === 'private') ? db.characters.find(c => c.id === chatId) : db.groups.find(g => g.id === chatId);
+    if (!chat) return;
+    const itemName = chatType === 'private' ? chat.remarkName : chat.name;
+    const menuItems = [
+        { label: chat.isPinned ? '取消置顶' : '置顶聊天', action: () => { chat.isPinned = !chat.isPinned; saveData(); renderChatList(); } },
+        { label: (chat.unreadCount || 0) > 0 ? '标为已读' : '标为未读', action: () => { chat.unreadCount = (chat.unreadCount || 0) > 0 ? 0 : 1; saveData(); renderChatList(); } },
+        { label: '删除聊天记录', danger: true, action: () => {
+            if (confirm(`确定要清空与“${itemName}”的聊天记录吗？此操作不可恢复。`)) {
+                chat.history = [];
+                if (chat.autoMemory) chat.autoMemory.lastExtractionCount = 0;
+                saveData();
+                renderChatList();
+                showToast('聊天记录已清空');
+            }
+        }}
+    ];
     createContextMenu(menuItems, x, y);
 }
     
@@ -1682,11 +1736,11 @@ function renderUserProfilesList() {
 
 function updateSendButtonState() {
     const btn = getEl('send-or-reply-btn');
-    if (isGenerating) {
-        btn.disabled = true;
+    if (isGenerating || isExtractingMemory) {
         btn.style.backgroundColor = '#ccc';
+        btn.style.cursor = 'not-allowed';
     } else {
-        btn.disabled = false;
+        btn.style.cursor = 'pointer';
         if (isNextClickForReply) {
             btn.innerHTML = aiReplyIconSVG;
             btn.style.backgroundColor = 'var(--accent-color)';
@@ -1699,7 +1753,7 @@ function updateSendButtonState() {
 
 function setupChatRoom() {
     getEl('send-or-reply-btn').addEventListener('click', () => {
-        if (isGenerating) return;
+        if (isGenerating || isExtractingMemory) return;
         if (isNextClickForReply) {
             getAiReply();
         } else {
@@ -1708,7 +1762,7 @@ function setupChatRoom() {
     });
 
     getEl('message-input').addEventListener('keypress', (e) => { 
-        if (e.key === 'Enter' && !isGenerating) {
+        if (e.key === 'Enter' && !isGenerating && !isExtractingMemory) {
             e.preventDefault(); 
             if (isNextClickForReply) {
                 getAiReply();
@@ -1805,8 +1859,9 @@ function setupChatRoom() {
 
 function adjustContentPadding(isPanelOpen) {
     const content = getEl('chat-room-screen').querySelector('.content');
-    const panelHeight = isPanelOpen ? 210 : 0;
-    content.style.paddingBottom = `${panelHeight + 10}px`;
+    // This function's padding adjustment was causing visual bugs. Removing the padding change.
+    // const panelHeight = isPanelOpen ? 210 : 0;
+    // content.style.paddingBottom = `${panelHeight + 10}px`;
     setTimeout(() => {
         if(content.scrollHeight > content.clientHeight) {
             content.scrollTop = content.scrollHeight;
@@ -2133,7 +2188,7 @@ function handleMessageLongPress(event, messageWrapper) {
             subtitle.style.display = 'none'; 
         }
 
-        const defaultChatBg = 'https://i.postimg.cc/W34V7HJV/paw-bg.png';
+        const defaultChatBg = 'https://i.postimg.cc/sgLhthHy/IMG-20250804-223920.jpg';
         const chatRoomScreen = getEl('chat-room-screen');
         chatRoomScreen.style.backgroundImage = `url(${chat.chatBg || defaultChatBg})`;
         chatRoomScreen.style.backgroundSize = chat.chatBg ? 'cover' : 'auto';
@@ -2147,13 +2202,25 @@ function handleMessageLongPress(event, messageWrapper) {
         isNextClickForReply = lastMessageIsUser;
         updateSendButtonState();
 
+        applyChatTheme(chat);
 
+        renderMessages(false, true);
+        switchScreen('chat-room-screen');
+    }
+    
+    function applyChatTheme(chat) {
         const styleEl = getEl('dynamic-chat-style');
-        const themeKey = chat.baseTheme || 'default';
-        let theme = colorThemesV2[themeKey];
-        if (!theme) {
-            console.warn(`Theme '${themeKey}' not found, falling back to default.`);
-            theme = colorThemesV2['default'];
+        let theme;
+
+        if (chat.baseTheme === 'custom' && chat.customTheme) {
+            theme = chat.customTheme;
+        } else {
+            const themeKey = chat.baseTheme || 'default';
+            theme = colorThemesV2[themeKey];
+            if (!theme) {
+                console.warn(`Theme '${themeKey}' not found, falling back to default.`);
+                theme = colorThemesV2['default'];
+            }
         }
         
         let combinedCss = `
@@ -2171,6 +2238,7 @@ function handleMessageLongPress(event, messageWrapper) {
             }
 
             #chat-room-screen .message-bubble.ai .content,
+            #chat-room-screen .message-bubble:not(.user) .content, /* CSS Rule Update */
             #chat-room-screen .message-wrapper.received .voice-bubble {
                 background-color: ${theme.received.bg};
                 color: ${theme.received.text};
@@ -2184,15 +2252,17 @@ function handleMessageLongPress(event, messageWrapper) {
             }
         `;
     
-        if (chat.customBubbleCss) {
-            combinedCss += `\n\n${chat.customBubbleCss}`;
-        }
+        const customCss = chat.customBubbleCss || '';
+        // Replace generic selectors with specific ones to ensure they work as intended
+        const processedCustomCss = customCss
+            .replace(new RegExp('\\.message-bubble\\.ai \\.content', 'g'), '#chat-room-screen .message-bubble.ai .content, #chat-room-screen .message-bubble:not(.user) .content')
+            .replace(new RegExp('\\.message-bubble\\.user \\.content', 'g'), '#chat-room-screen .message-bubble.user .content')
+            .replace(new RegExp('\\.message-bubble \\.content', 'g'), '#chat-room-screen .message-bubble .content');
+
+        combinedCss += `\n\n${processedCustomCss}`;
         
         styleEl.innerHTML = combinedCss;
         styleEl.innerHTML += `\n#chat-room-screen .message-bubble .content, #chat-room-screen .voice-bubble { font-size: ${chat.fontSize || 15}px; font-family: var(--font-family); }`;
-
-        renderMessages(false, true);
-        switchScreen('chat-room-screen');
     }
 
     function renderMessages(isLoadMore = false, forceScrollToBottom = false) {
@@ -2231,6 +2301,8 @@ function handleMessageLongPress(event, messageWrapper) {
     function loadMoreMessages() { currentPage++; renderMessages(true, false); }
     function calculateVoiceDuration(text) { return Math.max(1, Math.min(60, Math.ceil(text.length / 3.5))); }
     
+   
+   
    
     function createMessageBubbleElement(message) {
         if (message.isRetracted) {
@@ -2286,22 +2358,35 @@ function handleMessageLongPress(event, messageWrapper) {
             }
         }
         
-        wrapper.className = `message-wrapper ${isSent ? 'sent' : 'received'} ${currentChatType === 'group' && !isSent ? 'group-message' : ''}`;
-        let replyHTML = '';
-        if (replyTo) {
-            replyHTML = `
-                <div class="quoted-message">
-                    <div class="author">${replyTo.sender}</div>
-                    <div class="content">${replyTo.content}</div>
-                </div>`;
-        }
+       wrapper.className = `message-wrapper ${isSent ? 'sent' : 'received'} ${currentChatType === 'group' && !isSent ? 'group-message' : ''}`;
+      
+        
         const bubbleRow = document.createElement('div');
         bubbleRow.className = 'message-bubble-row';
 
         let bubbleElementHTML = '';
         const blockedMatch = content.match(new RegExp(`\\[${chat.realName}被拉黑后的消息：([\\s\\S]+?)\\]`));
-        const textMatch = content.match(/\[(?:我在回复“.*?”时说|.*的消息)：([\s\\S]+?)\]/);
         
+        let mainContent = content;
+        let replyHTML = '';
+        
+        // New Reply Logic
+        const replyMatch = content.match(/\[我在回复“(.+?): (.+?)”时说：([\s\S]+?)\]/);
+        if (replyMatch) {
+            const replyAuthor = replyMatch[1];
+            const replyText = replyMatch[2];
+            mainContent = replyMatch[3];
+
+            replyHTML = `
+                <div class="reply-quote-container">
+                    <div class="author">${replyAuthor}</div>
+                    <div class="text">${replyText}</div>
+                </div>`;
+        } else {
+            const textMatch = content.match(/\[.*?的消息：([\s\S]+?)\]/);
+            if (textMatch) mainContent = textMatch[1];
+        }
+
         if (redPacketData) {
             const isClaimed = redPacketData.status === 'claimed';
             const cardClass = isClaimed ? 'red-packet-card claimed' : 'red-packet-card';
@@ -2389,27 +2474,20 @@ function handleMessageLongPress(event, messageWrapper) {
                     <div class="transfer-footer">汪汪转账</div>
                 </div>
             `;
-        } else if (blockedMatch) {
-            bubbleElementHTML = `<div class="message-bubble ${isSent ? 'user' : 'ai'}"><div class="content">${blockedMatch[1].trim()}</div></div>`;
-            bubbleRow.insertAdjacentHTML('afterbegin', `<div class="blocked-indicator">!</div>`);
-        } else if (textMatch) {
-            const textContent = textMatch[1].trim();
-            const isImage = /^(https?:\/\/[^\s]+\.(?:jpg|jpeg|png|gif|webp|bmp|svg))$/i.test(textContent);
-            if (isImage) {
-                bubbleElementHTML = `<div class="image-bubble"><img src="${textContent}" alt="图片消息"></div>`;
-            } else {
-                bubbleElementHTML = `<div class="message-bubble ${isSent ? 'user' : 'ai'}"><div class="content">${textContent}</div></div>`;
-            }
         } else { 
-             const plainTextMatch = content.match(/\[.*?：([\s\S]+?)\]/);
-             const textToDisplay = plainTextMatch ? plainTextMatch[1].trim() : content;
-             bubbleElementHTML = `<div class="message-bubble ${isSent ? 'user' : 'ai'}"><div class="content">${textToDisplay}</div></div>`;
+             const textToDisplay = mainContent.trim();
+             const isImage = /^(https?:\/\/[^\s]+\.(?:jpg|jpeg|png|gif|webp|bmp|svg))$/i.test(textToDisplay);
+             if (isImage) {
+                bubbleElementHTML = `<div class="image-bubble"><img src="${textToDisplay}" alt="图片消息"></div>`;
+             } else {
+                 bubbleElementHTML = `<div class="message-bubble ${isSent ? 'user' : 'ai'}"><div class="content">${replyHTML}${textToDisplay}</div></div>`;
+             }
         }
 
         const nicknameHTML = (currentChatType === 'group' && !isSent && senderNickname) ? `<div class="group-nickname">${senderNickname}</div>` : '';
         const timeString = `${pad(new Date(timestamp).getHours())}:${pad(new Date(timestamp).getMinutes())}`;
-        const finalBubbleContent = replyHTML + bubbleElementHTML;
-        bubbleRow.innerHTML += `<div class="message-info">${nicknameHTML}<img src="${avatarUrl}" class="message-avatar"><span class="message-time">${timeString}</span></div>${finalBubbleContent}`;
+        
+        bubbleRow.innerHTML += `<div class="message-info">${nicknameHTML}<img src="${avatarUrl}" class="message-avatar"><span class="message-time">${timeString}</span></div>${bubbleElementHTML}`;
         wrapper.prepend(bubbleRow);
         return wrapper;
     }
@@ -2553,6 +2631,8 @@ function handleMessageLongPress(event, messageWrapper) {
         getEl('message-input').value = '';
 
         if (currentChatType === 'private' && chat.autoMemory && chat.autoMemory.enabled && (chat.history.length - (chat.autoMemory.lastExtractionCount || 0)) >= chat.autoMemory.frequency) {
+            isExtractingMemory = true;
+            updateSendButtonState();
             showToast(`正在为 ${chat.remarkName} 自动提取记忆...`);
             extractAndStoreMemory(chat.id).then(() => {
                 showToast(`为 ${chat.remarkName} 的自动记忆提取完成！`);
@@ -2560,6 +2640,9 @@ function handleMessageLongPress(event, messageWrapper) {
                 saveData();
             }).catch(err => {
                 showToast(`自动记忆提取失败: ${err.message}`);
+            }).finally(() => {
+                isExtractingMemory = false;
+                updateSendButtonState();
             });
         }
         
@@ -2869,7 +2952,6 @@ function generateGroupSystemPrompt(group) {
         momentsContext += "最近朋友圈没有新动态。\n";
     }
     prompt += momentsContext;
-  
     // --- 新增结束 ---
     
     if (worldBooksContent) {
@@ -3368,19 +3450,43 @@ async function processStream(response, chat, apiType) { const reader = response.
     getEl('block-contact-btn').addEventListener('click', () => { const char = db.characters.find(c => c.id === currentChatId); if (!char) return; char.isBlocked = !char.isBlocked; const userProfile = db.userProfiles.find(p => p.id === char.userProfileId); const content = `[${userProfile.name}已将${char.realName}${char.isBlocked ? '拉黑' : '解除拉黑'}]`; char.history.push({ id: `msg_${Date.now()}`, role: 'system', content, timestamp: Date.now() }); saveData(); addMessageBubble(char.history.slice(-1)[0]); renderChatList(); getEl('block-contact-btn').textContent = char.isBlocked ? '解除拉黑' : '拉黑'; showToast(char.isBlocked ? '已拉黑' : '已解除拉黑'); }); 
     getEl('link-world-book-btn').addEventListener('click', () => { const char = db.characters.find(c => c.id === currentChatId); if (!char) return; getEl('world-book-selection-list').innerHTML = db.worldBooks.map(book => `<li class="list-item"><input type="checkbox" id="wb-select-${book.id}" value="${book.id}" ${(char.worldBookIds || []).includes(book.id) ? 'checked' : ''}><label for="wb-select-${book.id}">${book.name}</label></li>`).join(''); getEl('world-book-selection-modal').classList.add('visible'); }); 
     getEl('save-world-book-selection-btn').addEventListener('click', (e) => { e.stopPropagation(); const chat = currentChatType === 'private' ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId); if (!chat) return; chat.worldBookIds = [...getEl('world-book-selection-list').querySelectorAll('input:checked')].map(input => input.value); saveData(); getEl('world-book-selection-modal').classList.remove('visible'); showToast('爪印书关联已更新'); }); 
-    getEl('extract-memory-btn').addEventListener('click', async (e) => { const btn = e.currentTarget; btn.classList.add('loading'); btn.disabled = true; try { await extractAndStoreMemory(currentChatId); } catch (error) { console.error("Memory Extraction Failed:", error); showToast(`记忆提取失败: ${error.message}`); } finally { btn.classList.remove('loading'); btn.disabled = false; } });
+    getEl('extract-memory-btn').addEventListener('click', async (e) => { const btn = e.currentTarget; btn.classList.add('loading'); btn.disabled = true; isExtractingMemory = true; updateSendButtonState(); try { await extractAndStoreMemory(currentChatId); } catch (error) { console.error("Memory Extraction Failed:", error); showToast(`记忆提取失败: ${error.message}`); } finally { btn.classList.remove('loading'); btn.disabled = false; isExtractingMemory = false; updateSendButtonState(); } });
     getEl('setting-chat-font-size').addEventListener('input', e => { getEl('setting-chat-font-size-label').textContent = `聊天字体大小 ${e.target.value}px`; });
     
-    getEl('setting-char-profile').addEventListener('click', () => {
-        const list = getEl('character-selection-list');
-        list.innerHTML = db.characters.map(char => `<li class="selection-item" data-id="${char.id}"><img src="${char.avatar}"><span>${char.remarkName}</span></li>`).join('');
-        getEl('character-select-modal').classList.add('visible');
+    getEl('setting-char-profile').addEventListener('click', (e) => {
+        if(e.target.closest('.avatar-container')) {
+             const char = db.characters.find(c => c.id === currentChatId);
+             if(char) {
+                getEl('edit-contact-id').value = char.id;
+                getEl('edit-contact-real-name').value = char.realName;
+                getEl('edit-contact-remark-name').value = char.remarkName;
+                getEl('edit-contact-avatar-preview').src = char.avatar;
+                getEl('edit-contact-persona').value = char.persona;
+                getEl('edit-contact-modal').classList.add('visible');
+             }
+        } else if (e.target.closest('.change-btn')) {
+            const list = getEl('character-selection-list');
+            list.innerHTML = db.characters.map(char => `<li class="selection-item" data-id="${char.id}"><img src="${char.avatar}"><span>${char.remarkName}</span></li>`).join('');
+            getEl('character-select-modal').classList.add('visible');
+        }
     });
 
-    getEl('setting-my-profile').addEventListener('click', () => {
-        const list = getEl('profile-selection-list');
-        list.innerHTML = db.userProfiles.map(p => `<li class="selection-item" data-id="${p.id}"><img src="${p.avatar}"><span>${p.name}</span></li>`).join('');
-        getEl('profile-select-modal').classList.add('visible');
+    getEl('setting-my-profile').addEventListener('click', (e) => {
+         if(e.target.closest('.avatar-container')) {
+            const chat = db.characters.find(c => c.id === currentChatId);
+            const profile = db.userProfiles.find(p => p.id === chat.userProfileId);
+             if(profile) {
+                getEl('edit-profile-id').value = profile.id;
+                getEl('edit-profile-name').value = profile.name;
+                getEl('edit-profile-avatar-preview').src = profile.avatar;
+                getEl('edit-profile-persona').value = profile.persona;
+                getEl('edit-profile-modal').classList.add('visible');
+             }
+        } else if (e.target.closest('.change-btn')) {
+            const list = getEl('profile-selection-list');
+            list.innerHTML = db.userProfiles.map(p => `<li class="selection-item" data-id="${p.id}"><img src="${p.avatar}"><span>${p.name}</span></li>`).join('');
+            getEl('profile-select-modal').classList.add('visible');
+        }
     });
 
     getEl('character-selection-list').addEventListener('click', (e) => {
@@ -3441,13 +3547,14 @@ function openThemeSelectionModal(type) {
 
     const grid = getEl('theme-selection-grid');
     grid.innerHTML = '';
+    
+    // Add predefined themes
     Object.entries(colorThemesV2).forEach(([key, { name, sent, received }]) => {
         const item = document.createElement('div');
         item.className = 'theme-item';
         item.dataset.themeKey = key;
-        if (chat.baseTheme === key) {
-            item.classList.add('selected');
-        }
+        if (chat.baseTheme === key) item.classList.add('selected');
+        
         item.innerHTML = `
             <div class="color-preview">
                 <div class="received-half" style="background-color:${received.bg};"></div>
@@ -3457,20 +3564,78 @@ function openThemeSelectionModal(type) {
         `;
         item.addEventListener('click', () => {
             chat.baseTheme = key;
-            
+            chat.customTheme = null; // Clear custom theme when a preset is chosen
             saveData();
             showToast(`已选择主题: ${name}`);
-            
-            if(type === 'private') loadSettingsToSidebar(); else loadGroupSettingsToSidebar();
-            
-            setTimeout(() => {
-                getEl('theme-select-modal').classList.remove('visible');
-            }, 300);
+            applyChatTheme(chat); 
+            getEl('theme-select-modal').querySelectorAll('.theme-item').forEach(el => el.classList.remove('selected'));
+            item.classList.add('selected');
         });
         grid.appendChild(item);
     });
+
+    // Add custom theme option
+    const customItem = document.createElement('div');
+    customItem.className = 'theme-item';
+    customItem.dataset.themeKey = 'custom';
+    if (chat.baseTheme === 'custom') customItem.classList.add('selected');
+    const sentColor = chat.customTheme?.sent?.bg || '#cccccc';
+    const receivedColor = chat.customTheme?.received?.bg || '#eeeeee';
+    customItem.innerHTML = `
+        <div class="color-preview">
+             <div class="received-half" style="background-color:${receivedColor};"></div>
+             <div class="sent-half" style="background-color:${sentColor};"></div>
+        </div>
+        <span>自定义</span>
+    `;
+    const customEditor = getEl('custom-theme-editor');
+    const sentPicker = getEl('custom-sent-color');
+    const receivedPicker = getEl('custom-received-color');
+
+    customItem.addEventListener('click', () => {
+        getEl('theme-select-modal').querySelectorAll('.theme-item').forEach(el => el.classList.remove('selected'));
+        customItem.classList.add('selected');
+        customEditor.style.display = 'block';
+        
+        const currentCustom = chat.customTheme || { sent: { bg: '#87CEFA', text: '#FFFFFF' }, received: { bg: '#FFC0CB', text: '#000000' } };
+        sentPicker.value = currentCustom.sent.bg;
+        receivedPicker.value = currentCustom.received.bg;
+
+        chat.baseTheme = 'custom';
+        if (!chat.customTheme) chat.customTheme = currentCustom;
+        saveData();
+        applyChatTheme(chat);
+    });
+    grid.appendChild(customItem);
+
+    const handleColorChange = () => {
+        if (chat.baseTheme !== 'custom') return;
+        chat.customTheme = {
+            sent: { bg: sentPicker.value, text: getContrastYIQ(sentPicker.value) },
+            received: { bg: receivedPicker.value, text: getContrastYIQ(receivedPicker.value) }
+        };
+        customItem.querySelector('.sent-half').style.backgroundColor = sentPicker.value;
+        customItem.querySelector('.received-half').style.backgroundColor = receivedPicker.value;
+        saveData();
+        applyChatTheme(chat);
+    };
+
+    sentPicker.oninput = handleColorChange;
+    receivedPicker.oninput = handleColorChange;
+
+    customEditor.style.display = chat.baseTheme === 'custom' ? 'block' : 'none';
     getEl('theme-select-modal').classList.add('visible');
 }
+
+function getContrastYIQ(hexcolor){
+	hexcolor = hexcolor.replace("#", "");
+	var r = parseInt(hexcolor.substr(0,2),16);
+	var g = parseInt(hexcolor.substr(2,2),16);
+	var b = parseInt(hexcolor.substr(4,2),16);
+	var yiq = ((r*299)+(g*587)+(b*114))/1000;
+	return (yiq >= 128) ? 'black' : 'white';
+}
+
 
     function loadSettingsToSidebar(){
         const char = db.characters.find(c => c.id === currentChatId);
@@ -3478,8 +3643,8 @@ function openThemeSelectionModal(type) {
         
         const userProfile = db.userProfiles.find(p => p.id === char.userProfileId) || db.userProfiles[0];
 
-        getEl('setting-char-profile').innerHTML = `<img src="${char.avatar}"> <div class="details"><p>${char.remarkName}</p><span>${char.realName}</span></div> <button type="button" class="change-btn">更换</button>`;
-        getEl('setting-my-profile').innerHTML = `<img src="${userProfile.avatar}"> <div class="details"><p>${userProfile.name}</p></div> <button type="button" class="change-btn">更换</button>`;
+        getEl('setting-char-profile').innerHTML = `<div class="avatar-container"><img src="${char.avatar}"></div> <div class="details"><p>${char.remarkName}</p><span>${char.realName}</span></div> <button type="button" class="change-btn">更换</button>`;
+        getEl('setting-my-profile').innerHTML = `<div class="avatar-container"><img src="${userProfile.avatar}"></div> <div class="details"><p>${userProfile.name}</p></div> <button type="button" class="change-btn">更换</button>`;
         
         document.querySelector(`input[name="proactive-chat"][value="${String(char.proactiveChat.enabled)}"]`).checked = true;
         getEl('proactive-chat-frequency').value = char.proactiveChat.frequency;
@@ -3747,8 +3912,8 @@ function openThemeSelectionModal(type) {
         getEl('moments-screen').addEventListener('click', handleMomentInteraction);
         getEl('moment-comment-form').addEventListener('submit', handleCommentSubmit);
         
-        getEl('moments-avatar-upload').addEventListener('change', async (e) => { const file = e.target.files[0]; if (file) try { const url = await compressImage(file, { maxWidth: 200, maxHeight: 200 }); db.momentsSettings.myAvatar = url; getEl('moments-my-avatar-preview').src = url; saveData(); showToast('朋友圈头像已更新'); } catch(err) { showToast('头像压缩失败'); } });
-        getEl('moments-bg-upload').addEventListener('change', async (e) => { const file = e.target.files[0]; if (file) try { const url = await compressImage(file, { quality: 0.85, maxWidth: 1080, maxHeight: 1080 }); db.momentsSettings.background = url; getEl('moments-bg-preview').style.backgroundImage = `url(${url})`; saveData(); showToast('朋友圈封面已更新'); } catch(err) { showToast('封面压缩失败'); } });
+        getEl('moments-avatar-upload').addEventListener('change', async (e) => { const file = e.target.files[0]; if (file) try { const url = await compressImage(file, { maxWidth: 200, maxHeight: 200 }); db.momentsSettings.myAvatar = url; getEl('moments-my-avatar-preview').src = url; saveData(); showToast('朋友圈头像已更新'); renderMomentsFeed(); } catch(err) { showToast('头像压缩失败'); } });
+        getEl('moments-bg-upload').addEventListener('change', async (e) => { const file = e.target.files[0]; if (file) try { const url = await compressImage(file, { quality: 0.85, maxWidth: 1080, maxHeight: 1080 }); db.momentsSettings.background = url; getEl('moments-bg-preview').style.backgroundImage = `url(${url})`; saveData(); showToast('朋友圈封面已更新'); renderMomentsFeed(); } catch(err) { showToast('封面压缩失败'); } });
 
         setInterval(automaticPostScheduler, 5 * 60 * 1000);
 
@@ -4523,7 +4688,7 @@ function openThemeSelectionModal(type) {
                             title = chat.name;
                             avatar = chat.avatar;
                             const previewMatch = firstReply.match(/\[.*?的消息：([\s\S]+?)\]/);
-                            preview = previewMatch ? `${sender.groupNickname}: ${previewMatch[1]}` : firstReply;
+                            preview = previewMatch ? `${sender.groupNickname}: ${previewMatch}` : firstReply;
                          } else {
                             title = chat.remarkName;
                             avatar = chat.avatar;
