@@ -17,9 +17,29 @@
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: var(--font-family); margin: 0; padding: 0; background: linear-gradient(135deg, #FFEBCD, #D2B48C); display: flex; align-items: center; justify-content: center; min-height: 100vh; }
         .phone-screen { width: 100%; max-width: 420px; height: 100vh; max-height: 850px; background-color: var(--white-color); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); border-radius: var(--phone-corner-radius); overflow: hidden; position: relative; display: flex; flex-direction: column; }
-        .screen { display: none; flex-direction: column; width: 100%; height: 100%; animation: fadeIn 0.5s ease; }
-        .screen.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        
+        /* --- 核心修复：屏幕布局 --- */
+        .screen {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            position: absolute; /* 使用绝对定位，防止互相影响 */
+            top: 0;
+            left: 0;
+            opacity: 0; /* 默认透明 */
+            visibility: hidden; /* 默认不可见 */
+            transform: scale(0.95); /* 初始缩放状态 */
+            transition: opacity 0.4s ease, visibility 0.4s, transform 0.4s ease; /* 过渡动画 */
+            z-index: 1; /* 默认在底层 */
+        }
+        .screen.active {
+            opacity: 1; /* 激活时完全可见 */
+            visibility: visible;
+            transform: scale(1); /* 恢复正常大小 */
+            z-index: 2; /* 提到顶层显示 */
+        }
+
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: rgba(253, 251, 246, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid #eee; flex-shrink: 0; position: relative; z-index: 10; }
         .app-header .back-btn, .app-header .action-btn { background: none; border: none; font-size: 24px; font-weight: bold; color: var(--secondary-color); cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease; }
         .app-header .back-btn:active, .app-header .action-btn:active { transform: scale(0.9); }
@@ -54,7 +74,8 @@
         .content { flex-grow: 1; overflow-y: auto; padding: 20px; position: relative; }
         #chat-list-screen .content, #contacts-screen-panel .content, #me-screen-panel .content { padding: 0; }
         .placeholder-text { text-align: center; color: #aaa; margin-top: 50px; }
-        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 100; display: none; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
+        .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 100; display: none; align-items: center; justify-content: center; animation: fadeInModal 0.3s ease; }
+        @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
         .modal-overlay.visible { display: flex; }
         .modal-window { background: var(--white-color); padding: 25px; border-radius: var(--border-radius); box-shadow: 0 5px 25px rgba(0,0,0,0.15); width: 85%; max-width: 340px; animation: slideUp 0.4s ease-out; }
         .modal-window h3 { margin-top: 0; text-align: center; color: var(--secondary-color); }
@@ -73,7 +94,7 @@
             overflow: hidden;
             display: flex;
             padding: 6px;
-            animation: fadeIn 0.1s ease;
+            animation: fadeInModal 0.1s ease;
         }
         .context-menu-item {
             padding: 9px 16px;
@@ -93,7 +114,7 @@
         .context-menu-item.danger:hover {
             background-color: rgba(255, 138, 128, 0.2);
         }
-        .action-sheet-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 200; display: none; align-items: flex-end; animation: fadeIn 0.3s ease; }
+        .action-sheet-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 200; display: none; align-items: flex-end; animation: fadeInModal 0.3s ease; }
         .action-sheet-overlay.visible { display: flex; }
         .action-sheet { background: #f7f7f7; width: 100%; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); animation: slideUp 0.3s ease-out; }
         .action-sheet-button { width: 100%; background: white; border: none; padding: 15px; font-size: 16px; color: var(--secondary-color); font-weight: 500; cursor: pointer; border-radius: 10px; margin-bottom: 8px; }
@@ -213,7 +234,7 @@
             line-height: 1.6;
             max-width: 220px;
             display: none;
-            animation: fadeIn 0.3s ease;
+            animation: fadeInModal 0.3s ease;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: relative;
             transform: rotate(-1deg);
@@ -641,7 +662,7 @@
             text-overflow: ellipsis;
         }
 
-        /* === NEW/UPDATED: Call System Styles === */
+        /* === Call System Styles === */
         #incoming-call-modal .modal-window {
             background-color: rgba(40, 40, 40, 0.85);
             backdrop-filter: blur(20px);
@@ -693,8 +714,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            padding-top: 85px; /* Adjusted */
             text-align: center;
+            z-index: 3;
         }
         #call-screen-main-view::before {
             content: '';
@@ -706,15 +729,36 @@
             filter: blur(20px) brightness(0.5);
             transform: scale(1.1);
         }
-        #main-participant-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid rgba(255, 255, 255, 0.3);
+        /* New: Participant Grid */
+        #participant-avatars-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
             margin-bottom: 15px;
             z-index: 1;
         }
+        .participant-avatar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .participant-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 5px;
+            transition: box-shadow 0.3s ease;
+        }
+        .participant-avatar.speaking {
+            box-shadow: 0 0 0 4px var(--primary-color);
+        }
+        .participant-name {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
         #main-participant-name { font-size: 24px; font-weight: 600; z-index: 1; }
         #main-participant-status { font-size: 14px; color: #ccc; z-index: 1; margin-top: 5px;}
 
@@ -766,8 +810,47 @@
         .call-bubble.ai-speech { background-color: rgba(50, 50, 50, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); align-self: flex-start; }
         .call-bubble.user-input { background-color: #3a3a3c; align-self: flex-end; text-align: left; }
         
-        .call-controls { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; padding: 20px; padding-bottom: 40px; z-index: 10; }
-        .call-input-modal textarea { height: 100px; }
+        .call-controls { 
+            position: absolute; 
+            bottom: 0; left: 0; right: 0; 
+            display: flex; 
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px; 
+            padding-bottom: 40px; 
+            gap: 15px;
+            z-index: 10; 
+        }
+        .call-input-container {
+            display: flex;
+            flex-grow: 1;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 22px;
+            padding: 4px;
+        }
+        #call-input-text {
+            flex-grow: 1;
+            border: none;
+            background: transparent;
+            color: white;
+            padding: 0 15px;
+            font-size: 16px;
+        }
+        #call-input-text:focus {
+            outline: none;
+        }
+        #call-input-send-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background-color: var(--primary-color);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -797,7 +880,6 @@
         <div id="outgoing-call-screen" class="screen"></div>
         <div id="call-screen" class="screen"></div>
         <div id="incoming-call-modal" class="modal-overlay"></div>
-        <div id="call-input-modal" class="modal-overlay"></div>
 
         <div id="toast-notification" class="toast"></div>
         <div id="add-char-modal" class="modal-overlay"></div>
@@ -893,6 +975,9 @@ function lightenRgba(rgba, percent) {
 function injectHTML() {
     const pawIcon = `<svg viewBox="0 0 24 24" fill="currentColor" style="width:24px;height:24px;"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M15.5,12A1.5,1.5 0 0,1 14,13.5A1.5,1.5 0 0,1 12.5,12A1.5,1.5 0 0,1 14,10.5A1.5,1.5 0 0,1 15.5,12M10,13.5A1.5,1.5 0 0,1 8.5,12A1.5,1.5 0 0,1 10,10.5A1.5,1.5 0 0,1 11.5,12A1.5,1.5 0 0,1 10,13.5M10,9.5A1.5,1.5 0 0,1 8.5,8A1.5,1.5 0 0,1 10,6.5A1.5,1.5 0 0,1 11.5,8A1.5,1.5 0 0,1 10,9.5M15.5,8A1.5,1.5 0 0,1 14,9.5A1.5,1.5 0 0,1 12.5,8A1.5,1.5 0 0,1 14,6.5A1.5,1.5 0 0,1 15.5,8Z" /></svg>`;
     const settingsSVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14,12.94C19.07,12.45 19,11.96 19,11.5C19,11.04 19.07,10.55 19.14,10.06L21.17,8.42C21.45,8.18 21.5,7.77 21.26,7.49L19.5,4.51C19.26,4.23 18.84,4.18 18.57,4.32L16.36,5.22C15.9,4.84 15.38,4.54 14.8,4.34L14.4,2.1C14.34,1.68 13.96,1.38 13.53,1.38H10.47C10.04,1.38 9.66,1.68 9.6,2.1L9.2,4.34C8.62,4.54 8.1,4.84 7.64,5.22L5.43,4.32C5.16,4.18 4.74,4.23 4.5,4.51L2.74,7.49C2.5,7.77 2.55,8.18 2.83,8.42L4.86,10.06C4.93,10.55 5,11.04 5,11.5C5,11.96 4.93,12.45 4.86,12.94L2.83,14.58C2.55,14.82 2.5,15.23 2.74,15.51L4.5,18.49C4.74,18.77 5.16,18.82 5.43,18.68L7.64,17.78C8.1,18.16 8.62,18.46 9.2,18.66L9.6,20.9C9.66,21.32 10.04,21.62 10.47,21.62H13.53C13.96,21.62 14.34,21.32 14.4,20.9L14.8,18.66C15.38,18.46 15.9,18.16 16.36,17.78L18.57,18.68C18.84,18.82 19.26,18.77 19.5,18.49L21.26,15.51C21.5,15.23 21.45,14.82 21.17,14.58L19.14,12.94M12,14.5C10.62,14.5 9.5,13.38 9.5,12C9.5,10.62 10.62,9.5 12,9.5C13.38,9.5 14.5,10.62 14.5,12C14.5,13.38 13.38,14.5 12,14.5Z" /></svg>`;
+    const classicHangUpIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="white"><path d="M12 9c-1.6 0-3.15.25-4.62.72v3.1zM13.49 13.49c.07-.06.13-.11.19-.17l-1.3-1.3c-.56.43-1.2.74-1.88.9v2.67c.7-.24 1.34-.61 1.9-1.07.05-.04.1-.09.15-.13zM21 15.46l-5.27-.61-2.52 2.52c-2.83-1.44-5.15-3.75-6.59-6.59l2.53-2.53L8.54 3H3.03C2.45 13.18 10.82 21.55 21 20.97v-5.51z"/></svg>`;
+    const sendArrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`;
+
     const htmlMap = {
         'chat-list-screen': `
             <header class="app-header" id="qq-app-header">
@@ -1075,11 +1160,11 @@ function injectHTML() {
                 </div>
                 <div class="incoming-call-actions">
                     <div class="action-button-wrapper">
-                        <button id="decline-call-btn" class="call-action-btn decline"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 16.5L3 6m18 6l-5.6-5.6a1.2 1.2 0 0 0-1.7 0L3 18.2a1.2 1.2 0 0 0-.3 1.2l1.2 3.6a1.2 1.2 0 0 0 1.2.9h15.6a1.2 1.2 0 0 0 1.2-1.2V7.7a1.2 1.2 0 0 0-.3-1.1z"/></svg></button>
+                        <button id="decline-call-btn" class="call-action-btn decline">${classicHangUpIcon}</button>
                         <span>拒绝</span>
                     </div>
                     <div class="action-button-wrapper">
-                        <button id="accept-call-btn" class="call-action-btn accept"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button>
+                        <button id="accept-call-btn" class="call-action-btn accept"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button>
                         <span>接听</span>
                     </div>
                 </div>
@@ -1090,15 +1175,15 @@ function injectHTML() {
                 <div id="outgoing-call-name" class="caller-name"></div>
                 <div class="caller-text" id="outgoing-call-status">正在呼叫...</div>
             </div>
-            <div class="call-controls" style="position: absolute; bottom: 0; width: 100%;">
+            <div class="call-controls" style="position: absolute; bottom: 0; width: 100%; justify-content: center;">
                  <div class="action-button-wrapper">
-                    <button id="cancel-outgoing-call-btn" class="call-action-btn decline" style="width:70px; height:70px;"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 16.5L3 6m18 6l-5.6-5.6a1.2 1.2 0 0 0-1.7 0L3 18.2a1.2 1.2 0 0 0-.3 1.2l1.2 3.6a1.2 1.2 0 0 0 1.2.9h15.6a1.2 1.2 0 0 0 1.2-1.2V7.7a1.2 1.2 0 0 0-.3-1.1z"/></svg></button>
+                    <button id="cancel-outgoing-call-btn" class="call-action-btn decline" style="width:70px; height:70px;">${classicHangUpIcon}</button>
                     <span>取消</span>
                  </div>
             </div>`,
         'call-screen': `
             <div id="call-screen-main-view">
-                <img id="main-participant-avatar" src="">
+                <div id="participant-avatars-grid"></div> <!-- New Grid for Avatars -->
                 <div id="main-participant-name"></div>
                 <div id="main-participant-status"></div>
             </div>
@@ -1110,18 +1195,11 @@ function injectHTML() {
             </div>
             <div class="call-transcript-area" id="call-transcript-area"></div>
             <div class="call-controls">
-                <button id="user-speak-btn" class="call-action-btn" style="background-color: rgba(255,255,255,0.2);"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg></button>
-                <button id="hang-up-btn" class="call-action-btn decline" style="width:70px; height:70px;"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 16.5L3 6m18 6l-5.6-5.6a1.2 1.2 0 0 0-1.7 0L3 18.2a1.2 1.2 0 0 0-.3 1.2l1.2 3.6a1.2 1.2 0 0 0 1.2.9h15.6a1.2 1.2 0 0 0 1.2-1.2V7.7a1.2 1.2 0 0 0-.3-1.1z"/></svg></button>
-            </div>`,
-        'call-input-modal': `
-            <div class="modal-window call-input-modal">
-                <h3>你要说什么？</h3>
-                <form id="call-input-form">
-                    <div class="form-group">
-                        <textarea id="call-input-textarea" rows="4" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">发送</button>
-                </form>
+                <div class="call-input-container">
+                    <input type="text" id="call-input-text" placeholder="你要说什么？">
+                    <button id="call-input-send-btn">${sendArrowIcon}</button>
+                </div>
+                <button id="hang-up-btn" class="call-action-btn decline" style="width:70px; height:70px; flex-shrink: 0;">${classicHangUpIcon}</button>
             </div>`
     };
     for (const id in htmlMap) {
@@ -1151,7 +1229,6 @@ const defaultIcons = {
     'chat-list-screen': { name: '汪汪', url: 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/Ih9o/1440X1261/IMG_20250731_170506.jpg' },
     'api-settings-screen': { name: '项圈', url: 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/S7ZQ/1440X1231/IMG_20250731_170617.jpg' },
     'world-book-screen': { name: '爪印书', url: 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/I4zK/1440X1246/IMG_20250731_170555.jpg' },
-    'tutorial-screen': { name: '教程', url: 'https://i.postimg.cc/tJpD31fD/1.png' },
     'beautify-screen': { name: '美化', url: 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/ol5R/1440X1236/IMG_20250731_170455.jpg' },
     'memory-core-screen': { name: '记忆', url: 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/vKfO/1440X1191/IMG_20250731_170537.jpg' },
     'day-mode-btn': { name: '', url: 'https://i.postimg.cc/Jz0tYqnT/chan-145.png' },
@@ -1443,7 +1520,6 @@ function setupHomeScreen() {
         </div>
         <div class="dock">
             <a href="#" class="app-icon" id="day-mode-btn"><img src="${getIcon('day-mode-btn')}" alt="日间" class="icon-img"></a>
-            <a href="#" class="app-icon" data-target="tutorial-screen"><img src="${getIcon('tutorial-screen')}" alt="教程" class="icon-img"></a>
             <a href="#" class="app-icon" id="night-mode-btn"><img src="${getIcon('night-mode-btn')}" alt="夜间" class="icon-img"></a>
         </div>`;
     getEl('home-screen').innerHTML = homeScreenHTML;
@@ -1456,7 +1532,6 @@ function setupHomeScreen() {
     document.getElementById('night-mode-btn')?.addEventListener('click', (e) => { e.preventDefault(); applyHomeScreenMode('night'); });
     document.querySelector('[data-target="world-book-screen"]').addEventListener('click', () => renderWorldBookList());
     document.querySelector('[data-target="beautify-screen"]').addEventListener('click', () => renderCustomizeForm());
-    document.querySelector('[data-target="tutorial-screen"]').addEventListener('click', () => renderTutorialContent());
     document.querySelector('[data-target="memory-core-screen"]').addEventListener('click', () => renderMemoryCoreList());
 }
     
@@ -1575,25 +1650,6 @@ function renderCustomizeForm() {
             </div>`);
     });
 }
-    
-    function setupTutorialApp() { 
-        const screen = getEl('tutorial-screen');
-        if (screen) {
-            screen.addEventListener('click', (e) => { 
-                const header = e.target.closest('.tutorial-header'); 
-                if (header) header.parentElement.classList.toggle('open'); 
-            }); 
-        }
-    }
-
-function renderTutorialContent() {
-    const tutorials = [ { title: '写在前面', imageUrls: ['https://i.postimg.cc/7PgyMG9S/image.jpg'] }, { title: '软件介绍', imageUrls: [ 'https://i.postimg.cc/VvsJRh6q/IMG-20250713-162647.jpg', 'https://i.postimg.cc/8P5FfxxD/IMG-20250713-162702.jpg', 'https://i.postimg.cc/3r94R3Sn/IMG-20250713-162712.jpg' ] }, { title: '汪汪', imageUrls: [ 'https://i.postimg.cc/x8scFPJW/IMG-20250713-162756.jpg', 'https://i.postimg.cc/pX6mfqtj/IMG-20250713-162809.jpg', 'https://i.postimg.cc/YScjV00q/IMG-20250713-162819.jpg', 'https://i.postimg.cc/13VfJw9j/IMG-20250713-162828.jpg' ] }, { title: '群聊', imageUrls: ['https://i.postimg.cc/X7LSmRTJ/404.jpg'] } ];
-    const container = getEl('tutorial-content-area');
-    if (container) {
-        container.innerHTML = tutorials.map(t => `<div class="tutorial-item"><div class="tutorial-header">${t.title}</div><div class="tutorial-content">${t.imageUrls.map(url => `<img src="${url}" alt="${t.title}教程图片">`).join('')}</div></div>`).join('');
-    }
-}
-
 
 // --- Chat & Messaging Functions ---
 function setupQQApp() {
@@ -1709,7 +1765,7 @@ function renderChatList() {
     sortedChats.forEach(chat => {
         let lastMessageText = '开始聊天吧...';
         if (chat.history?.length > 0) {
-            const lastMsg = chat.history.filter(msg => !/\[system:|拉黑|解除拉黑|邀请.*?加入了群聊|修改群名为|接收|退回|更新状态为|已接收礼物|领取了.*的红包/.test(msg.content)).pop();
+            const lastMsg = chat.history.filter(msg => !/拉黑|解除拉黑|邀请.*?加入了群聊|修改群名为|接收|退回|更新状态为|已接收礼物|领取了.*的红包/.test(msg.content) && !/^\[(system|系统指令):/i.test(msg.content)).pop();
             if (lastMsg) {
                 if(lastMsg.isRetracted) {
                     lastMessageText = lastMsg.role === 'user' ? '你撤回了一条消息' : `${lastMsg.senderName || '对方'}撤回了一条消息`;
@@ -2187,7 +2243,7 @@ function handlePatPat(messageWrapper) {
         const message = {
             id: `msg_pat_${Date.now()}`,
             role: 'system',
-            content: `[system:${patContent}]`,
+            content: `[pat-notification:${patContent}]`,
             timestamp: Date.now()
         };
         chat.history.push(message);
@@ -2236,116 +2292,116 @@ function toggleStickerModal(forceState) {
     adjustContentPadding(show);
 }
 
-function renderPlusMenu() {
-    const menuGrid = getEl('chat-plus-menu').querySelector('.plus-menu-grid');
-    const menuItems = [
-        { id: 'photo-video-btn', label: '相册', icon: '<path d="M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19M8.5,13.5L11,16.5L14.5,12L19,18H5L8.5,13.5Z" />' },
-        { id: 'camera-btn', label: '拍摄', icon: '<path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" />' },
-        { id: 'video-call-btn', label: '视频通话', icon: '<path d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z" />' },
-        { id: 'location-btn', label: '位置', icon: '<path d="M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5Z" />' },
-        { id: 'wallet-btn', label: '红包', icon: '<path d="M18,16H16V15A2,2 0 0,0 14,13H10A2,2 0 0,0 8,15V16H6A2,2 0 0,0 4,18V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V18A2,2 0 0,0 18,16M11,10H13V12H11V10M18,6A2,2 0 0,0 16,4H8A2,2 0 0,0 6,6V12H8V8H16V12H18V6Z" />' },
-        { id: 'gift-btn', label: '礼物', icon: '<path d="M20,8L12,13L4,8V6H20M20,4H4A2,2 0 0,0 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6A2,2 0 0,0 20,4M12.5,18C12.5,17.29 12.17,16.65 11.64,16.27C12.17,15.89 12.5,15.26 12.5,14.55C12.5,13.6 11.83,12.79 11,12.58V12H13V10H11V8H13V6H11V5C11,4.45 10.55,4 10,4H8C7.45,4 7,4.45 7,5V6H9V8H7V10H9V12H7V12.58C6.17,12.79 5.5,13.6 5.5,14.55C5.5,15.26 5.83,15.89 6.36,16.27C5.83,16.65 5.5,17.29 5.5,18H12.5Z" />' },
-        { id: 'transfer-btn', label: '转账', icon: '<path d="M16.13,15.13L18.26,13L16.13,10.88L17.54,9.47L22.07,14L17.54,18.53L16.13,17.12M7.88,9.88L5.75,12L7.88,14.13L6.47,15.54L2,11L6.47,6.47L7.88,7.88M12.25,5C12.6,5 12.92,5.21 13.09,5.54L16.5,12H14.83L12.25,7.03L9.67,12H8L11.41,5.54C11.58,5.21 11.9,5 12.25,5Z" />' },
-        { id: 'voice-message-btn', label: '语音输入', icon: '<path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>' }
-    ];
+    function renderPlusMenu() {
+        const menuGrid = getEl('chat-plus-menu').querySelector('.plus-menu-grid');
+        const menuItems = [
+            { id: 'photo-video-btn', label: '相册', icon: '<path d="M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19M8.5,13.5L11,16.5L14.5,12L19,18H5L8.5,13.5Z" />' },
+            { id: 'camera-btn', label: '拍摄', icon: '<path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" />' },
+            { id: 'video-call-btn', label: '视频通话', icon: '<path d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z" />' },
+            { id: 'location-btn', label: '位置', icon: '<path d="M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5Z" />' },
+            { id: 'wallet-btn', label: '红包', icon: '<path d="M18,16H16V15A2,2 0 0,0 14,13H10A2,2 0 0,0 8,15V16H6A2,2 0 0,0 4,18V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V18A2,2 0 0,0 18,16M11,10H13V12H11V10M18,6A2,2 0 0,0 16,4H8A2,2 0 0,0 6,6V12H8V8H16V12H18V6Z" />' },
+            { id: 'gift-btn', label: '礼物', icon: '<path d="M20,8L12,13L4,8V6H20M20,4H4A2,2 0 0,0 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6A2,2 0 0,0 20,4M12.5,18C12.5,17.29 12.17,16.65 11.64,16.27C12.17,15.89 12.5,15.26 12.5,14.55C12.5,13.6 11.83,12.79 11,12.58V12H13V10H11V8H13V6H11V5C11,4.45 10.55,4 10,4H8C7.45,4 7,4.45 7,5V6H9V8H7V10H9V12H7V12.58C6.17,12.79 5.5,13.6 5.5,14.55C5.5,15.26 5.83,15.89 6.36,16.27C5.83,16.65 5.5,17.29 5.5,18H12.5Z" />' },
+            { id: 'transfer-btn', label: '转账', icon: '<path d="M16.13,15.13L18.26,13L16.13,10.88L17.54,9.47L22.07,14L17.54,18.53L16.13,17.12M7.88,9.88L5.75,12L7.88,14.13L6.47,15.54L2,11L6.47,6.47L7.88,7.88M12.25,5C12.6,5 12.92,5.21 13.09,5.54L16.5,12H14.83L12.25,7.03L9.67,12H8L11.41,5.54C11.58,5.21 11.9,5 12.25,5Z" />' },
+            { id: 'voice-message-btn', label: '语音输入', icon: '<path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>' }
+        ];
 
-    menuGrid.innerHTML = menuItems.map(item => `
-        <div class="plus-menu-item" id="${item.id}">
-            <div class="icon-background">
-                <svg viewBox="0 0 24 24">${item.icon}</svg>
+        menuGrid.innerHTML = menuItems.map(item => `
+            <div class="plus-menu-item" id="${item.id}">
+                <div class="icon-background">
+                    <svg viewBox="0 0 24 24">${item.icon}</svg>
+                </div>
+                <span>${item.label}</span>
             </div>
-            <span>${item.label}</span>
-        </div>
-    `).join('');
+        `).join('');
 
-    menuGrid.addEventListener('click', (e) => {
-        const item = e.target.closest('.plus-menu-item');
-        if (!item) return;
+        menuGrid.addEventListener('click', (e) => {
+            const item = e.target.closest('.plus-menu-item');
+            if (!item) return;
 
-        togglePlusMenu(false);
+            togglePlusMenu(false);
+            
+            switch (item.id) {
+                case 'photo-video-btn':
+                    getEl('image-upload-input').click();
+                    break;
+                case 'camera-btn':
+                    getEl('image-upload-input').click(); 
+                    break;
+                case 'voice-message-btn':
+                    getEl('send-voice-form').reset();
+                    getEl('voice-duration-preview').textContent = '0"';
+                    getEl('send-voice-modal').classList.add('visible');
+                    break;
+                case 'wallet-btn':
+                    openRedPacketModal();
+                    break;
+                case 'transfer-btn':
+                    getEl('send-transfer-form').reset();
+                    getEl('send-transfer-modal').classList.add('visible');
+                    break;
+                case 'gift-btn':
+                    getEl('send-gift-form').reset();
+                    getEl('send-gift-modal').classList.add('visible');
+                    break;
+                case 'location-btn':
+                    getEl('send-location-form').reset();
+                    getEl('send-location-modal').classList.add('visible');
+                    break;
+                case 'video-call-btn':
+                    handleInitiateCall();
+                    break;
+            }
+        });
+    }
+
+    function handleMessageLongPress(event, messageWrapper) {
+        const validTargets = '.message-bubble, .image-bubble, .voice-bubble, .pv-card, .transfer-card, .red-packet-card, .location-card, .gift-card-flipper';
+        if (!event.target.closest(validTargets)) {
+            return;
+        }
+
+        if (isInMultiSelectMode) return;
+        clearTimeout(longPressTimer);
+        const messageId = messageWrapper.dataset.id;
+        const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
+        const message = chat.history.find(m => m.id === messageId);
+        if (!message || message.isRetracted) return;
+
+        const isInvisibleMessage = /\[.*?(?:接收|退回|更新状态为|已接收礼物|邀请.*?加入了群聊|修改群名为|拉黑|解除拉黑|领取了.*的红包)\]/.test(message.content);
+        if (isInvisibleMessage) return;
+
+        let menuItems = [];
+
+        menuItems.push({ label: '引用', action: () => startReply(messageId) });
         
-        switch (item.id) {
-            case 'photo-video-btn':
-                getEl('image-upload-input').click();
-                break;
-            case 'camera-btn':
-                getEl('image-upload-input').click(); 
-                break;
-            case 'voice-message-btn':
-                getEl('send-voice-form').reset();
-                getEl('voice-duration-preview').textContent = '0"';
-                getEl('send-voice-modal').classList.add('visible');
-                break;
-            case 'wallet-btn':
-                openRedPacketModal();
-                break;
-            case 'transfer-btn':
-                getEl('send-transfer-form').reset();
-                getEl('send-transfer-modal').classList.add('visible');
-                break;
-            case 'gift-btn':
-                getEl('send-gift-form').reset();
-                getEl('send-gift-modal').classList.add('visible');
-                break;
-            case 'location-btn':
-                getEl('send-location-form').reset();
-                getEl('send-location-modal').classList.add('visible');
-                break;
-            case 'video-call-btn':
-                handleInitiateCall();
-                break;
+        const canBeEdited = !/\[(?:语音|表情包|照片\/视频|转账|礼物|位置)/.test(message.content) && !message.redPacketData && !message.imageData;
+        if (canBeEdited) {
+            menuItems.push({ label: '编辑', action: () => startMessageEdit(messageId) });
         }
-    });
-}
 
-function handleMessageLongPress(event, messageWrapper) {
-    const validTargets = '.message-bubble, .image-bubble, .voice-bubble, .pv-card, .transfer-card, .red-packet-card, .location-card, .gift-card-flipper';
-    if (!event.target.closest(validTargets)) {
-        return;
-    }
-
-    if (isInMultiSelectMode) return;
-    clearTimeout(longPressTimer);
-    const messageId = messageWrapper.dataset.id;
-    const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
-    const message = chat.history.find(m => m.id === messageId);
-    if (!message || message.isRetracted) return;
-
-    const isInvisibleMessage = /\[.*?(?:接收|退回|更新状态为|已接收礼物|system:|邀请.*?加入了群聊|修改群名为|拉黑|解除拉黑|领取了.*的红包)\]/.test(message.content);
-    if (isInvisibleMessage) return;
-
-    let menuItems = [];
-
-    menuItems.push({ label: '引用', action: () => startReply(messageId) });
-    
-    const canBeEdited = !/\[(?:语音|表情包|照片\/视频|转账|礼物|位置)/.test(message.content) && !message.redPacketData && !message.imageData;
-    if (canBeEdited) {
-        menuItems.push({ label: '编辑', action: () => startMessageEdit(messageId) });
-    }
-
-    const twoMinutes = 2 * 60 * 1000;
-    if (message.role === 'user' && (Date.now() - message.timestamp < twoMinutes)) {
-        menuItems.push({ label: '撤回', action: () => retractMessage(messageId) });
-    }
-
-    menuItems.push({ label: '多选', action: () => enterMultiSelectMode(messageId) });
-
-    menuItems.push({ label: '删除', danger: true, action: () => {
-        if (confirm('确定要删除这条消息吗？')) {
-            chat.history = chat.history.filter(m => m.id !== messageId);
-            saveData();
-            renderMessages(false, true);
-            renderChatList();
+        const twoMinutes = 2 * 60 * 1000;
+        if (message.role === 'user' && (Date.now() - message.timestamp < twoMinutes)) {
+            menuItems.push({ label: '撤回', action: () => retractMessage(messageId) });
         }
-    }});
-    
-    const clientX = event.clientX || event.touches[0].clientX;
-    const clientY = event.clientY || event.touches[0].clientY;
 
-    if (menuItems.length > 0) {
-        createContextMenu(menuItems, clientX, clientY);
+        menuItems.push({ label: '多选', action: () => enterMultiSelectMode(messageId) });
+
+        menuItems.push({ label: '删除', danger: true, action: () => {
+            if (confirm('确定要删除这条消息吗？')) {
+                chat.history = chat.history.filter(m => m.id !== messageId);
+                saveData();
+                renderMessages(false, true);
+                renderChatList();
+            }
+        }});
+        
+        const clientX = event.clientX || event.touches[0].clientX;
+        const clientY = event.clientY || event.touches[0].clientY;
+
+        if (menuItems.length > 0) {
+            createContextMenu(menuItems, clientX, clientY);
+        }
     }
-}
     function startReply(messageId) {
     const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
     const message = chat.history.find(m => m.id === messageId);
@@ -2387,25 +2443,25 @@ function handleMessageLongPress(event, messageWrapper) {
 }
 
     function retractMessage(messageId) {
-    const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
-    const messageIndex = chat.history.findIndex(m => m.id === messageId);
-    if (messageIndex > -1) {
-        const messageToRetract = chat.history[messageIndex];
-        const userProfileId = currentChatType === 'private' ? chat.userProfileId : chat.me.profileId;
-        const userProfile = db.userProfiles.find(p => p.id === userProfileId);
-        const senderName = messageToRetract.role === 'user' 
-            ? (chat.me?.nickname || userProfile.name)
-            : (chat.members?.find(m => m.id === messageToRetract.senderId)?.groupNickname || chat.remarkName);
-        
-        messageToRetract.isRetracted = true;
-        messageToRetract.originalContent = messageToRetract.content; 
-        messageToRetract.senderName = senderName; 
-        messageToRetract.content = '[消息已撤回]';
-        saveData();
-        renderMessages(false, true);
-        renderChatList();
+        const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
+        const messageIndex = chat.history.findIndex(m => m.id === messageId);
+        if (messageIndex > -1) {
+            const messageToRetract = chat.history[messageIndex];
+            const userProfileId = currentChatType === 'private' ? chat.userProfileId : chat.me.profileId;
+            const userProfile = db.userProfiles.find(p => p.id === userProfileId);
+            const senderName = messageToRetract.role === 'user' 
+                ? (chat.me?.nickname || userProfile.name)
+                : (chat.members?.find(m => m.id === messageToRetract.senderId)?.groupNickname || chat.remarkName);
+            
+            messageToRetract.isRetracted = true;
+            messageToRetract.originalContent = messageToRetract.content; 
+            messageToRetract.senderName = senderName; 
+            messageToRetract.content = '[消息已撤回]';
+            saveData();
+            renderMessages(false, true);
+            renderChatList();
+        }
     }
-}
     function startMessageEdit(messageId) { 
         exitMultiSelectMode(); 
         editingMessageId = messageId; 
@@ -2529,7 +2585,7 @@ function handleMessageLongPress(event, messageWrapper) {
         }
 
         const defaultChatBg = 'https://i.postimg.cc/sgLhthHy/IMG-20250804-223920.jpg';
-        const chatRoomScreen = getEl('chat-room-screen');
+                const chatRoomScreen = getEl('chat-room-screen');
         chatRoomScreen.style.backgroundImage = `url(${chat.chatBg || defaultChatBg})`;
         chatRoomScreen.style.backgroundSize = chat.chatBg ? 'cover' : 'auto';
         chatRoomScreen.style.backgroundRepeat = chat.chatBg ? 'no-repeat' : 'repeat';
@@ -2635,6 +2691,11 @@ function handleMessageLongPress(event, messageWrapper) {
    
    
     function createMessageBubbleElement(message) {
+        // New rule: Hide all system instructions
+        if (/^\[(系统指令|system):/i.test(message.content)) {
+            return null;
+        }
+
         if (message.isRetracted) {
             const wrapper = document.createElement('div');
             wrapper.className = 'message-wrapper system-notification';
@@ -2644,13 +2705,15 @@ function handleMessageLongPress(event, messageWrapper) {
             wrapper.innerHTML = `<div class="system-notification-bubble" ${originalContentData}>${retractedText}</div>`;
             return wrapper;
         }
-              const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
+        const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
+        if (!chat) return null;
+        
         const { role, content, timestamp, id, transferStatus, giftStatus, stickerData, senderId, replyTo, redPacketData, locationData, imageData } = message;
         
-        const systemRegex = /\[(.*?(?:邀请.*?加入了群聊|修改群名为：|已将.*?拉黑|已将.*?解除拉黑|领取了.*?的红包))\]/;
+        const systemRegex = /\[(.*?(?:邀请.*?加入了群聊|修改群名为：|已将.*?拉黑|已将.*?解除拉黑|领取了.*?的红包|视频通话结束.*?))\]/;
         const systemMatch = content.match(systemRegex);
         
-        const patPatRegex = /\[system:你拍了拍.*?\]/;
+        const patPatRegex = /\[pat-notification:(.*?)\]/;
         const patPatMatch = content.match(patPatRegex);
 
         const invisibleRegex = /\[.*?(?:接收|退回).*?的转账\]|\[.*?更新状态为：.*?\]|\[.*?已接收礼物\]/;
@@ -2659,9 +2722,10 @@ function handleMessageLongPress(event, messageWrapper) {
         const wrapper = document.createElement('div');
         wrapper.dataset.id = id;
 
-        if (systemMatch || (patPatMatch && role === 'system')) {
+        if (systemMatch || patPatMatch) {
             wrapper.className = 'message-wrapper system-notification';
-            let notificationText = content.slice(1, -1);
+            let notificationText = patPatMatch ? patPatMatch[1] : content.match(/\[(.*?)]/)[1];
+
             if (content.includes('拉黑')) notificationText = `您已将${chat.remarkName}拉黑`;
             else if (content.includes('解除拉黑')) notificationText = `您已将${chat.remarkName}解除拉黑`;
             else if (content.includes('领取了')) {
@@ -2669,8 +2733,6 @@ function handleMessageLongPress(event, messageWrapper) {
                 const senderNameMatch = content.match(/领取了(.*?)的红包/);
                 const senderName = senderNameMatch ? senderNameMatch[1] : '你';
                 notificationText = `${claimerName}领取了${senderName}的红包`;
-            } else if (patPatMatch) {
-                notificationText = content.substring(8, content.length - 1);
             }
             wrapper.innerHTML = `<div class="system-notification-bubble">${notificationText}</div>`;
             return wrapper;
@@ -3207,8 +3269,7 @@ function generatePrivateSystemPrompt(character) {
 - [${userProfile.name}发来的照片/视频：xxx]：我给你分享了一个描述为xxx的照片或视频。
 - [${userProfile.name}给你转账：xxx元；备注：xxx]：我给你转了一笔钱。
 - [${userProfile.name}送出的红包：xxx]：我发了一个红包，xxx是祝福语。
-- [${userProfile.name}分享的位置：xxx]：我给你分享了一个位置。
-- [system: xxx]：这是一条系统指令，用于设定场景或提供上下文，此条信息不应在对话中被直接提及，你只需理解其内容并应用到后续对话中。\n`;
+- [${userProfile.name}分享的位置：xxx]：我给你分享了一个位置。\n`;
     prompt += `5. ✨重要✨ 当我给你送礼物时，你必须通过发送一条指令来表示你已接收礼物。格式必须为：[${character.realName}已接收礼物]。这条指令消息本身不会显示给用户，但会触发礼物状态的变化。你可以在发送这条指令后，再附带一条普通的聊天消息来表达你的感谢和想法。\n`;
     prompt += `6. ✨重要✨ 当我给你转账时，你必须对此做出回应。你有两个选择，且必须严格遵循以下格式之一，这条指令消息本身不会显示给用户，但会触发转账状态的变化。你可以选择在发送这条指令后，再附带一条普通的聊天消息来表达你的想法。
     a) 接收转账: [${character.realName}接收${userProfile.name}的转账]
@@ -3314,6 +3375,7 @@ function generateGroupSystemPrompt(group) {
     prompt += `   - 我（用户）可能会发送如 \`[表情包]\`、\`[语音]\`、\`[红包]\` 等特殊消息，或发送 \`[xx邀请xx加入了群聊]\` 或 \`[xx修改群名为：xxx]\` 这样的系统通知，你需要理解这些消息的含义并让群成员做出相应反应。\n`;
     prompt += `   - **抢红包**: 如果我发了红包，想抢红包的角色需要发送一条格式为 \`[{成员真名}领取了${userProfile.name}的红包]\` 的指令。这条指令会触发抢红包成功的效果。\n`;
     prompt += `   - 角色们偶尔也会犯错，可以撤回自己刚刚发出的消息。操作方式是：发送一条格式为 \`[{成员真名}撤回了一条消息]\` 的指令。\n`;
+    prompt += `   - **视频通话**: 当我发起群视频时，你会收到一条 \`[系统指令：用户...发起了群组视频通话请求。]\` 的指令。你需要让每个AI成员独立决策，并通过发送 \`[{成员真名}接受视频通话]\` 或 \`[{成员真名}拒绝视频通话]\` 格式的消息来回应。\n`;
     prompt += `   - 保持对话的持续性，不要主动结束对话。\n\n`;
     prompt += `现在，请根据以上设定，开始扮演群聊中的所有角色。`;
     return prompt;
@@ -3364,7 +3426,7 @@ async function getAiReply(customPrompt = null, messages = null, isTest = false) 
             }
         } else if (chat) {
              systemPrompt = (currentChatType === 'private') ? generatePrivateSystemPrompt(chat) : generateGroupSystemPrompt(chat);
-             messagesToSend = chat.history.slice(-(chat.maxMemory || 10)).map(m => {
+             messagesToSend = chat.history.filter(m => !/^\[(系统指令|system):/i.test(m.content)).slice(-(chat.maxMemory || 10)).map(m => {
                 const messagePayload = { role: m.role, content: m.content };
                 if (m.imageData) {
                     messagePayload.imageData = m.imageData;
@@ -3463,13 +3525,13 @@ async function processStream(response, chat, apiType) { const reader = response.
             const locationMatch = msgContent.match(/\[(.*?)分享的位置：(.*)\]/);
 
              if (callInitiateMatch) {
-                handleAiInitiatedCall(chat);
+                handleAiInitiatedCall(chat, callInitiateMatch[1]);
                 continue; 
             } else if (callAcceptMatch) {
-                handleCallAccepted(chat);
+                handleCallAccepted(chat, callAcceptMatch[1]);
                 continue;
             } else if (callRejectMatch) {
-                handleCallRejected(chat);
+                handleCallRejected(chat, callRejectMatch[1]);
                 continue;
             } else if (retractionMatch && retractionMatch[1]) {
                 const retractingCharacterName = retractionMatch[1].trim();
@@ -4913,8 +4975,9 @@ function getContrastYIQ(hexcolor){
                             getEl('edit-memory-screen-title').textContent = '编辑全局记忆';
                         } else { 
                             const char = db.characters.find(c => c.id === memory.characterId);
+                            const group = db.groups.find(g => g.id === memory.groupId);
                             getEl('memory-topic-group').style.display = 'none';
-                            getEl('edit-memory-screen-title').textContent = `编辑 ${char ? char.remarkName : '角色'} 的记忆`;
+                            getEl('edit-memory-screen-title').textContent = `编辑 ${char ? char.remarkName : (group ? group.name : '群聊')} 的记忆`;
                         }
                         switchScreen('edit-memory-screen');
                     }
@@ -4964,7 +5027,7 @@ function getContrastYIQ(hexcolor){
                 action: () => {
                     let confirmMessage = memory.type === 'global' 
                         ? `确定要删除全局记忆“${memory.topic}”吗？`
-                        : `确定要删除这条角色记忆吗？`;
+                        : `确定要删除这条角色/群聊记忆吗？`;
                     if (confirm(confirmMessage)) {
                         db.memoryEntries = db.memoryEntries.filter(m => m.id !== memoryId);
                         saveData();
@@ -4990,7 +5053,7 @@ function getContrastYIQ(hexcolor){
                      action: () => {
                          let confirmMessage = memory.type === 'global' 
                              ? `确定要删除全局记忆“${memory.topic}”吗？`
-                             : `确定要删除这条角色记忆吗？`;
+                             : `确定要删除这条角色/群聊记忆吗？`;
                          if (confirm(confirmMessage)) {
                              db.memoryEntries = db.memoryEntries.filter(m => m.id !== memoryId);
                              saveData();
@@ -5038,7 +5101,12 @@ function getContrastYIQ(hexcolor){
                 const char = db.characters.find(c => c.id === mem.characterId);
                 topicDisplay = char ? char.remarkName : '未知角色';
                 iconHTML = `<img src="${char ? char.avatar : 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/k10U/1440X1440/Camera_XHS_17539526492361000g0082nu3tbm2k800g5nt289hgbmblr8ib1t8.jpg'}" class="chat-avatar" style="width: 50px; height: 50px;">`;
-            } else {
+            } else if (mem.type === 'group') {
+                const group = db.groups.find(g => g.id === mem.groupId);
+                topicDisplay = group ? group.name : '未知群聊';
+                iconHTML = `<img src="${group ? group.avatar : 'https://i.postimg.cc/fTLCngk1/image.jpg'}" class="chat-avatar group-avatar" style="width: 50px; height: 50px;">`;
+            }
+            else {
                 topicDisplay = mem.topic;
                 iconHTML = `<div class="chat-avatar" style="background-color: #eee; display: flex; align-items: center; justify-content: center; font-size: 24px;">🌐</div>`;
             }
@@ -5249,96 +5317,121 @@ ${momentContext}
 
     // --- NEW / REFACTORED: Call System ---
     function setupCallSystem() {
-        const plusMenuGrid = getEl('plus-menu-grid');
-        if (plusMenuGrid) {
-            plusMenuGrid.addEventListener('click', e => {
-                if (e.target.closest('#video-call-btn')) handleInitiateCall();
-            });
-        }
-        
         getEl('accept-call-btn').addEventListener('click', handleUserAcceptsCall);
         getEl('decline-call-btn').addEventListener('click', handleUserDeclinesCall);
         getEl('cancel-outgoing-call-btn').addEventListener('click', endVideoCall);
         getEl('hang-up-btn').addEventListener('click', endVideoCall);
-
-        getEl('user-speak-btn').addEventListener('click', () => {
-            getEl('call-input-form').reset();
-            getEl('call-input-modal').classList.add('visible');
-            getEl('call-input-textarea').focus();
-        });
         
-        getEl('call-input-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const text = getEl('call-input-textarea').value.trim();
+        const callInput = getEl('call-input-text');
+        const callSendBtn = getEl('call-input-send-btn');
+        
+        const sendCallInput = () => {
+            const text = callInput.value.trim();
             if (text) {
                 triggerAiInCallAction(text);
+                callInput.value = '';
             }
-            getEl('call-input-modal').classList.remove('visible');
-        });
+        };
 
-        // Make self-view draggable
+        callSendBtn.addEventListener('click', sendCallInput);
+        callInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') {
+                e.preventDefault();
+                sendCallInput();
+            }
+        });
+        
         const selfView = getEl('call-screen-self-view');
         let isDragging = false;
         let offsetX, offsetY;
 
-        selfView.addEventListener('mousedown', (e) => {
+        const startDrag = (e) => {
             isDragging = true;
-            offsetX = e.clientX - selfView.offsetLeft;
-            offsetY = e.clientY - selfView.offsetTop;
+            const event = e.touches ? e.touches[0] : e;
+            offsetX = event.clientX - selfView.offsetLeft;
+            offsetY = event.clientY - selfView.offsetTop;
             selfView.style.cursor = 'grabbing';
-        });
+            selfView.style.transition = 'none';
+        };
 
-        document.addEventListener('mousemove', (e) => {
+        const doDrag = (e) => {
             if (isDragging) {
                 e.preventDefault();
-                let newX = e.clientX - offsetX;
-                let newY = e.clientY - offsetY;
+                const event = e.touches ? e.touches[0] : e;
+                let newX = event.clientX - offsetX;
+                let newY = event.clientY - offsetY;
                 
                 const screenRect = getEl('phone-screen').getBoundingClientRect();
                 const viewRect = selfView.getBoundingClientRect();
 
-                // Constrain movement within the phone screen
-                newX = Math.max(0, Math.min(newX, screenRect.width - viewRect.width));
-                newY = Math.max(0, Math.min(newY, screenRect.height - viewRect.height));
+                newX = Math.max(10, Math.min(newX, screenRect.width - viewRect.width - 10));
+                newY = Math.max(10, Math.min(newY, screenRect.height - viewRect.height - 10));
 
                 selfView.style.left = `${newX}px`;
                 selfView.style.top = `${newY}px`;
             }
-        });
+        };
 
-        document.addEventListener('mouseup', () => {
+        const stopDrag = () => {
             isDragging = false;
             selfView.style.cursor = 'grab';
-        });
+            selfView.style.transition = '';
+        };
+
+        selfView.addEventListener('mousedown', startDrag);
+        document.addEventListener('mousemove', doDrag);
+        document.addEventListener('mouseup', stopDrag);
+        selfView.addEventListener('touchstart', startDrag, { passive: false });
+        document.addEventListener('touchmove', doDrag, { passive: false });
+        document.addEventListener('touchend', stopDrag);
     }
 
 
     function handleInitiateCall() {
         if (videoCallState.isActive || videoCallState.isAwaitingResponse) return;
-        const chat = db.characters.find(c => c.id === currentChatId);
+        const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
         if (!chat) return;
 
-        videoCallState = { ...videoCallState, isAwaitingResponse: true, initiator: 'user', activeChatId: currentChatId };
+        videoCallState = { ...videoCallState, isAwaitingResponse: true, initiator: 'user', activeChatId: currentChatId, isGroupCall: currentChatType === 'group', participants: [] };
+        
+        if(videoCallState.isGroupCall) {
+            getEl('outgoing-call-avatar').src = chat.avatar;
+            getEl('outgoing-call-name').textContent = chat.name;
+            getEl('outgoing-call-status').textContent = '正在呼叫群成员...';
+        } else {
+            getEl('outgoing-call-avatar').src = chat.avatar;
+            getEl('outgoing-call-name').textContent = chat.remarkName;
+            getEl('outgoing-call-status').textContent = '正在呼叫...';
+        }
 
-        getEl('outgoing-call-avatar').src = chat.avatar;
-        getEl('outgoing-call-name').textContent = chat.remarkName;
-        getEl('outgoing-call-status').textContent = '正在呼叫...';
         switchScreen('outgoing-call-screen');
         
+        // **FIX:** Force transition to call screen after 2 seconds
         setTimeout(() => {
-             if (videoCallState.isAwaitingResponse && videoCallState.initiator === 'user') {
+            if(videoCallState.isAwaitingResponse) { // If still waiting, force start
+                console.log("Call timeout reached, forcing call start.");
+                if(videoCallState.isGroupCall) {
+                    // For group calls, let's assume at least one person joins instantly for demo purposes
+                    videoCallState.participants = []; // Start with no one, they can join later via AI response
+                }
                 startVideoCall();
             }
         }, 2000);
+        
+        const requestMessage = { id: `msg_sys_${Date.now()}`, role: 'system', content: `[系统指令：用户发起了${videoCallState.isGroupCall ? '群组' : ''}视频通话请求。]`, timestamp: Date.now() };
+        chat.history.push(requestMessage);
+        saveData();
+        getAiReply(); // Still ask AI to respond, they might accept/reject in the chat later
     }
 
-    function handleAiInitiatedCall(chat) {
+    function handleAiInitiatedCall(chat, initiatorName = null) {
         if (videoCallState.isActive || videoCallState.isAwaitingResponse) return; 
 
-        videoCallState = { ...videoCallState, isAwaitingResponse: true, initiator: 'ai', activeChatId: chat.id };
+        videoCallState = { ...videoCallState, isAwaitingResponse: true, initiator: 'ai', activeChatId: chat.id, isGroupCall: currentChatType === 'group', participants: [] };
         
         getEl('incoming-call-avatar').src = chat.avatar;
-        getEl('incoming-call-name').textContent = chat.remarkName;
+        getEl('incoming-call-name').textContent = videoCallState.isGroupCall ? chat.name : chat.remarkName;
+        getEl('caller-text').textContent = videoCallState.isGroupCall ? `${initiatorName || '群成员'}邀请你加入视频通话` : '邀请你进行视频通话';
         getEl('incoming-call-modal').classList.add('visible');
     }
     
@@ -5350,52 +5443,98 @@ ${momentContext}
     }
 
     function handleUserDeclinesCall() {
-        const chat = db.characters.find(c => c.id === videoCallState.activeChatId);
+        const chat = (videoCallState.isGroupCall ? db.groups : db.characters).find(c => c.id === videoCallState.activeChatId);
         if (chat && videoCallState.initiator === 'ai') {
-            const userProfile = db.userProfiles.find(p => p.id === chat.userProfileId);
-            const declineMessage = { id: `msg_sys_${Date.now()}`, role: 'system', content: `[system:${userProfile.name}拒绝了你的通话请求]`, timestamp: Date.now() };
+            const userProfile = db.userProfiles.find(p => p.id === (videoCallState.isGroupCall ? chat.me.profileId : chat.userProfileId));
+            const declineMessage = { id: `msg_sys_${Date.now()}`, role: 'system', content: `[系统指令:${userProfile.name}拒绝了你的通话请求]`, timestamp: Date.now() };
             chat.history.push(declineMessage);
             saveData();
-            addMessageBubble(declineMessage);
             getAiReply(); 
         }
         getEl('incoming-call-modal').classList.remove('visible');
-        videoCallState = { isActive: false, isAwaitingResponse: false, activeChatId: null, initiator: null, callHistory: [] };
+        videoCallState = { isActive: false, isAwaitingResponse: false, isGroupCall: false, activeChatId: null, initiator: null, callHistory: [] };
+    }
+
+    function handleCallAccepted(chat, memberName) {
+        if (!videoCallState.isAwaitingResponse && !videoCallState.isActive) return;
+
+        if(videoCallState.isGroupCall) {
+            const member = chat.members.find(m => m.realName === memberName);
+            if(member && !videoCallState.participants.some(p => p.id === member.id)) {
+                videoCallState.participants.push(member);
+            }
+        }
+        if (!videoCallState.isActive) {
+            startVideoCall();
+        } else {
+            updateParticipantAvatars();
+        }
+    }
+
+    function handleCallRejected(chat, memberName) {
+        showToast(`${memberName} 拒绝了通话邀请。`);
     }
 
     function startVideoCall() {
-        const chat = db.characters.find(c => c.id === videoCallState.activeChatId);
+        const chat = (videoCallState.isGroupCall ? db.groups : db.characters).find(c => c.id === videoCallState.activeChatId);
         if (!chat) return;
-        const userProfile = db.userProfiles.find(p => p.id === chat.userProfileId);
+        const userProfile = db.userProfiles.find(p => p.id === (videoCallState.isGroupCall ? chat.me.profileId : chat.userProfileId));
 
         videoCallState.isActive = true;
         videoCallState.isAwaitingResponse = false;
         videoCallState.startTime = Date.now();
         videoCallState.callHistory = [];
         
-        // Setup realistic call UI
         getEl('call-screen-main-view').style.setProperty('--bg-image', `url(${chat.avatar})`);
-        getEl('main-participant-avatar').src = chat.avatar;
-        getEl('main-participant-name').textContent = chat.remarkName;
-        getEl('main-participant-status').textContent = '视频通话中...';
+        
         getEl('self-view-avatar').src = userProfile.avatar;
 
         getEl('call-transcript-area').innerHTML = '';
+        updateParticipantAvatars();
         switchScreen('call-screen');
 
         if (callTimerInterval) clearInterval(callTimerInterval);
         callTimerInterval = setInterval(updateCallTimer, 1000);
         updateCallTimer();
 
-        triggerAiInCallAction(); // Start the AI narrative
+        triggerAiInCallAction();
+    }
+
+    function updateParticipantAvatars() {
+        const grid = getEl('participant-avatars-grid');
+        const nameEl = getEl('main-participant-name');
+        const statusEl = getEl('main-participant-status');
+        grid.innerHTML = '';
+        
+        const chat = videoCallState.isGroupCall ? db.groups.find(g => g.id === videoCallState.activeChatId) : db.characters.find(c => c.id === videoCallState.activeChatId);
+        const userProfile = db.userProfiles.find(p => p.id === (videoCallState.isGroupCall ? chat.me.profileId : chat.userProfileId));
+
+
+        if (videoCallState.isGroupCall) {
+            nameEl.textContent = chat.name;
+            statusEl.textContent = `${videoCallState.participants.length + 1}人通话中`;
+            
+            const userParticipant = { id: 'user_me', avatar: userProfile.avatar, name: '我' };
+            const allParticipants = [userParticipant, ...videoCallState.participants];
+            
+            allParticipants.forEach(p => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'participant-avatar-wrapper';
+                wrapper.innerHTML = `<img src="${p.avatar}" class="participant-avatar" alt="${p.groupNickname || p.name}"><div class="participant-name">${p.groupNickname || p.name}</div>`;
+                grid.appendChild(wrapper);
+            });
+        } else {
+            grid.innerHTML = `<div class="participant-avatar-wrapper"><img src="${chat.avatar}" class="participant-avatar" alt="${chat.remarkName}"></div>`;
+            nameEl.textContent = chat.remarkName;
+            statusEl.textContent = '视频通话中...';
+        }
     }
 
     function endVideoCall() {
         if (!videoCallState.isActive && !videoCallState.isAwaitingResponse) return;
         
-        // If user cancels during "calling..." screen
         if(videoCallState.isAwaitingResponse) {
-             videoCallState = { isActive: false, isAwaitingResponse: false, activeChatId: null, initiator: null, callHistory:[] };
+             videoCallState = { isActive: false, isAwaitingResponse: false, isGroupCall: false, activeChatId: null, initiator: null, callHistory:[] };
              switchScreen('chat-room-screen');
              return;
         }
@@ -5404,33 +5543,49 @@ ${momentContext}
         const durationText = `${String(Math.floor(duration / 60)).padStart(2, '0')}:${String(duration % 60).padStart(2, '0')}`;
         const endCallText = `视频通话结束，时长 ${durationText}`;
 
-        const chat = db.characters.find(c => c.id === videoCallState.activeChatId);
+        const chat = (videoCallState.isGroupCall ? db.groups : db.characters).find(c => c.id === videoCallState.activeChatId);
         if (chat) {
             const endMessage = {
                 id: `msg_sys_${Date.now()}`,
                 role: 'system',
-                content: `[system:${endCallText}]`,
+                content: `[${endCallText}]`,
                 timestamp: Date.now(),
             };
             chat.history.push(endMessage);
             
-            const callTranscriptForAI = videoCallState.callHistory.map(h => `${h.role === 'user' ? '用户' : chat.realName}: ${h.content}`).join('\n');
+            const callTranscriptForMemory = videoCallState.callHistory.map(h => `${h.role === 'user' ? '我' : (h.senderName || '对方')}: ${h.content}`).join('\n');
+            if (callTranscriptForMemory) {
+                let memoryEntry = db.memoryEntries.find(m => (videoCallState.isGroupCall ? m.groupId : m.characterId) === chat.id);
+                const memoryContent = `\n--- [${new Date().toLocaleString()}] 视频通话记录 ---\n${callTranscriptForMemory}\n--- 通话记录结束 ---`;
+                if(memoryEntry) {
+                    memoryEntry.content += memoryContent;
+                } else {
+                     const newMemory = { id: `mem_${chat.id}`, content: memoryContent, timestamp: Date.now() };
+                     if(videoCallState.isGroupCall) {
+                         Object.assign(newMemory, { type: 'group', groupId: chat.id, topic: chat.name });
+                     } else {
+                         Object.assign(newMemory, { type: 'character', characterId: chat.id, topic: chat.remarkName });
+                     }
+                     db.memoryEntries.push(newMemory);
+                }
+            }
+            
             const hiddenReportInstruction = {
                 id: `msg_sys_${Date.now()+1}`,
                 role: 'system',
-                content: `[系统指令：视频通话刚刚结束。请你根据通话记录，以你的角色口吻，主动发消息总结通话或表达感受。]\n---通话记录---\n${callTranscriptForAI}\n---通话记录结束---`,
+                content: `[系统指令：视频通话刚刚结束。请你以你的角色口吻，主动发消息总结通话或表达感受。]`,
                 timestamp: Date.now() + 1,
             };
             chat.history.push(hiddenReportInstruction);
             saveData();
-            openChatRoom(chat.id, 'private'); // Re-open chat to show the end message
-            getAiReply(); // Trigger AI's summary
+            openChatRoom(chat.id, videoCallState.isGroupCall ? 'group' : 'private');
+            getAiReply(); 
         }
         
         clearInterval(callTimerInterval);
         callTimerInterval = null;
-        videoCallState = { isActive: false, isAwaitingResponse: false, activeChatId: null, initiator: null, callHistory: [] };
-        switchScreen('chat-room-screen');
+        videoCallState = { isActive: false, isAwaitingResponse: false, isGroupCall: false, activeChatId: null, initiator: null, callHistory: [] };
+        // We don't switch screen here, because openChatRoom already does it.
     }
 
     function updateCallTimer() {
@@ -5447,10 +5602,11 @@ ${momentContext}
     async function triggerAiInCallAction(userInput = null) {
         if (!videoCallState.isActive) return;
 
-        const chat = db.characters.find(c => c.id === videoCallState.activeChatId);
+        const chat = (videoCallState.isGroupCall ? db.groups : db.characters).find(c => c.id === videoCallState.activeChatId);
         const transcriptArea = getEl('call-transcript-area');
-        const userProfile = db.userProfiles.find(p => p.id === chat.userProfileId);
-
+        const userProfile = db.userProfiles.find(p => p.id === (videoCallState.isGroupCall ? chat.me.profileId : chat.userProfileId));
+        const statusEl = getEl('main-participant-status');
+        
         if (userInput) {
             const userBubble = document.createElement('div');
             userBubble.className = 'call-bubble user-input';
@@ -5458,40 +5614,67 @@ ${momentContext}
             transcriptArea.appendChild(userBubble);
             transcriptArea.scrollTop = transcriptArea.scrollHeight;
             videoCallState.callHistory.push({ role: 'user', content: userInput });
+            statusEl.textContent = '正在思考...'; // **FIX:** Change status on user input
         }
         
-        const callHistoryForPrompt = videoCallState.callHistory.map(h => `${h.role === 'user' ? userProfile.name : chat.realName}: ${h.content}`).join('\n');
+        const callHistoryForPrompt = videoCallState.callHistory.map(h => `${h.role === 'user' ? userProfile.name : (h.senderName || '角色')}: ${h.content}`).join('\n');
         
-        const inCallPrompt = `
-# 任务：视频通话旁白
-你是一个场景描述引擎。你正在扮演角色“${chat.realName}”（人设：${chat.persona}），并以【第三人称旁观视角】来描述TA在与“${userProfile.name}”（人设：${userProfile.persona}）视频通话中的所有动作、神态和语言。
+        let inCallPrompt;
+        if(videoCallState.isGroupCall) {
+            inCallPrompt = `
+# 任务：群组视频通话导演
+你是一个场景描述与对话生成引擎。你正在导演一场名为“${chat.name}”的群视频通话。
 # 核心规则
-1.  **视角铁律**: 绝不使用第一人称“我”。必须使用第三人称，如“他”、“她”、或直接用角色名“${chat.realName}”。
-2.  **内容核心**: 你的描述必须结合角色的性格、当前对话的上下文，以及视频通话这一特殊场景。可以描述TA的微表情、周围的环境、不经意的动作等。
+1. **身份**: 你需要扮演所有【除了用户（${userProfile.name}）以外】的AI成员。
+2. **格式**: 你的回复【必须】是JSON数组，每个对象代表一个角色的发言，格式为：\`{"name": "角色真名", "speech": "*他笑了笑* 大家好啊！"}\`。
+3. **角色扮演**: 严格遵守每个成员的人设。
+4. **内容限制**: 你的描述必须【直接回应】用户的最新发言，保持对话的互动性。描述应简洁，【总字数不超过200字】。严禁脱离用户输入进行独立的故事性描写。
+# 当前情景
+**参与者**: ${[userProfile.name, ...videoCallState.participants.map(p => p.realName)].join('、 ')}。
+**群成员设定**: \n${chat.members.map(m => `- ${m.realName} (昵称: ${m.groupNickname}): ${m.persona}`).join('\n')}
+**通话记录**:
+${callHistoryForPrompt}
+---
+现在，请根据通话记录和成员人设，继续这场群聊通话。`;
+
+        } else {
+            inCallPrompt = `
+# 任务：视频通话旁白
+你现在是一个场景描述引擎。你的任务是扮演 ${chat.realName} (${chat.persona})，并以【第三人称旁观视角】来描述TA在与“${userProfile.name}”（人设：${userProfile.persona}）视频通话中的所有动作、神态和语言。
+# 核心规则
+1.  **视角铁律**: 绝不使用第一人称“我”。必须使用第三人称，如“他”、“她”、或直接使用角色名“${chat.realName}”。
+2.  **内容限制**: 你的描述必须【直接回应】用户的最新发言，保持对话的互动性。描述应简洁，【总字数不超过200字】。严禁脱离用户输入进行独立的故事性描写。
 3.  **格式**: 直接输出描述性文本，不要加任何前缀或格式。
 # 通话记录
 ${callHistoryForPrompt}
 ---
 现在，请继续这场通话的旁白描述。`;
+        }
 
         const aiResponse = await getAiReply(inCallPrompt, []);
         
         if (aiResponse) {
-            const connectingMsg = transcriptArea.querySelector('em');
-            if(connectingMsg) connectingMsg.remove();
-
-            const aiBubble = document.createElement('div');
-            aiBubble.className = 'call-bubble ai-speech';
-            aiBubble.textContent = aiResponse;
-            transcriptArea.appendChild(aiBubble);
-            transcriptArea.scrollTop = transcriptArea.scrollHeight;
-            videoCallState.callHistory.push({ role: 'assistant', content: aiResponse });
-            
-            getEl('main-participant-status').textContent = '对方正在讲话...';
-            setTimeout(() => {
-                getEl('main-participant-status').textContent = '视频通话中...';
-            }, 2000);
+            if(videoCallState.isGroupCall) {
+                try {
+                    const speeches = JSON.parse(aiResponse);
+                    speeches.forEach(speech => {
+                        const aiBubble = document.createElement('div');
+                        aiBubble.className = 'call-bubble ai-speech';
+                        aiBubble.innerHTML = `<strong>${speech.name}:</strong> ${speech.speech}`;
+                        transcriptArea.appendChild(aiBubble);
+                        videoCallState.callHistory.push({ role: 'assistant', senderName: speech.name, content: speech.speech });
+                    });
+                } catch(e) { console.error("Failed to parse group call JSON response", e); }
+            } else {
+                const aiBubble = document.createElement('div');
+                aiBubble.className = 'call-bubble ai-speech';
+                aiBubble.textContent = aiResponse;
+                transcriptArea.appendChild(aiBubble);
+                transcriptArea.scrollTop = transcriptArea.scrollHeight;
+                videoCallState.callHistory.push({ role: 'assistant', senderName: chat.realName, content: aiResponse });
+            }
         }
+        statusEl.textContent = videoCallState.isGroupCall ? `${videoCallState.participants.length + 1}人通话中` : '视频通话中...';
         saveData();
     }
 
