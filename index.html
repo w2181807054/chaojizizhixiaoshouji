@@ -82,6 +82,7 @@
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         #edit-group-member-modal, #create-member-for-group-modal { z-index: 102; }
         #edit-contact-modal, #edit-profile-modal { z-index: 102; }
+        #heart-voice-modal .modal-window { line-height: 1.6; color: var(--text-color); }
         #edit-group-member-modal .avatar-preview, #create-member-for-group-modal .avatar-preview, #add-char-modal .avatar-preview, #edit-contact-modal .avatar-preview, #create-profile-modal .avatar-preview, #edit-profile-modal .avatar-preview { width: 80px; height: 80px; border-radius: 50%; }
         .context-menu {
             position: fixed;
@@ -152,6 +153,17 @@
             flex-direction: column;
             position: relative;
         }
+        .html-module-wrapper {
+            display: flex;
+            margin-bottom: 12px;
+            width: 100%;
+        }
+        .html-module-wrapper > .sent {
+            margin-left: auto;
+        }
+        .html-module-wrapper > .received {
+            margin-right: auto;
+        }
         .message-wrapper.sent { align-items: flex-end; }
         .message-wrapper.received { align-items: flex-start; }
         .message-wrapper.group-message { margin-bottom: 18px; }
@@ -176,16 +188,35 @@
         .message-bubble { max-width: 220px; margin: 0 8px; cursor: pointer; }
         .message-bubble .content { 
             padding: 10px 14px; 
-            border-radius: var(--border-radius); 
+            border-radius: 8px; 
             word-wrap: break-word; 
             line-height: 1.5; 
-            box-shadow: 0 4px 8px rgba(183, 132, 96, 0.1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
             font-family: var(--font-family);
+            position: relative;
         }
         .message-bubble.is-text-bubble .content {
              backdrop-filter: blur(5px); 
             -webkit-backdrop-filter: blur(5px); 
         }
+
+        .message-bubble.user.is-text-bubble .content::before, .message-bubble.ai.is-text-bubble .content::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            background-color: inherit;
+        }
+        .message-bubble.user.is-text-bubble .content::before {
+            right: -4px;
+            clip-path: polygon(0 50%, 100% 0, 100% 100%);
+        }
+        .message-bubble.ai.is-text-bubble .content::before {
+            left: -4px;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+        }
+
         .message-bubble .reply-quote-container {
             background-color: rgba(0,0,0,0.05);
             padding: 6px 10px;
@@ -205,16 +236,12 @@
             text-overflow: ellipsis;
         }
 
-        .message-bubble.user .content { border-radius: var(--border-radius) 8px var(--border-radius) var(--border-radius); }
-        .message-bubble.ai .content { border-radius: 8px var(--border-radius) var(--border-radius) var(--border-radius); }
         .blocked-indicator { width: 16px; height: 16px; background-color: #ef5350; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; margin: auto 6px; }
         .message-wrapper.sent .blocked-indicator { order: -1; }
         .message-wrapper.received .message-bubble-row { align-items: center; }
         .system-notification-bubble { background-color: rgba(200, 200, 200, 0.5); color: #666; font-size: 12px; padding: 4px 10px; border-radius: 10px; text-align: center; cursor: pointer; }
-        .image-bubble { max-width: 120px; border-radius: var(--border-radius); margin: 0 8px; padding: 4px; background-color: rgba(255, 255, 255, 0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
-        .image-bubble img { width: 100%; height: auto; display: block; border-radius: calc(var(--border-radius) - 4px); }
-        .message-wrapper.sent .image-bubble { border-radius: var(--border-radius) 8px var(--border-radius) var(--border-radius); }
-        .message-wrapper.received .image-bubble { border-radius: 8px var(--border-radius) var(--border-radius) var(--border-radius); }
+        .image-bubble { max-width: 120px; border-radius: 8px; margin: 0 8px; padding: 4px; background-color: rgba(255, 255, 255, 0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
+        .image-bubble img { width: 100%; height: auto; display: block; border-radius: 4px; }
         
         .voice-message-card {
             display: flex;
@@ -222,9 +249,8 @@
             gap: 4px;
             margin: 0 8px;
         }
-        .voice-bubble { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: var(--border-radius); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); cursor: pointer; transition: all 0.2s ease; min-width: 90px; max-width: 200px; }
-        .message-wrapper.sent .voice-bubble { border-radius: var(--border-radius) 8px var(--border-radius) var(--border-radius); flex-direction: row-reverse; }
-        .message-wrapper.received .voice-bubble { border-radius: 8px var(--border-radius) var(--border-radius) var(--border-radius); }
+        .voice-bubble { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 8px; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); cursor: pointer; transition: all 0.2s ease; min-width: 90px; max-width: 200px; }
+        .message-wrapper.sent .voice-bubble { flex-direction: row-reverse; }
         .voice-bubble .play-icon { width: 18px; height: 18px; flex-shrink: 0; }
         .voice-bubble .duration { font-size: 13px; margin: 0 8px; white-space: nowrap; }
         .message-wrapper.sent .play-icon { transform: scaleX(-1); }
@@ -252,9 +278,7 @@
         .message-wrapper.sent .voice-transcript::before { right: 15px; }
         .message-wrapper.received .voice-transcript::before { left: 15px; }
 
-        .pv-card { width: 230px; aspect-ratio: 1 / 1; background-color: #f0f0f0; border-radius: var(--border-radius); box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; position: relative; cursor: pointer; margin: 0 8px; }
-        .message-wrapper.sent .pv-card { border-radius: var(--border-radius) 8px var(--border-radius) var(--border-radius); }
-        .message-wrapper.received .pv-card { border-radius: 8px var(--border-radius) var(--border-radius) var(--border-radius); }
+        .pv-card { width: 230px; aspect-ratio: 1 / 1; background-color: #f0f0f0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; position: relative; cursor: pointer; margin: 0 8px; }
         .pv-card-image-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; transition: opacity 0.5s ease-in-out; z-index: 2; }
         .pv-card-image-overlay.hidden { opacity: 0; pointer-events: none; }
         .pv-card-content { padding: 15px; height: 100%; overflow-y: auto; color: var(--text-color); line-height: 1.6; font-size: 15px; background-color: white; position: relative; z-index: 1; }
@@ -402,13 +426,11 @@
             height: 100%;
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
-            border-radius: var(--border-radius);
+            border-radius: 8px;
             box-shadow: 4px 4px 0px #ddd;
             border: 2px solid #333;
             overflow: hidden;
         }
-        .message-wrapper.sent .gift-card-front, .message-wrapper.sent .gift-card-back { border-radius: var(--border-radius) 8px var(--border-radius) var(--border-radius); }
-        .message-wrapper.received .gift-card-front, .message-wrapper.received .gift-card-back { border-radius: 8px var(--border-radius) var(--border-radius) var(--border-radius); }
 
         .gift-card-front {
             background-color: #fff;
@@ -525,7 +547,7 @@
         .wallpaper-preview { width: 100%; aspect-ratio: 9 / 16; max-height: 400px; border-radius: var(--border-radius); margin-bottom: 15px; background-size: cover; background-position: center; border: 3px dashed var(--primary-color); display: flex; align-items: center; justify-content: center; color: var(--secondary-color); font-style: italic; background-color: var(--bg-color); }
         .toast { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.7); color: white; padding: 10px 20px; border-radius: 15px; font-size: 14px; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s; z-index: 1000; }
         .toast.show { opacity: 1; visibility: visible; }
-        #world-book-selection-modal, #invite-member-modal, #character-select-modal, #profile-select-modal, #theme-select-modal { z-index: 102; }
+        #world-book-selection-modal, #invite-member-modal, #character-select-modal, #profile-select-modal, #theme-select-modal, #heart-voice-modal { z-index: 102; }
         #batch-sticker-modal { z-index: 103; }
         .modal-window { width: 90%; max-width: 380px; }
         #world-book-selection-list, #invite-member-selection-list, #character-selection-list, #profile-selection-list { list-style: none; padding: 0; margin: 0; max-height: 40vh; overflow-y: auto; }
@@ -588,7 +610,8 @@
         .moment-item-main { display: flex; flex-direction: column; flex-grow: 1; gap: 8px; }
         .moment-item-name { font-weight: 600; color: var(--secondary-color); margin: 0; }
         .moment-item-content { margin: 0; line-height: 1.6; color: var(--text-color); word-break: break-word; }
-        .moment-item-image { width: auto; max-width: 200px; height: auto; border-radius: 10px; margin-top: 5px; cursor: pointer; }
+        .moment-item-image { width: auto; max-width: 200px; height: auto; border-radius: 10px; margin-top: 5px; cursor: pointer; object-fit: cover; max-height: 250px; }
+        .moment-item-audio { margin-top: 10px; }
         .moment-item-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
         .moment-item-time { font-size: 13px; color: #aaa; }
         .moment-item-actions { position: relative; }
@@ -786,6 +809,10 @@
 
         .call-header { 
             position: absolute; top: 0; left: 0; right: 0; padding-top: 20px; text-align: center; z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
         }
         #call-timer { font-size: 16px; letter-spacing: 1px; background-color: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 10px; display: inline-block;}
         
@@ -898,6 +925,12 @@
         <div id="receive-transfer-actionsheet" class="action-sheet-overlay"></div>
         <div id="moment-comment-modal" class="modal-overlay"></div>
         <div id="create-moment-modal" class="modal-overlay"></div>
+        <div id="heart-voice-modal" class="modal-overlay">
+            <div class="modal-window" id="heart-voice-content">
+                <h3>TA的心声</h3>
+                <p>正在读取...</p>
+            </div>
+        </div>
         <div id="pat-a-pat-modal" class="modal-overlay">
            <div class="modal-window">
                <h3 id="pat-a-pat-title"></h3>
@@ -975,6 +1008,7 @@ function lightenRgba(rgba, percent) {
 function injectHTML() {
     const pawIcon = `<svg viewBox="0 0 24 24" fill="currentColor" style="width:24px;height:24px;"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M15.5,12A1.5,1.5 0 0,1 14,13.5A1.5,1.5 0 0,1 12.5,12A1.5,1.5 0 0,1 14,10.5A1.5,1.5 0 0,1 15.5,12M10,13.5A1.5,1.5 0 0,1 8.5,12A1.5,1.5 0 0,1 10,10.5A1.5,1.5 0 0,1 11.5,12A1.5,1.5 0 0,1 10,13.5M10,9.5A1.5,1.5 0 0,1 8.5,8A1.5,1.5 0 0,1 10,6.5A1.5,1.5 0 0,1 11.5,8A1.5,1.5 0 0,1 10,9.5M15.5,8A1.5,1.5 0 0,1 14,9.5A1.5,1.5 0 0,1 12.5,8A1.5,1.5 0 0,1 14,6.5A1.5,1.5 0 0,1 15.5,8Z" /></svg>`;
     const settingsSVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14,12.94C19.07,12.45 19,11.96 19,11.5C19,11.04 19.07,10.55 19.14,10.06L21.17,8.42C21.45,8.18 21.5,7.77 21.26,7.49L19.5,4.51C19.26,4.23 18.84,4.18 18.57,4.32L16.36,5.22C15.9,4.84 15.38,4.54 14.8,4.34L14.4,2.1C14.34,1.68 13.96,1.38 13.53,1.38H10.47C10.04,1.38 9.66,1.68 9.6,2.1L9.2,4.34C8.62,4.54 8.1,4.84 7.64,5.22L5.43,4.32C5.16,4.18 4.74,4.23 4.5,4.51L2.74,7.49C2.5,7.77 2.55,8.18 2.83,8.42L4.86,10.06C4.93,10.55 5,11.04 5,11.5C5,11.96 4.93,12.45 4.86,12.94L2.83,14.58C2.55,14.82 2.5,15.23 2.74,15.51L4.5,18.49C4.74,18.77 5.16,18.82 5.43,18.68L7.64,17.78C8.1,18.16 8.62,18.46 9.2,18.66L9.6,20.9C9.66,21.32 10.04,21.62 10.47,21.62H13.53C13.96,21.62 14.34,21.32 14.4,20.9L14.8,18.66C15.38,18.46 15.9,18.16 16.36,17.78L18.57,18.68C18.84,18.82 19.26,18.77 19.5,18.49L21.26,15.51C21.5,15.23 21.45,14.82 21.17,14.58L19.14,12.94M12,14.5C10.62,14.5 9.5,13.38 9.5,12C9.5,10.62 10.62,9.5 12,9.5C13.38,9.5 14.5,10.62 14.5,12C14.5,13.38 13.38,14.5 12,14.5Z" /></svg>`;
+    const heartVoiceSVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" /></svg>`;
     const classicHangUpIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="white"><path d="M12 9c-1.6 0-3.15.25-4.62.72v3.1zM13.49 13.49c.07-.06.13-.11.19-.17l-1.3-1.3c-.56.43-1.2.74-1.88.9v2.67c.7-.24 1.34-.61 1.9-1.07.05-.04.1-.09.15-.13zM21 15.46l-5.27-.61-2.52 2.52c-2.83-1.44-5.15-3.75-6.59-6.59l2.53-2.53L8.54 3H3.03C2.45 13.18 10.82 21.55 21 20.97v-5.51z"/></svg>`;
     const sendArrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`;
 
@@ -1029,7 +1063,7 @@ function injectHTML() {
                 </div>
             </footer>
         `,
-        'chat-room-screen': `<header class="app-header" id="chat-room-header-default"><button class="back-btn" data-target="chat-list-screen">‹</button><div class="title-container"><h1 class="title" id="chat-room-title">...</h1><div class="subtitle" id="chat-room-subtitle"><div class="online-indicator"></div><span id="chat-room-status-text">在线</span></div></div><button class="action-btn" id="chat-settings-btn">${settingsSVG}</button></header><header class="app-header" id="chat-room-header-select" style="display: none;"><button class="action-btn" id="cancel-multi-select-btn">取消</button><div class="title-container"><h1 class="title" id="multi-select-title">选择消息</h1></div><div class="placeholder"></div></header><main class="content"><div class="message-area" id="message-area"></div><div class="typing-indicator" id="typing-indicator"></div></main><div class="chat-input-wrapper"><div id="reply-preview-bar" class="reply-preview-bar"></div><div class="message-input-area" id="message-input-default"><button id="plus-menu-btn" class="icon-btn"><svg viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" /></svg></button><input type="text" id="message-input" placeholder="输入消息..."><button id="sticker-toggle-btn" class="icon-btn"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg></button><button id="send-or-reply-btn" class="icon-btn send-btn"></button></div><div class="message-input-area" id="message-edit-bar" style="display: none;"><input type="text" id="message-edit-input"><button id="save-edit-btn" class="icon-btn send-btn">✓</button><button id="cancel-edit-btn" class="icon-btn" style="background-color: #aaa;">✗</button></div><div id="chat-plus-menu" class="chat-plus-menu"><div class="plus-menu-grid"></div></div></div><div id="multi-select-bar"><span id="select-count">已选择 0 项</span><button class="btn btn-danger" id="delete-selected-btn" style="width: auto; padding: 8px 16px;">删除已选</button></div><div id="sticker-modal"><div class="header"><span>我的表情</span><div><button class="btn btn-secondary btn-small" id="batch-add-sticker-btn" style="margin-right: 8px;">批量导入</button><button class="btn btn-primary btn-small" id="add-new-sticker-btn">添加新表情</button></div></div><div class="sticker-grid" id="sticker-grid-container"></div></div>`,
+        'chat-room-screen': `<header class="app-header" id="chat-room-header-default"><button class="back-btn" data-target="chat-list-screen">‹</button><div class="title-container"><h1 class="title" id="chat-room-title">...</h1><div class="subtitle" id="chat-room-subtitle"><div class="online-indicator"></div><span id="chat-room-status-text">在线</span></div></div><div class="action-btn-group"><button class="action-btn" id="show-heart-voice-btn" style="display:none;">${heartVoiceSVG}</button><button class="action-btn" id="chat-settings-btn">${settingsSVG}</button></div></header><header class="app-header" id="chat-room-header-select" style="display: none;"><button class="action-btn" id="cancel-multi-select-btn">取消</button><div class="title-container"><h1 class="title" id="multi-select-title">选择消息</h1></div><div class="placeholder"></div></header><main class="content"><div class="message-area" id="message-area"></div><div class="typing-indicator" id="typing-indicator"></div></main><div class="chat-input-wrapper"><div id="reply-preview-bar" class="reply-preview-bar"></div><div class="message-input-area" id="message-input-default"><button id="plus-menu-btn" class="icon-btn"><svg viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" /></svg></button><input type="text" id="message-input" placeholder="输入消息..."><button id="sticker-toggle-btn" class="icon-btn"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg></button><button id="send-or-reply-btn" class="icon-btn send-btn"></button></div><div class="message-input-area" id="message-edit-bar" style="display: none;"><input type="text" id="message-edit-input"><button id="save-edit-btn" class="icon-btn send-btn">✓</button><button id="cancel-edit-btn" class="icon-btn" style="background-color: #aaa;">✗</button></div><div id="chat-plus-menu" class="chat-plus-menu"><div class="plus-menu-grid"></div></div></div><div id="multi-select-bar"><span id="select-count">已选择 0 项</span><button class="btn btn-danger" id="delete-selected-btn" style="width: auto; padding: 8px 16px;">删除已选</button></div><div id="sticker-modal"><div class="header"><span>我的表情</span><div><button class="btn btn-secondary btn-small" id="batch-add-sticker-btn" style="margin-right: 8px;">批量导入</button><button class="btn btn-primary btn-small" id="add-new-sticker-btn">添加新表情</button></div></div><div class="sticker-grid" id="sticker-grid-container"></div></div>`,
         'world-book-screen': `<header class="app-header"><button class="back-btn" data-target="home-screen">‹</button><div class="title-container"><h1 class="title">爪印书</h1></div><button class="action-btn" id="add-world-book-btn">${pawIcon}</button></header><main class="content"><ul class="list-container" id="world-book-list-container"></ul><div class="placeholder-text" id="no-world-books-placeholder" style="display: none;"><p>你的世界一片混沌...</p><p>点击右上角的爪印创造第一个设定吧！</p></div></main>`,
         'edit-world-book-screen': `<header class="app-header"><button class="back-btn" data-target="world-book-screen">‹</button><div class="title-container"><h1 class="title" id="edit-world-book-title">创建/编辑条目</h1></div><div class="placeholder"></div></header><main class="content"><form id="edit-world-book-form"><input type="hidden" id="world-book-id"><div class="form-group"><label for="world-book-name">条目名称</label><input type="text" id="world-book-name" placeholder="例如：世界观背景、魔法体系" required></div><div class="form-group"><label for="world-book-content">条目内容</label><textarea id="world-book-content" rows="8" placeholder="详细描述此项设定..." required></textarea></div><div class="form-group"><label>注入位置</label><div class="form-group radio-group"><label><input type="radio" name="world-book-position" value="before" checked> 前</label><label><input type="radio" name="world-book-position" value="after"> 后</label></div></div><button type="submit" class="btn btn-primary">保存条目</button></form></main>`,
         'moments-settings-screen': `<header class="app-header"><button class="back-btn" data-target="chat-list-screen">‹</button><div class="title-container"><h1 class="title">朋友圈设置</h1></div><div class="placeholder"></div></header><main class="content"><div class="form-group"><label>我的朋友圈头像</label><div class="avatar-setting" style="justify-content: center;"><img src="" alt="我的头像" id="moments-my-avatar-preview" class="avatar-preview" style="width:80px;height:80px;border-radius:12px;"><input type="file" id="moments-avatar-upload" accept="image/*" style="display:none;"><label for="moments-avatar-upload" class="btn btn-secondary" style="flex-grow:1; margin-left:15px; margin-bottom:0;">更换头像</label></div></div><hr><div class="form-group"><label>朋友圈封面</label><div class="wallpaper-preview" id="moments-bg-preview" style="height:150px; margin-bottom:10px;"></div><input type="file" id="moments-bg-upload" accept="image/*" style="display:none;"><label for="moments-bg-upload" class="btn btn-primary">更换封面</label></div><hr><form id="moments-settings-form"><div class="form-group"><label>AI自动发布动态</label><div class="form-group radio-group"><label><input type="radio" name="moments-enabled" value="true"> 开启</label><label><input type="radio" name="moments-enabled" value="false"> 关闭</label></div></div><div class="form-group"><label for="moments-frequency">发布频率</label><select id="moments-frequency" name="frequency"><option value="high">高 (1-2小时/条)</option><option value="medium">中 (4-8小时/条)</option><option value="low">低 (12-24小时/条)</option></select></div><button type="submit" class="btn btn-primary">保存设置</button></form><hr style="border:none; border-top:1px solid #eee; margin: 20px 0;"><button type="button" class="btn btn-danger" id="clear-moments-btn">清空所有动态</button></main>`,
@@ -1083,7 +1117,7 @@ function injectHTML() {
         'send-location-modal': `<div class="modal-window"><h3>发送定位</h3><form id="send-location-form"><div class="form-group"><label for="location-name-input">地点名称</label><input type="text" id="location-name-input" placeholder="如：汪汪咖啡馆" required></div><div class="form-group"><label for="location-address-input">详细地址 (选填)</label><input type="text" id="location-address-input" placeholder="如：萌爪路123号"></div><button type="submit" class="btn btn-primary">发送</button></form></div>`,
         'receive-transfer-actionsheet': `<div class="action-sheet"><button class="action-sheet-button" id="accept-transfer-btn">接收</button><button class="action-sheet-button danger" id="return-transfer-btn">退回</button></div>`,
         'moment-comment-modal': `<div class="modal-window"><h3>发表评论</h3><form id="moment-comment-form"><input type="hidden" id="moment-comment-moment-id"><input type="hidden" id="moment-comment-reply-id"><input type="hidden" id="moment-comment-reply-name"><div class="form-group"><textarea id="moment-comment-input" placeholder="发布一条友善的评论吧" required></textarea></div><button type="submit" class="btn btn-primary">发布</button></form></div>`,
-        'create-moment-modal': `<div class="modal-window"><h3>发布动态</h3><form id="create-moment-form"><div class="form-group"><textarea id="create-moment-text" placeholder="分享新鲜事..." required rows="5"></textarea></div><input type="file" id="create-moment-image-upload" accept="image/*" style="display:none;"><label for="create-moment-image-upload" class="btn btn-secondary">选择图片 (可选)</label><img id="create-moment-image-preview" src="" alt="Image Preview"><button type="submit" class="btn btn-primary">发布</button></form></div>`,
+        'create-moment-modal': `<div class="modal-window"><h3>发布动态</h3><form id="create-moment-form"><div class="form-group"><textarea id="create-moment-text" placeholder="分享新鲜事..." required rows="5"></textarea></div><input type="file" id="create-moment-image-upload" accept="image/*" style="display:none;"><label for="create-moment-image-upload" class="btn btn-secondary">选择图片 (可选)</label><img id="create-moment-image-preview" src="" alt="Image Preview" style="display:none; max-width:100%; border-radius:10px; margin-top:10px;"><button type="submit" class="btn btn-primary">发布</button></form></div>`,
         'chat-settings-sidebar': `<div class="header">聊天设置</div><div class="content"><form id="chat-settings-form">
             <div class="form-group"><label>伙伴信息</label><div id="setting-char-profile" class="profile-selector"></div></div>
             <div class="form-group"><label>我的信息</label><div id="setting-my-profile" class="profile-selector"></div></div>
@@ -1210,6 +1244,7 @@ function injectHTML() {
 
 // --- Global Variables and Constants ---
 const colorThemesV2 = {
+    'wechat_green': { name: '微信绿', sent: { bg: '#A9EA7A', text: '#000000' }, received: { bg: '#FFFFFF', text: '#000000' } },
     'default': { name: '默认', sent: { bg: 'rgba(255,204,204,0.9)', text: '#A56767' }, received: { bg: 'rgba(255,255,255,0.9)', text: '#6D6D6D' } },
     'green_tea': { name: '抹茶', sent: { bg: '#C1E1C1', text: '#3A5F0B' }, received: { bg: '#F0F8FF', text: '#4682B4' } },
     'lavender': { name: '薰衣草', sent: { bg: '#E6E6FA', text: '#483D8B' }, received: { bg: '#FFF0F5', text: '#C71585' } },
@@ -1244,6 +1279,8 @@ let isNextClickForReply = false;
 let notificationTimeout = null;
 let isExtractingMemory = false;
 let callTimerInterval = null;
+let longPressJustFired = false;
+
 
 let videoCallState = {
     isActive: false,
@@ -1317,7 +1354,7 @@ const loadData = () => {
     db.momentsSettings = { ...defaultDb.momentsSettings, ...db.momentsSettings };
     db.memorySettings = { ...defaultDb.memorySettings, ...db.memorySettings };
     
-    const defaultTheme = 'default';
+    const defaultTheme = 'wechat_green';
     db.characters.forEach(c => {
         const defaultProactive = { enabled: false, frequency: 'medium' };
         const defaultAutoMemory = { enabled: false, frequency: 15, lastExtractionCount: 0 };
@@ -1447,6 +1484,12 @@ const init = () => {
             if (!isClickInsideAllowedModal) {
                  openSidebar.classList.remove('open');
             }
+        }
+        
+        // Fix for request 8: check for long press before handling click
+        if (longPressJustFired) {
+            longPressJustFired = false;
+            return;
         }
 
         const navLink = e.target.closest('.app-icon');
@@ -1676,6 +1719,11 @@ function setupQQApp() {
     });
 
     getEl('chat-list-container').addEventListener('click', (e) => {
+        if (longPressJustFired) {
+            longPressJustFired = false;
+            return;
+        }
+        clearTimeout(longPressTimer);
         const chatItem = e.target.closest('.chat-item');
         if (chatItem) {
             currentChatId = chatItem.dataset.id;
@@ -1692,10 +1740,33 @@ function setupQQApp() {
         }
     });
     const chatListContainer = getEl('chat-list-container');
-    chatListContainer.addEventListener('contextmenu', (e) => { e.preventDefault(); const chatItem = e.target.closest('.chat-item'); if (chatItem) handleChatListLongPress(chatItem.dataset.id, chatItem.dataset.type, e.clientX, e.clientY); });
-    chatListContainer.addEventListener('touchstart', (e) => { const chatItem = e.target.closest('.chat-item'); if (!chatItem) return; longPressTimer = setTimeout(() => { const touch = e.touches[0]; handleChatListLongPress(chatItem.dataset.id, chatItem.dataset.type, touch.clientX, touch.clientY); }, 400); });
-    chatListContainer.addEventListener('touchend', () => clearTimeout(longPressTimer));
-    chatListContainer.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+    const handleChatListLongPressStart = (e) => {
+        const chatItem = e.target.closest('.chat-item');
+        if (!chatItem) return;
+        longPressJustFired = false;
+        longPressTimer = setTimeout(() => {
+            longPressJustFired = true;
+            const clientX = e.clientX || e.touches[0].clientX;
+            const clientY = e.clientY || e.touches[0].clientY;
+            if (!getEl('chat-room-screen').classList.contains('active')) {
+                 handleChatListLongPress(chatItem.dataset.id, chatItem.dataset.type, clientX, clientY);
+            }
+        }, 500);
+    };
+    
+    const cancelChatListLongPress = () => clearTimeout(longPressTimer);
+    
+    chatListContainer.addEventListener('contextmenu', (e) => { 
+        e.preventDefault(); 
+        const chatItem = e.target.closest('.chat-item'); 
+        if(chatItem) handleChatListLongPress(chatItem.dataset.id, chatItem.dataset.type, e.clientX, e.clientY);
+    });
+    chatListContainer.addEventListener('mousedown', handleChatListLongPressStart);
+    chatListContainer.addEventListener('touchstart', handleChatListLongPressStart);
+    chatListContainer.addEventListener('mouseup', cancelChatListLongPress);
+    chatListContainer.addEventListener('mouseleave', cancelChatListLongPress);
+    chatListContainer.addEventListener('touchend', cancelChatListLongPress);
+    chatListContainer.addEventListener('touchmove', cancelChatListLongPress);
 
     getEl('add-item-btn').addEventListener('click', () => {
         const activePanelId = getEl('chat-list-screen').querySelector('.qq-tab-panel.active').id;
@@ -1737,6 +1808,7 @@ function updateHeaderActions(activePanelId) {
     
 function handleChatListLongPress(chatId, chatType, x, y) {
     clearTimeout(longPressTimer);
+    if (!getEl('chat-list-screen').classList.contains('active') || getEl('chat-room-screen').classList.contains('active')) return;
     const chat = (chatType === 'private') ? db.characters.find(c => c.id === chatId) : db.groups.find(g => g.id === chatId);
     if (!chat) return;
     const itemName = chatType === 'private' ? chat.remarkName : chat.name;
@@ -1765,7 +1837,7 @@ function renderChatList() {
     sortedChats.forEach(chat => {
         let lastMessageText = '开始聊天吧...';
         if (chat.history?.length > 0) {
-            const lastMsg = chat.history.filter(msg => !/拉黑|解除拉黑|邀请.*?加入了群聊|修改群名为|接收|退回|更新状态为|已接收礼物|领取了.*的红包/.test(msg.content) && !/^\[(system|系统指令):/i.test(msg.content)).pop();
+            const lastMsg = chat.history.filter(msg => !/拉黑|解除拉黑|邀请.*?加入了群聊|修改群名为|接收|退回|更新状态为|已接收礼物|领取了.*的红包/.test(msg.content) && !/^\[(system|系统指令):/i.test(msg.content) && !msg.isHtmlModule).pop();
             if (lastMsg) {
                 if(lastMsg.isRetracted) {
                     lastMessageText = lastMsg.role === 'user' ? '你撤回了一条消息' : `${lastMsg.senderName || '对方'}撤回了一条消息`;
@@ -1816,7 +1888,7 @@ function renderChatList() {
             remarkName: getEl('char-remark-name').value, 
             persona: getEl('add-char-persona').value, 
             avatar: getEl('add-char-avatar-preview').src, 
-            baseTheme: 'default',
+            baseTheme: 'wechat_green',
             customBubbleCss: '',
             fontSize: 15, 
             maxMemory: 10, 
@@ -1826,8 +1898,8 @@ function renderChatList() {
             status: '在线', 
             worldBookIds: [], 
             isBlocked: false, 
-            proactiveChat: { enabled: false, frequency: 'medium' }, 
-            autoMemory: { enabled: false, frequency: 15, lastExtractionCount: 0 }, 
+            proactiveChat: { enabled: true, frequency: 'medium' }, 
+            autoMemory: { enabled: true, frequency: 15, lastExtractionCount: 0 }, 
             unreadCount: 0,
             userProfileId: 'profile_default_user' 
         };
@@ -1843,6 +1915,10 @@ function renderChatList() {
 function setupContactsScreen() {
     const container = getEl('contacts-list-container');
     container.addEventListener('click', e => {
+        if (longPressJustFired) {
+            longPressJustFired = false;
+            return;
+        }
         const item = e.target.closest('.list-item');
         if (!item) return;
 
@@ -1930,14 +2006,22 @@ function setupContactsScreen() {
         }];
         createContextMenu(menuItems, e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY);
     };
+    
+    const handleLongPressStart = (e) => {
+        longPressJustFired = false;
+        longPressTimer = setTimeout(() => {
+            longPressJustFired = true;
+            handleLongPress(e);
+        }, 500);
+    };
 
     contactsContainer.addEventListener('contextmenu', handleLongPress);
-    contactsContainer.addEventListener('touchstart', (e) => {
-        clearTimeout(longPressTimer);
-        longPressTimer = setTimeout(() => handleLongPress(e), 500);
-    });
+    contactsContainer.addEventListener('touchstart', handleLongPressStart);
+    contactsContainer.addEventListener('mousedown', handleLongPressStart);
     contactsContainer.addEventListener('touchend', () => clearTimeout(longPressTimer));
     contactsContainer.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+    contactsContainer.addEventListener('mouseup', () => clearTimeout(longPressTimer));
+    contactsContainer.addEventListener('mouseleave', () => clearTimeout(longPressTimer));
 }
 
 
@@ -2124,6 +2208,9 @@ function setupChatRoom() {
         if (e.target.classList.contains('cancel-reply-btn')) {
             cancelReply();
         }
+        if (e.target.closest('#show-heart-voice-btn')) {
+            getEl('heart-voice-modal').classList.add('visible');
+        }
     });
     
     getEl('plus-menu-btn').addEventListener('click', () => {
@@ -2132,6 +2219,11 @@ function setupChatRoom() {
 
     const messageArea = getEl('message-area');
     messageArea.addEventListener('click', (e) => {
+        if (longPressJustFired) {
+            longPressJustFired = false;
+            return;
+        }
+
         if (e.target.id === 'load-more-btn') { loadMoreMessages(); return; }
         const wrapper = e.target.closest('.message-wrapper');
         if (!wrapper) return;
@@ -2195,10 +2287,25 @@ function setupChatRoom() {
         }
     });
 
+    const handleMessageLongPressStart = (e) => {
+        const wrapper = e.target.closest('.message-wrapper'); 
+        if (!wrapper) return;
+        longPressJustFired = false;
+        longPressTimer = setTimeout(() => {
+            longPressJustFired = true;
+            handleMessageLongPress(e, wrapper);
+        }, 500);
+    };
+
+    const cancelMessageLongPress = () => clearTimeout(longPressTimer);
+
     messageArea.addEventListener('contextmenu', (e) => { e.preventDefault(); if (isInMultiSelectMode) return; const wrapper = e.target.closest('.message-wrapper'); if (wrapper) handleMessageLongPress(e, wrapper); });
-    messageArea.addEventListener('touchstart', (e) => { const wrapper = e.target.closest('.message-wrapper'); if (!wrapper) return; longPressTimer = setTimeout(() => { handleMessageLongPress(e, wrapper); }, 400); });
-    messageArea.addEventListener('touchend', () => clearTimeout(longPressTimer));
-    messageArea.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+    messageArea.addEventListener('touchstart', handleMessageLongPressStart);
+    messageArea.addEventListener('mousedown', handleMessageLongPressStart);
+    messageArea.addEventListener('touchend', cancelMessageLongPress);
+    messageArea.addEventListener('touchmove', cancelMessageLongPress);
+    messageArea.addEventListener('mouseup', cancelMessageLongPress);
+    messageArea.addEventListener('mouseleave', cancelMessageLongPress);
 
     getEl('save-edit-btn').addEventListener('click', saveMessageEdit);
     getEl('cancel-edit-btn').addEventListener('click', cancelMessageEdit);
@@ -2354,8 +2461,10 @@ function toggleStickerModal(forceState) {
         });
     }
 
+    
+
     function handleMessageLongPress(event, messageWrapper) {
-        const validTargets = '.message-bubble, .image-bubble, .voice-bubble, .pv-card, .transfer-card, .red-packet-card, .location-card, .gift-card-flipper';
+        const validTargets = '.message-bubble, .image-bubble, .voice-bubble, .pv-card, .transfer-card, .red-packet-card, .location-card, .gift-card-flipper, [class*="html-module-wrapper"]';
         if (!event.target.closest(validTargets)) {
             return;
         }
@@ -2367,7 +2476,7 @@ function toggleStickerModal(forceState) {
         const message = chat.history.find(m => m.id === messageId);
         if (!message || message.isRetracted) return;
 
-        const isInvisibleMessage = /\[.*?(?:接收|退回|更新状态为|已接收礼物|邀请.*?加入了群聊|修改群名为|拉黑|解除拉黑|领取了.*的红包)\]/.test(message.content);
+        const isInvisibleMessage = /\[.*?(?:接收|退回|更新状态为|已接收礼物|邀请.*?加入了群聊|修改群名为|拉黑|解除拉黑|领取了.*的红包)\]/.test(message.content) || message.isHtmlModule;
         if (isInvisibleMessage) return;
 
         let menuItems = [];
@@ -2577,11 +2686,14 @@ function toggleStickerModal(forceState) {
         getEl('chat-room-title').textContent = (type === 'private') ? chat.remarkName : chat.name;
         
         const subtitle = getEl('chat-room-subtitle');
+        const heartVoiceBtn = getEl('show-heart-voice-btn');
         if (type === 'private') {
             subtitle.style.display = 'flex';
             getEl('chat-room-status-text').textContent = chat.status || '在线';
+            heartVoiceBtn.style.display = 'flex';
         } else {
             subtitle.style.display = 'none'; 
+            heartVoiceBtn.style.display = 'none';
         }
 
         const defaultChatBg = 'https://i.postimg.cc/sgLhthHy/IMG-20250804-223920.jpg';
@@ -2611,8 +2723,8 @@ function toggleStickerModal(forceState) {
         if (chat.baseTheme === 'custom' && chat.customTheme) {
             theme = chat.customTheme;
         } else {
-            const themeKey = chat.baseTheme || 'default';
-            theme = colorThemesV2[themeKey] || colorThemesV2['default'];
+            const themeKey = chat.baseTheme || 'wechat_green';
+            theme = colorThemesV2[themeKey] || colorThemesV2['wechat_green'];
         }
         
         let themeCss = `
@@ -2625,8 +2737,9 @@ function toggleStickerModal(forceState) {
                 background-color: ${lightenRgba(theme.sent.bg, 20)};
                 color: ${theme.sent.text};
             }
-            #chat-room-screen .message-wrapper.sent .voice-transcript::before {
-                background-color: ${lightenRgba(theme.sent.bg, 20)};
+            #chat-room-screen .message-wrapper.sent .voice-transcript::before,
+            #chat-room-screen .message-bubble.user.is-text-bubble .content::before {
+                background-color: ${theme.sent.bg};
             }
 
             #chat-room-screen .message-bubble.ai.is-text-bubble .content,
@@ -2634,13 +2747,17 @@ function toggleStickerModal(forceState) {
             #chat-room-screen .message-wrapper.received .voice-bubble {
                 background-color: ${theme.received.bg};
                 color: ${theme.received.text};
+                border: 1px solid #E5E5E5;
             }
             #chat-room-screen .message-wrapper.received .voice-transcript {
                 background-color: ${lightenRgba(theme.received.bg, 20)};
                 color: ${theme.received.text};
             }
-            #chat-room-screen .message-wrapper.received .voice-transcript::before {
-                background-color: ${lightenRgba(theme.received.bg, 20)};
+            #chat-room-screen .message-wrapper.received .voice-transcript::before,
+             #chat-room-screen .message-bubble.ai.is-text-bubble .content::before {
+                background-color: ${theme.received.bg};
+                border-right: 1px solid #E5E5E5;
+                border-bottom: 1px solid #E5E5E5;
             }
         `;
         
@@ -2691,9 +2808,19 @@ function toggleStickerModal(forceState) {
    
    
     function createMessageBubbleElement(message) {
-        // New rule: Hide all system instructions
         if (/^\[(系统指令|system):/i.test(message.content)) {
             return null;
+        }
+        
+        if(message.isHtmlModule) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'html-module-wrapper';
+            wrapper.dataset.id = message.id;
+            const contentDiv = document.createElement('div');
+            contentDiv.className = message.role === 'user' ? 'sent' : 'received';
+            contentDiv.innerHTML = message.content;
+            wrapper.appendChild(contentDiv);
+            return wrapper;
         }
 
         if (message.isRetracted) {
@@ -3292,7 +3419,9 @@ function generatePrivateSystemPrompt(character) {
     
     prompt += `14. ✨新增功能：视频通话✨ 你可以主动向我发起视频通话。要发起通话，请发送指令：[${character.realName}发起视频通话]。当收到我的通话请求时，你的回复【必须且只能】是以下两种格式之一：[${character.realName}接受视频通话] 或 [${character.realName}拒绝视频通话]。\n`;
 
-    prompt += `15. 你的输出格式必须严格遵循以下几种之一，可以组合使用：
+    prompt += `15. ✨新增功能：角色心声✨ 在你发送聊天回复的同时，你必须在内部生成一段“心声”，这是角色的内心独白，不会被我直接看到，但可以通过特定按钮查看。心声必须严格符合你的人设和当前情境，揭示你未说出口的真实想法、情绪或动机。心声的格式必须是：<heart_voice>你的内心独白，不超过250字</heart_voice>。这段心声必须与你的聊天回复内容分开，并放在所有消息的最后。\n`;
+
+    prompt += `16. 你的输出格式必须严格遵循以下几种之一，可以组合使用：
 - 普通消息: [${character.realName}的消息：{消息内容}]
 - 被拉黑后的消息(仅当你被拉黑时使用): [${character.realName}被拉黑后的消息：{消息内容}]
 - 送我的礼物: [${character.realName}送来的礼物：{礼物描述}]
@@ -3305,10 +3434,9 @@ function generatePrivateSystemPrompt(character) {
 - 对我礼物的回应(此条不显示): [${character.realName}已接收礼物]
 - 对我转账的回应(此条不显示): [${character.realName}接收${userProfile.name}的转账] 或 [${character.realName}退回${userProfile.name}的转账]
 - 对我红包的回应(此条不显示): [${character.realName}领取了${userProfile.name}的红包]
-- 更新状态(此条不显示): [${character.realName}更新状态为：{新状态}]
-`;
-    prompt += `16. 你的每次回复可以生成3到8条消息。这些消息应以普通文本消息为主，可以偶尔、选择性地穿插一条特殊消息（如礼物、语音、图片、表情包等），特殊消息的位置应随机。大部分回复应该只包含文本消息。\n`;
-    prompt += `17. 不要主动结束对话，除非我明确提出。保持你的人设，自然地进行对话。`;
+- 更新状态(此条不显示): [${character.realName}更新状态为：{新状态}]\n`;
+    prompt += `17. 你的每次回复可以生成3到8条消息。这些消息应以普通文本消息为主，可以偶尔、选择性地穿插一条特殊消息（如礼物、语音、图片、表情包等），特殊消息的位置应随机。大部分回复应该只包含文本消息。\n`;
+    prompt += `18. 不要主动结束对话，除非我明确提出。保持你的人设，自然地进行对话。`;
     
     return prompt;
 }
@@ -3512,6 +3640,32 @@ async function processStream(response, chat, apiType) { const reader = response.
     if (fullResponse) {
         const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
         if (!chat) return;
+        
+        const heartVoiceMatch = fullResponse.match(/<heart_voice>([\s\S]+?)<\/heart_voice>/);
+        if (heartVoiceMatch && heartVoiceMatch[1]) {
+            const heartVoiceContent = heartVoiceMatch[1].trim();
+            getEl('heart-voice-content').innerHTML = `<h3>TA的心声</h3><p>${heartVoiceContent}</p>`;
+            fullResponse = fullResponse.replace(heartVoiceMatch[0], '').trim();
+        }
+
+        const orangeModuleMatch = fullResponse.match(/<orange char=".*?">([\s\S]+?)<\/orange>/);
+        if(orangeModuleMatch && orangeModuleMatch[1]) {
+            const htmlContent = orangeModuleMatch[1].trim();
+             const htmlMessage = { 
+                id: `msg_html_${Date.now()}`, 
+                role: 'assistant', 
+                content: htmlContent, 
+                timestamp: Date.now(),
+                isHtmlModule: true
+            };
+            if(currentChatType === 'group') {
+                // In group chat, need to figure out sender. Let's assume the prompt handles this.
+                // For now, let's just add it. A more robust solution might be needed.
+            }
+            chat.history.push(htmlMessage);
+            addMessageBubble(htmlMessage);
+            fullResponse = fullResponse.replace(orangeModuleMatch[0], '').trim();
+        }
 
         const allMessages = fullResponse.match(/\[.*?\]/g) || [];
         
@@ -4270,7 +4424,7 @@ function getContrastYIQ(hexcolor){
                     isAdmin: false 
                 }; 
             }), 
-            baseTheme: 'default', 
+            baseTheme: 'wechat_green', 
             fontSize: 15, 
             maxMemory: 10, 
             chatBg: '', 
@@ -4279,7 +4433,7 @@ function getContrastYIQ(hexcolor){
             unreadCount: 0, 
             customBubbleCss: '', 
             worldBookIds: [],
-            proactiveChat: { enabled: false, frequency: 'medium' }
+            proactiveChat: { enabled: true, frequency: 'medium' }
         }; 
         db.groups.push(newGroup); 
         saveData(); 
@@ -4485,23 +4639,47 @@ function getContrastYIQ(hexcolor){
         feedContainer.addEventListener('touchmove', () => clearTimeout(longPressTimer));
     }
     
-    function automaticPostScheduler() {
+    async function automaticPostScheduler() {
         const { enabled, frequency, lastPostTime } = db.momentsSettings;
         if (!enabled || db.characters.length === 0) return;
         const now = Date.now();
         const oneHour = 3600000;
         
-        const freqMap = { 'high': [1, 2], 'medium': [4, 8], 'low': [12, 24] };
+        const freqMap = { 'high': [0.5, 1.5], 'medium': [2, 5], 'low': [6, 12] };
         const [minHours, maxHours] = freqMap[frequency] || freqMap['medium'];
         
         const randomInterval = (Math.random() * (maxHours - minHours) + minHours) * oneHour;
         
         if (now - (lastPostTime || 0) > randomInterval) {
-            createAutomaticPost();
+            await createAutomaticPost();
         }
     }
 
-    function generateMomentPostPrompt(character) { return `你正在扮演角色“${character.realName}”，现在请你发布一条朋友圈动态。\n你的设定是：${character.persona || '一个友好的人'}。\n你的动态应该符合你的角色设定，可以是对日常生活的记录、一个想法、一张照片的描述等等。\n请只输出动态的文案，直接输出文字，不要包含任何其他说明或像“[${character.realName}发布动态：]”这样的前缀。`; }
+    function generateMomentPostPrompt(character) {
+        return `你正在扮演角色“${character.realName}”，现在请你发布一条朋友圈动态。
+你的设定是：${character.persona || '一个友好的人'}。
+你的动态应该符合你的角色设定，可以是对日常生活的记录、一个想法、一张照片的描述等等。
+
+你的任务是生成动态的文案，并决定是否需要配图或配乐。
+请严格按照以下JSON格式之一进行回复，不要包含任何其他说明或Markdown代码块：
+
+1.  只有文字：
+    {"text": "你的动态文案内容。"}
+
+2.  文字和图片（AI生成）：
+    {"text": "你的动态文案内容。", "image_prompt": "用于生成图片的英文关键词,用%20分隔"}
+
+3.  文字和音乐（提供链接）：
+    {"text": "你的动态文案内容。", "music_url": "https://freesound.org/path/to/sound.mp3"}
+
+示例:
+{"text": "今天天气真好，出门散步。", "image_prompt": "sunny%20day%20park%20path"}
+{"text": "有点emo..."}
+{"text": "听到了这首宝藏歌曲，分享给你们！", "music_url": "https://www.myinstants.com/media/sounds/tmpa9k3yt2u.mp3"}
+
+现在，请生成你的朋友圈动态。`;
+    }
+    
     function generateMomentReactionPrompt(reactor, momentToReact, replyingToComment = null) {
         const postAuthor = db.characters.find(c => c.id === momentToReact.characterId) || { remarkName: '我', id: 'user_me' };
         let prompt = `你正在扮演角色“${reactor.realName}”，你的设定是：${reactor.persona || '一个友好的人'}。\n你正在看“${postAuthor.remarkName}”的朋友圈动态。\n\n--- 动态内容 ---\n${postAuthor.remarkName}: ${momentToReact.content}\n`;
@@ -4529,26 +4707,39 @@ function getContrastYIQ(hexcolor){
     async function createAutomaticPost() {
         if (db.characters.length === 0) return;
         const character = db.characters[Math.floor(Math.random() * db.characters.length)];
-        const postContent = await getAiReply(generateMomentPostPrompt(character));
-        if (postContent && postContent.trim().length > 0 && !postContent.includes("无法生成")) {
-            const newMoment = { id: `moment_${Date.now()}`, characterId: character.id, content: postContent.trim(), imageUrl: null, timestamp: Date.now(), likes: [], comments: [] };
-            db.moments.unshift(newMoment);
-            db.momentsSettings.lastPostTime = Date.now();
-            saveData();
-            if(getEl('moments-screen-panel').classList.contains('active')) {
-                renderMomentsFeed();
-            } else {
-                showTopNotification({
-                    avatar: character.avatar,
-                    title: `${character.remarkName} 发布了新动态`,
-                    preview: postContent.trim(),
-                    target: 'chat-list-screen',
-                    targetTab: 'moments-screen-panel'
-                });
+        const rawResponse = await getAiReply(generateMomentPostPrompt(character));
+        
+        try {
+            const postData = JSON.parse(rawResponse);
+            if (postData && postData.text) {
+                 const newMoment = { 
+                    id: `moment_${Date.now()}`, 
+                    characterId: character.id, 
+                    content: postData.text.trim(), 
+                    imageUrl: postData.image_prompt ? `https://image.pollinations.ai/prompt/${postData.image_prompt}` : null, 
+                    musicUrl: postData.music_url || null,
+                    timestamp: Date.now(), 
+                    likes: [], 
+                    comments: [] 
+                };
+                db.moments.unshift(newMoment);
+                db.momentsSettings.lastPostTime = Date.now();
+                saveData();
+                if(getEl('moments-screen-panel').classList.contains('active')) {
+                    renderMomentsFeed();
+                } else {
+                    showTopNotification({
+                        avatar: character.avatar,
+                        title: `${character.remarkName} 发布了新动态`,
+                        preview: postData.text.trim(),
+                        target: 'chat-list-screen',
+                        targetTab: 'moments-screen-panel'
+                    });
+                }
+                setTimeout(() => triggerAiReactions(newMoment.id), Math.random() * 5000 + 3000);
             }
-            setTimeout(() => triggerAiReactions(newMoment.id), 2000);
-        } else {
-            console.log(`自动为 ${character.remarkName} 创建朋友圈失败，AI返回内容为空或无效。`);
+        } catch (e) {
+            console.error(`为 ${character.remarkName} 创建朋友圈失败，AI返回内容无效或格式错误:`, rawResponse, e);
         }
     }
     
@@ -4686,6 +4877,7 @@ function getContrastYIQ(hexcolor){
         li.dataset.momentId = moment.id;
 
         const deleteButtonHTML = `<button data-action="delete"><svg viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"></path></svg> 删除</button>`;
+        const audioPlayerHTML = moment.musicUrl ? `<audio controls src="${moment.musicUrl}" class="moment-item-audio"></audio>` : '';
 
         li.innerHTML = `
             <img src="${author.avatar}" alt="${author.remarkName}" class="moment-item-avatar">
@@ -4693,6 +4885,7 @@ function getContrastYIQ(hexcolor){
                 <p class="moment-item-name">${author.remarkName}</p>
                 <p class="moment-item-content">${moment.content}</p>
                 ${moment.imageUrl ? `<img src="${moment.imageUrl}" class="moment-item-image">` : ''}
+                ${audioPlayerHTML}
                 <div class="moment-item-footer">
                     <span class="moment-item-time">${formatTimeAgo(moment.timestamp)}</span>
                     <div class="moment-item-actions">
@@ -5188,9 +5381,9 @@ function getContrastYIQ(hexcolor){
             const timeSinceLastMessage = lastMessage ? (now - lastMessage.timestamp) : Infinity;
 
             const frequencyMap = {
-                high: { min: 1, max: 4 },
-                medium: { min: 4, max: 8 },
-                low: { min: 12, max: 24 }
+                high: { min: 0.5, max: 1.5 },
+                medium: { min: 2, max: 5 },
+                low: { min: 6, max: 12 }
             };
 
             const setting = frequencyMap[chat.proactiveChat.frequency] || frequencyMap.medium;
@@ -5406,13 +5599,11 @@ ${momentContext}
 
         switchScreen('outgoing-call-screen');
         
-        // **FIX:** Force transition to call screen after 2 seconds
         setTimeout(() => {
-            if(videoCallState.isAwaitingResponse) { // If still waiting, force start
+            if(videoCallState.isAwaitingResponse) {
                 console.log("Call timeout reached, forcing call start.");
                 if(videoCallState.isGroupCall) {
-                    // For group calls, let's assume at least one person joins instantly for demo purposes
-                    videoCallState.participants = []; // Start with no one, they can join later via AI response
+                    videoCallState.participants = []; 
                 }
                 startVideoCall();
             }
@@ -5421,7 +5612,7 @@ ${momentContext}
         const requestMessage = { id: `msg_sys_${Date.now()}`, role: 'system', content: `[系统指令：用户发起了${videoCallState.isGroupCall ? '群组' : ''}视频通话请求。]`, timestamp: Date.now() };
         chat.history.push(requestMessage);
         saveData();
-        getAiReply(); // Still ask AI to respond, they might accept/reject in the chat later
+        getAiReply(); 
     }
 
     function handleAiInitiatedCall(chat, initiatorName = null) {
@@ -5585,7 +5776,6 @@ ${momentContext}
         clearInterval(callTimerInterval);
         callTimerInterval = null;
         videoCallState = { isActive: false, isAwaitingResponse: false, isGroupCall: false, activeChatId: null, initiator: null, callHistory: [] };
-        // We don't switch screen here, because openChatRoom already does it.
     }
 
     function updateCallTimer() {
@@ -5614,7 +5804,7 @@ ${momentContext}
             transcriptArea.appendChild(userBubble);
             transcriptArea.scrollTop = transcriptArea.scrollHeight;
             videoCallState.callHistory.push({ role: 'user', content: userInput });
-            statusEl.textContent = '正在思考...'; // **FIX:** Change status on user input
+            statusEl.textContent = '正在思考...'; 
         }
         
         const callHistoryForPrompt = videoCallState.callHistory.map(h => `${h.role === 'user' ? userProfile.name : (h.senderName || '角色')}: ${h.content}`).join('\n');
