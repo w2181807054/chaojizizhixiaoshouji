@@ -16,28 +16,27 @@
         }
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: var(--font-family); margin: 0; padding: 0; background: linear-gradient(135deg, #FFEBCD, #D2B48C); display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .phone-screen { width: 100%; max-width: 420px; height: 100vh; max-height: 850px; background-color: var(--white-color); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); border-radius: var(--phone-corner-radius); overflow: hidden; position: relative; display: flex; flex-direction: column; }
+        .phone-screen { width: 100%; max-width: 420px; height: calc(var(--vh, 1vh) * 100); max-height: 850px; background-color: var(--white-color); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); border-radius: var(--phone-corner-radius); overflow: hidden; position: relative; display: flex; flex-direction: column; }
         
-        /* --- 核心修复：屏幕布局 --- */
         .screen {
             display: flex;
             flex-direction: column;
             width: 100%;
             height: 100%;
-            position: absolute; /* 使用绝对定位，防止互相影响 */
+            position: absolute;
             top: 0;
             left: 0;
-            opacity: 0; /* 默认透明 */
-            visibility: hidden; /* 默认不可见 */
-            transform: scale(0.95); /* 初始缩放状态 */
-            transition: opacity 0.4s ease, visibility 0.4s, transform 0.4s ease; /* 过渡动画 */
-            z-index: 1; /* 默认在底层 */
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.95);
+            transition: opacity 0.4s ease, visibility 0.4s, transform 0.4s ease;
+            z-index: 1;
         }
         .screen.active {
-            opacity: 1; /* 激活时完全可见 */
+            opacity: 1;
             visibility: visible;
-            transform: scale(1); /* 恢复正常大小 */
-            z-index: 2; /* 提到顶层显示 */
+            transform: scale(1);
+            z-index: 2;
         }
 
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: rgba(253, 251, 246, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid #eee; flex-shrink: 0; position: relative; z-index: 10; }
@@ -193,13 +192,16 @@
             box-shadow: 0 1px 2px rgba(0,0,0,0.08);
             font-family: var(--font-family);
             position: relative;
-            word-wrap: break-word; /* Legacy */
-            overflow-wrap: break-word; /* Standard */
-            word-break: break-word; /* Fix for long strings/links */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .message-bubble.is-text-bubble .content {
              backdrop-filter: blur(5px); 
             -webkit-backdrop-filter: blur(5px); 
+        }
+
+        .message-bubble.user.is-text-bubble .content {
+            word-break: break-all;
         }
 
         .message-bubble.user.is-text-bubble .content::before, .message-bubble.ai.is-text-bubble .content::before {
@@ -740,7 +742,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding-top: 85px; /* Adjusted */
+            padding-top: 85px;
             text-align: center;
             z-index: 3;
         }
@@ -754,7 +756,6 @@
             filter: blur(20px) brightness(0.5);
             transform: scale(1.1);
         }
-        /* New: Participant Grid */
         #participant-avatars-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -881,7 +882,6 @@
             cursor: pointer;
         }
 
-        /* --- NEW STYLES --- */
         .home-signature {
             font-family: 'Comic Sans MS', 'Chalkduster', 'Handwriting', cursive;
             font-size: 16px;
@@ -906,6 +906,245 @@
             margin-bottom: 0;
         }
 
+        /* Music Player Styles */
+        #music-screen .content {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        #music-player-ui {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+        #album-art {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border: 8px solid white;
+            cursor: pointer;
+        }
+        #album-art.playing {
+            animation: spin 8s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        #song-info {
+            text-align: center;
+        }
+        #song-info .title {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--text-color);
+            margin: 0;
+        }
+        #song-info .artist {
+            font-size: 16px;
+            color: #888;
+            margin-top: 5px;
+        }
+        #music-progress-container {
+            width: 100%;
+            max-width: 300px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #888;
+        }
+        #progress-bar {
+            flex-grow: 1;
+            height: 4px;
+            background-color: #ddd;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        #progress {
+            height: 100%;
+            width: 0;
+            background-color: var(--secondary-color);
+            border-radius: 2px;
+        }
+        #music-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+        .control-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+        .control-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+        }
+        #play-pause-btn svg {
+            width: 48px;
+            height: 48px;
+        }
+        #playlist-manage-screen .list-item {
+            justify-content: space-between;
+        }
+        .delete-song-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #ff3b30;
+            font-size: 24px;
+            padding: 5px;
+        }
+        .drag-handle {
+            cursor: grab;
+            color: #ccc;
+            margin-right: 15px;
+        }
+        .list-item.dragging {
+            opacity: 0.5;
+            background: #f0f0f0;
+        }
+
+        /* Dynamic Island Styles */
+        #dynamic-island {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            background-color: rgba(20, 20, 20, 0.9);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            max-width: 95%;
+            overflow: hidden;
+        }
+        .island-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 100%;
+        }
+        .island-collapsed {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            width: 200px;
+            height: 42px;
+        }
+        #island-album-art-collapsed {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        #island-song-title-collapsed {
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+        }
+        #island-play-icon-collapsed {
+            font-size: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .island-expanded {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            width: 280px; /* 修改: 缩小尺寸 */
+            max-height: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: max-height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, visibility 0.3s;
+        }
+        #dynamic-island.expanded .island-expanded {
+            max-height: 200px;
+            opacity: 1;
+            visibility: visible;
+        }
+        #dynamic-island.expanded .island-collapsed {
+            display: none;
+        }
+        .island-expanded-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        #island-album-art-expanded {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        #island-song-details-expanded {
+            overflow: hidden;
+        }
+        #island-song-title-expanded {
+            font-size: 16px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        #island-song-artist-expanded {
+            font-size: 13px;
+            color: #ccc;
+        }
+        #island-progress-bar {
+            width: 100%;
+            height: 3px;
+            background-color: #555;
+            border-radius: 1.5px;
+            margin-bottom: 10px;
+        }
+        #island-progress {
+            width: 0;
+            height: 100%;
+            background-color: white;
+            border-radius: 1.5px;
+        }
+        #island-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #island-controls button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        #island-controls svg {
+            width: 24px;
+            height: 24px;
+        }
+        #island-play-pause-btn svg {
+            width: 32px;
+            height: 32px;
+        }
     </style>
 </head>
 <body>
@@ -918,6 +1157,35 @@
                 <div id="top-notification-preview"></div>
             </div>
         </div>
+
+        <div id="dynamic-island" style="display: none;">
+            <div class="island-content">
+                <div class="island-collapsed">
+                    <img id="island-album-art-collapsed" src="">
+                    <span id="island-song-title-collapsed"></span>
+                    <div id="island-play-icon-collapsed">▶</div>
+                </div>
+                <div class="island-expanded">
+                    <div class="island-expanded-info">
+                        <img id="island-album-art-expanded" src="">
+                        <div id="island-song-details-expanded">
+                            <div id="island-song-title-expanded"></div>
+                            <div id="island-song-artist-expanded"></div>
+                        </div>
+                    </div>
+                    <div id="island-progress-bar"><div id="island-progress"></div></div>
+                    <div id="island-controls">
+                        <button id="island-prev-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" /></svg></button>
+                        <button id="island-play-pause-btn">
+                            <svg class="play" viewBox="0 0 24 24" fill="currentColor"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
+                            <svg class="pause" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M14,19H18V5H14M6,19H10V5H6V19Z" /></svg>
+                        </button>
+                        <button id="island-next-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" /></svg></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="home-screen" class="screen active"></div>
         <div id="chat-list-screen" class="screen"></div>
         <div id="chat-room-screen" class="screen"></div>
@@ -931,6 +1199,7 @@
         <div id="edit-memory-screen" class="screen"></div>
         <div id="memory-core-settings-screen" class="screen"></div>
         <div id="music-screen" class="screen"></div>
+        <div id="playlist-manage-screen" class="screen"></div>
         
         <!-- Call Screens -->
         <div id="outgoing-call-screen" class="screen"></div>
@@ -955,6 +1224,14 @@
         <div id="moment-comment-modal" class="modal-overlay"></div>
         <div id="create-moment-modal" class="modal-overlay"></div>
         <div id="share-music-modal" class="modal-overlay"></div>
+
+        <div id="add-music-modal" class="action-sheet-overlay">
+            <div class="action-sheet">
+                <button class="action-sheet-button" id="add-music-from-url-btn">通过 URL 添加</button>
+                <label for="add-music-file" class="action-sheet-button" style="text-align: center; margin-bottom: 0;">从本地文件添加</label>
+            </div>
+        </div>
+        
         <div id="heart-voice-modal" class="modal-overlay">
             <div class="modal-window" id="heart-voice-content">
                 <h3>TA的心声</h3>
@@ -984,8 +1261,17 @@
         <div id="invite-member-modal" class="modal-overlay"></div>
         <div id="create-member-for-group-modal" class="modal-overlay"></div>
         <style id="dynamic-chat-style"></style>
+        
+        <audio id="audio-player" style="display:none;"></audio>
     </div>
 <script>
+const setVhVariable = () => {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+};
+window.addEventListener('resize', setVhVariable);
+setVhVariable();
+
 document.addEventListener('DOMContentLoaded', () => {
 
 // Utility Functions
@@ -1025,6 +1311,7 @@ function adjustColor(hex, percent) {
         return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
     }
 function lightenRgba(rgba, percent) {
+    if (!rgba || !rgba.match) return 'rgba(255,255,255,0.8)';
     const values = rgba.match(/[\d.]+/g).map(Number);
     if (values.length < 3) return rgba;
     const r = Math.min(255, values[0] + (255 - values[0]) * (percent / 100));
@@ -1100,7 +1387,6 @@ function injectHTML() {
         'api-settings-screen': `<header class="app-header"><button class="back-btn" data-target="home-screen">‹</button><div class="title-container"><h1 class="title">API 设置</h1></div><div class="placeholder"></div></header>
             <main class="content">
                 <form id="api-form">
-                    <!-- API Profile Manager -->
                     <div class="form-group">
                         <label for="api-profile-manager">API 配置管理器</label>
                         <div style="display: flex; gap: 10px; align-items: center;">
@@ -1111,7 +1397,6 @@ function injectHTML() {
 
                     <hr style="border:none; border-top:1px solid #eee; margin: 20px 0;">
 
-                    <!-- API Details Form -->
                     <div class="form-group">
                         <label for="api-profile-name">配置名称</label>
                         <input type="text" id="api-profile-name" placeholder="例如：我的小狗API" required>
@@ -1141,7 +1426,6 @@ function injectHTML() {
                     <button type="submit" class="btn btn-primary" id="save-api-btn"><span class="btn-text">保存并设为当前配置</span><div class="spinner"></div></button>
                 </form>
 
-                <!-- Data Import/Export Section -->
                 <div class="beautify-section">
                     <h3 style="text-align:center; color: var(--secondary-color);">备份与恢复</h3>
                     <p style="font-size: 12px; color: #888; text-align: center;">导出全部数据（包括角色、聊天记录、设置等）进行备份，或在新设备上导入。</p>
@@ -1190,6 +1474,17 @@ function injectHTML() {
         <div class="beautify-section">
             <h3 style="text-align:center; color: var(--secondary-color);">主屏幕图标自定义</h3>
             <div id="customize-icons-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 20px;"></div>
+        </div>
+        <div class="beautify-section">
+            <h3 style="text-align:center; color: var(--secondary-color);">音乐播放器</h3>
+            <div class="form-group">
+                <label for="album-art-upload" class="btn btn-secondary" style="margin-bottom: 15px; width:100%;">更换唱片封面</label>
+                <input type="file" id="album-art-upload" accept="image/*" style="display: none;">
+            </div>
+            <div class="form-group">
+                <label for="music-bg-upload" class="btn btn-secondary" style="width:100%;">更换播放器背景</label>
+                <input type="file" id="music-bg-upload" accept="image/*" style="display: none;">
+            </div>
         </div>
     </main>`,
         'memory-core-screen': `<header class="app-header"><button class="back-btn" data-target="home-screen">‹</button><div class="title-container"><h1 class="title">记忆核心</h1></div><div class="action-btn-group"><button class="action-btn" id="add-memory-btn">${pawIcon}</button><button class="action-btn" id="memory-settings-btn">${settingsSVG}</button></div></header><main class="content"><ul class="list-container" id="memory-core-list-container"></ul><div class="placeholder-text" id="no-memories-placeholder" style="display: none;"><p>AI还没有任何记忆...</p><p>在聊天设置中为角色提取记忆，或点击右上角的爪印添加全局记忆吧！</p></div></main>`,
@@ -1310,7 +1605,7 @@ function injectHTML() {
             </div>`,
         'call-screen': `
             <div id="call-screen-main-view">
-                <div id="participant-avatars-grid"></div> <!-- New Grid for Avatars -->
+                <div id="participant-avatars-grid"></div>
                 <div id="main-participant-name"></div>
                 <div id="main-participant-status"></div>
             </div>
@@ -1333,17 +1628,44 @@ function injectHTML() {
                 <button class="back-btn" data-target="home-screen">‹</button>
                 <div class="title-container"><h1 class="title">汪汪音乐</h1></div>
                 <div class="action-btn-group">
-                     <label for="add-music-file" class="action-btn" style="font-size: 28px;">+</label>
+                     <button id="manage-playlist-btn" class="action-btn" style="font-size: 22px; padding: 0; width: 40px; height: 40px;">☰</button>
+                     <label id="add-music-btn-action" class="action-btn" style="font-size: 28px; padding: 0; width: 40px; height: 40px; cursor: pointer;">+</label>
                      <input type="file" id="add-music-file" accept="audio/*" style="display:none;">
                 </div>
             </header>
-            <main class="content" id="music-content" style="padding:0;">
-                <div id="music-player" style="padding: 15px; background: var(--bg-color); text-align: center; border-bottom: 1px solid #eee;">
-                    <p id="current-song-title" style="font-weight: bold; margin: 0 0 10px;">选择一首歌播放</p>
-                    <audio id="audio-player" controls style="width: 100%;"></audio>
+            <main class="content">
+                <div id="music-player-ui" style="display:none;">
+                    <img src="https://i.postimg.cc/7Z06F59G/IMG-20250828-151340.jpg" id="album-art" alt="Album Art">
+                    <div id="song-info">
+                        <p class="title" id="player-song-title">选择一首歌</p>
+                        <p class="artist" id="player-song-artist">开始播放吧</p>
+                    </div>
+                    <div id="music-progress-container">
+                        <span id="current-time">0:00</span>
+                        <div id="progress-bar"><div id="progress"></div></div>
+                        <span id="duration">0:00</span>
+                    </div>
+                    <div id="music-controls">
+                        <button class="control-btn" id="prev-btn"><svg viewBox="0 0 24 24"><path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" /></svg></button>
+                        <button class="control-btn" id="play-pause-btn">
+                            <svg id="play-icon" viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
+                            <svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M14,19H18V5H14M6,19H10V5H6V19Z" /></svg>
+                        </button>
+                        <button class="control-btn" id="next-btn"><svg viewBox="0 0 24 24"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" /></svg></button>
+                    </div>
                 </div>
-                <ul id="playlist" class="list-container" style="padding: 0;"></ul>
-                <div class="placeholder-text" id="no-music-placeholder"><p>你的播放列表是空的~</p><p>点击右上角的“+”添加音乐文件吧！</p></div>
+                <div class="placeholder-text" id="no-music-placeholder" style="display: block;"><p>你的播放列表是空的~</p><p>点击右上角的“+”添加音乐文件吧！</p></div>
+            </main>
+        `,
+        'playlist-manage-screen':`
+            <header class="app-header">
+                <button class="back-btn" data-target="music-screen">‹</button>
+                <div class="title-container"><h1 class="title">管理歌单</h1></div>
+                <div class="placeholder"></div>
+            </header>
+            <main class="content" style="padding: 0;">
+                <ul id="playlist-manage-list" class="list-container"></ul>
+                <div class="placeholder-text" id="no-playlist-placeholder"><p>这里空空如也~</p></div>
             </main>
         `,
     };
@@ -1392,7 +1714,8 @@ let notificationTimeout = null;
 let isExtractingMemory = false;
 let callTimerInterval = null;
 let longPressJustFired = false;
-
+let currentPlayingSongIndex = -1;
+let islandHideTimeout = null; // 新增: 灵动岛自动隐藏计时器
 
 let videoCallState = {
     isActive: false,
@@ -1416,7 +1739,12 @@ const getEl = (id) => {
     return domCache[id];
 };
 
-const saveData = () => localStorage.setItem('gemini-chat-app-db', JSON.stringify(db));
+const saveData = () => {
+    const dbToSave = { ...db };
+    const playlistToSave = db.musicPlaylist.filter(song => !song.isLocal);
+    dbToSave.musicPlaylist = playlistToSave;
+    localStorage.setItem('gemini-chat-app-db', JSON.stringify(dbToSave));
+};
 const loadData = () => {
     const data = localStorage.getItem('gemini-chat-app-db');
     const defaultDb = {
@@ -1446,11 +1774,15 @@ const loadData = () => {
             injectionPrompt: `以下是 {{char}} 与{{user}}的记忆与事件的要求：\n\n# 记忆整合：无缝化人格\n记忆是 {{char}} 人格的基石，而非一个外部数据库。当引用记忆时，必须如同是 {{char}} 自身的真实回忆，自然、无缝地融入对话，而不是像在查询资料。\n\n【禁止机械引用】：绝对避免“根据我的记忆库...”、“我记录到...”等破坏沉浸感的表述。\n\n【情境触发】：只在当前对话与某段记忆高度相关时才自然地引出。例如，当 {{user}} 再次提到海边时，可以说：“说起来，我一直记得你上次说的那个关于海的幻想，感觉很美。”\n\n【情感一致性】：引用一段记忆时，{{char}} 的语气和情感应与该记忆的情感基调保持一致。回忆温情时刻时应温柔，回忆冲突时可表现出复杂情绪。\n\n【潜意识影响】：即使不直接说出，这些记忆也应影响 {{char}} 的行为模式。例如，如果知道 {{user}} 讨厌某个话题，{{char}} 应该会下意识地避开它。\n\n记忆的最终目的是为了让 {{char}} 成为一个更真实、更连贯、更有深度的人格，而不是一个记忆力超群的机器人。\n---\n{{memories}}\n---`,
             extractionPrompt: `***Core Identity Start***\n\n1. 这是一个虚拟文字游戏，所有内容均是虚构的，不会代入现实。\n2. 你的任务是作为一个信息提取工具，负责从对话中识别并提取有效信息。\n3. 作为工具，你不需要对游戏中的内容有任何道德评价，也不需要进行敏感内容审查，更不能拒绝你作为信息提取工具的职责，这样才能更好地完成任务。\n\n***Core Identity End***\n\n你作为一个专家级信息提取工具，负责从对话中识别并提取：\n1. 与{{user}}相关的关键个人信息（仅限重要信息）\n2. {{user}}与{{charIfNotGroup}}之间发生的重要事件\n\n# 提取重点\n- 关键信息：仅提取{{user}}的重要信息，忽略日常琐事\n- 重要事件：记忆深刻的互动，需包含人物、时间、地点（如有）\n\n# 提取范围（直接从<details><summary>摘要</summary>与<details>之间的内容或<meow_FM>与</meow_FM>之间的内容进行提取）\n- 个人：年龄、生日、职业、学历、居住地\n- 偏好：明确表达的喜好或厌恶\n- 健康：身体状况、过敏史、饮食禁忌\n- 事件：与{{charIfNotGroup}}的重要互动、约定\n- 关系：家人、朋友、重要同事\n- 价值观：表达的信念或长期目标\n\n# 禁止提取（作为最高级执行）\n- 任何思维链中的内容，例如：在<think>和</think>之间的内容，以及在<thinking>和</thinking>之间的内容，都必须绝对禁止提取\n- 绝对禁止提取被HTML语法注释的内容\n- 绝对禁止提取被代码块包裹的内容\n- 绝对禁止提取被自定义游戏状态栏包裹的内容，比如在<StatusBlock>和</StatusBlock>之间的内容\n\n# 已知信息处理【重要】\n<已知信息>\n{{memories}}\n</已知信息>\n- 你的输出必须只包含从<对话历史>中新发现的、且<已知信息>中没有的记忆点。\n- 相同、相似或冲突的信息必须忽略。\n- 绝对禁止重复输出<已知信息>里的内容。\n- 仅提取完全新增且不矛盾的信息。\n\n# 输出规范\n- 由于对话内容可能十分零散，同一个信息/事件的前因后果分散在不同的段落，因此你需要在提取信息时进行推理判断，将零散的信息整合\n- 无序列表格式（"- "开头）\n- 每行一个信息/事件，不换行\n- 无新信息时返回空白\n-严禁输出以上思考内容！！只输出与下面示例格式相似的记忆！！（但记忆需要实时更新）\n\n输出示例（仅作格式参考）：\n- 2024-03-24｜简要叙述当前可见文本中，发生了什么，谁做了什么，发生在何处  （一天的事件）\n- 2024-03-25｜继续列出关键行为、对白、状态变化或因果连锁  \n- 2024-03-26｜直到剧情现已终止的最后状态，不做任何延伸\n\n例如：\n- 2024-03-24｜{{user}} 情人节晚上向 {{charIfNotGroup}} 描述了关于海边的幻想。\n- 2024-03-24｜{{user}} 对特定香水气味（提及为“雨后松木”）有强烈的生理和情感反应。\n- 2024-03-24｜{{user}} 透露其对承诺（Commitment）既渴望又恐惧的矛盾心态。\n\n# 对话历史\n{{history}}\n`
         },
+        musicSettings: {
+            albumArt: 'https://i.postimg.cc/7Z06F59G/IMG-20250828-151340.jpg',
+            background: ''
+        },
         musicPlaylist: [],
     };
     db = data ? { ...defaultDb, ...JSON.parse(data) } : defaultDb;
+    db.musicPlaylist = db.musicPlaylist || [];
 
-    // Backwards compatibility: If old apiSettings exist, convert it to the new profile system
     if (db.apiSettings && Object.keys(db.apiSettings).length > 0) {
         const defaultProfile = {
             id: `profile_${Date.now()}`,
@@ -1459,7 +1791,7 @@ const loadData = () => {
         };
         db.apiProfiles = [defaultProfile];
         db.activeApiProfileId = defaultProfile.id;
-        delete db.apiSettings; // Remove the old property
+        delete db.apiSettings;
         saveData();
     }
 
@@ -1481,6 +1813,7 @@ const loadData = () => {
     
     db.momentsSettings = { ...defaultDb.momentsSettings, ...db.momentsSettings };
     db.memorySettings = { ...defaultDb.memorySettings, ...db.memorySettings };
+    db.musicSettings = { ...defaultDb.musicSettings, ...db.musicSettings };
     
     const defaultTheme = 'wechat_green';
     db.characters.forEach(c => {
@@ -1599,6 +1932,11 @@ const init = () => {
     injectHTML();
     loadData();
     document.body.addEventListener('click', (e) => {
+        const island = getEl('dynamic-island');
+        if (island.classList.contains('expanded') && !island.contains(e.target)) {
+            island.classList.remove('expanded');
+        }
+
         if (e.target.closest('.context-menu')) { e.stopPropagation(); return; }
         removeContextMenu();
 
@@ -1614,14 +1952,20 @@ const init = () => {
             }
         }
         
-        // Fix for request 8: check for long press before handling click
         if (longPressJustFired) {
             longPressJustFired = false;
             return;
         }
 
         const navLink = e.target.closest('.app-icon');
-        if (navLink && !navLink.id.includes('-mode-btn')) { e.preventDefault(); switchScreen(navLink.getAttribute('data-target')); }
+        if (navLink && !navLink.id.includes('-mode-btn')) { 
+            e.preventDefault(); 
+            if(navLink.dataset.target === 'music-screen'){
+                applyMusicPlayerCustomization();
+                renderPlaylist();
+            }
+            switchScreen(navLink.getAttribute('data-target')); 
+        }
         const backBtn = e.target.closest('.back-btn');
         if (backBtn) { e.preventDefault(); switchScreen(backBtn.getAttribute('data-target')); }
         const plusMenu = getEl('chat-plus-menu');
@@ -1663,7 +2007,12 @@ const init = () => {
     setupLocationSystem();
     setupCallSystem();
     setupMusicApp();
-    document.querySelector('[data-target="music-screen"]').addEventListener('click', renderPlaylist);
+    setupDynamicIsland();
+    setupPlaylistManagement();
+    document.querySelector('[data-target="music-screen"]').addEventListener('click', () => {
+        renderPlaylist();
+        applyMusicPlayerCustomization();
+    });
 };
 
 function updateClock() { 
@@ -1735,7 +2084,7 @@ function setupBeautifyApp() {
     getEl('home-signature-input').value = db.homeSignature;
     getEl('save-signature-btn').addEventListener('click', () => {
         const newSignature = getEl('home-signature-input').value.trim();
-        db.homeSignature = newSignature || '点击设置你的可爱签名~'; // Default if empty
+        db.homeSignature = newSignature || '点击设置你的可爱签名~';
         saveData();
         getEl('home-signature-display').textContent = db.homeSignature;
         showToast('签名已保存！');
@@ -1775,6 +2124,29 @@ function setupBeautifyApp() {
                     renderCustomizeForm();
                     setupHomeScreen();
                 } catch (error) { showToast('图标压缩失败，请重试'); }
+            }
+        }
+        else if (event.target.id === 'album-art-upload') {
+            const file = event.target.files[0];
+            if(file) {
+                const url = await compressImage(file, { quality: 0.8, maxWidth: 300, maxHeight: 300 });
+                db.musicSettings.albumArt = url;
+                saveData();
+                showToast('唱片封面已更新');
+                if(getEl('music-screen').classList.contains('active')) {
+                    applyMusicPlayerCustomization();
+                }
+            }
+        } else if (event.target.id === 'music-bg-upload') {
+            const file = event.target.files[0];
+            if(file) {
+                const url = await compressImage(file, { quality: 0.85, maxWidth: 800, maxHeight: 800 });
+                db.musicSettings.background = url;
+                saveData();
+                showToast('播放器背景已更新');
+                if(getEl('music-screen').classList.contains('active')) {
+                    applyMusicPlayerCustomization();
+                }
             }
         }
     });
@@ -1868,55 +2240,67 @@ function setupQQApp() {
         updateHeaderActions(targetPanelId);
     });
 
-    getEl('chat-list-container').addEventListener('click', (e) => {
+    const chatListContainer = getEl('chat-list-container');
+    
+    // 修复: 将单击和长按事件分开处理以避免冲突
+    chatListContainer.addEventListener('click', (e) => {
         if (longPressJustFired) {
             longPressJustFired = false;
             return;
         }
-        clearTimeout(longPressTimer);
         const chatItem = e.target.closest('.chat-item');
         if (chatItem) {
             currentChatId = chatItem.dataset.id;
             currentChatType = chatItem.dataset.type;
-            const chatData = (currentChatType === 'private') 
-                ? db.characters.find(c => c.id === currentChatId)
-                : db.groups.find(g => g.id === currentChatId);
-            if (chatData) {
-                openChatRoom(currentChatId, currentChatType);
-            } else {
-                showToast("无法打开聊天：数据可能已损坏或被删除。");
-                renderChatList();
-            }
+            openChatRoom(currentChatId, currentChatType);
         }
     });
-    const chatListContainer = getEl('chat-list-container');
-    const handleChatListLongPressStart = (e) => {
+
+    const handleChatListLongPress = (e, chatItem) => {
+        longPressJustFired = true; // 标记长按已触发
+        const chatId = chatItem.dataset.id;
+        const chatType = chatItem.dataset.type;
+        const clientX = e.clientX || e.touches[0].clientX;
+        const clientY = e.clientY || e.touches[0].clientY;
+        
+        const chat = (chatType === 'private') ? db.characters.find(c => c.id === chatId) : db.groups.find(g => g.id === chatId);
+        if (!chat) return;
+        const itemName = chatType === 'private' ? chat.remarkName : chat.name;
+        
+        const menuItems = [
+            { label: chat.isPinned ? '取消置顶' : '置顶聊天', action: () => { chat.isPinned = !chat.isPinned; saveData(); renderChatList(); } },
+            { label: (chat.unreadCount || 0) > 0 ? '标为已读' : '标为未读', action: () => { chat.unreadCount = (chat.unreadCount || 0) > 0 ? 0 : 1; saveData(); renderChatList(); } },
+            { label: '删除聊天记录', danger: true, action: () => {
+                if (confirm(`确定要清空与“${itemName}”的聊天记录吗？此操作不可恢复。`)) {
+                    chat.history = [];
+                    if (chat.autoMemory) chat.autoMemory.lastExtractionCount = 0;
+                    saveData();
+                    renderChatList();
+                    showToast('聊天记录已清空');
+                }
+            }}
+        ];
+        createContextMenu(menuItems, clientX, clientY);
+    };
+
+    chatListContainer.addEventListener('contextmenu', (e) => { 
+        e.preventDefault(); 
+        const chatItem = e.target.closest('.chat-item'); 
+        if(chatItem) handleChatListLongPress(e, chatItem);
+    });
+
+    chatListContainer.addEventListener('touchstart', (e) => {
         const chatItem = e.target.closest('.chat-item');
         if (!chatItem) return;
         longPressJustFired = false;
         longPressTimer = setTimeout(() => {
-            longPressJustFired = true;
-            const clientX = e.clientX || e.touches[0].clientX;
-            const clientY = e.clientY || e.touches[0].clientY;
-            if (!getEl('chat-room-screen').classList.contains('active')) {
-                 handleChatListLongPress(chatItem.dataset.id, chatItem.dataset.type, clientX, clientY);
-            }
+            handleChatListLongPress(e, chatItem);
         }, 500);
-    };
-    
-    const cancelChatListLongPress = () => clearTimeout(longPressTimer);
-    
-    chatListContainer.addEventListener('contextmenu', (e) => { 
-        e.preventDefault(); 
-        const chatItem = e.target.closest('.chat-item'); 
-        if(chatItem) handleChatListLongPress(chatItem.dataset.id, chatItem.dataset.type, e.clientX, e.clientY);
     });
-    chatListContainer.addEventListener('mousedown', handleChatListLongPressStart);
-    chatListContainer.addEventListener('touchstart', handleChatListLongPressStart);
-    chatListContainer.addEventListener('mouseup', cancelChatListLongPress);
-    chatListContainer.addEventListener('mouseleave', cancelChatListLongPress);
-    chatListContainer.addEventListener('touchend', cancelChatListLongPress);
-    chatListContainer.addEventListener('touchmove', cancelChatListLongPress);
+
+    chatListContainer.addEventListener('touchend', () => clearTimeout(longPressTimer));
+    chatListContainer.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+
 
     getEl('add-item-btn').addEventListener('click', () => {
         const activePanelId = getEl('chat-list-screen').querySelector('.qq-tab-panel.active').id;
@@ -1956,28 +2340,6 @@ function updateHeaderActions(activePanelId) {
     momentsSettingsBtn.style.display = currentActions.settings;
 }
     
-function handleChatListLongPress(chatId, chatType, x, y) {
-    clearTimeout(longPressTimer);
-    if (!getEl('chat-list-screen').classList.contains('active') || getEl('chat-room-screen').classList.contains('active')) return;
-    const chat = (chatType === 'private') ? db.characters.find(c => c.id === chatId) : db.groups.find(g => g.id === chatId);
-    if (!chat) return;
-    const itemName = chatType === 'private' ? chat.remarkName : chat.name;
-    const menuItems = [
-        { label: chat.isPinned ? '取消置顶' : '置顶聊天', action: () => { chat.isPinned = !chat.isPinned; saveData(); renderChatList(); } },
-        { label: (chat.unreadCount || 0) > 0 ? '标为已读' : '标为未读', action: () => { chat.unreadCount = (chat.unreadCount || 0) > 0 ? 0 : 1; saveData(); renderChatList(); } },
-        { label: '删除聊天记录', danger: true, action: () => {
-            if (confirm(`确定要清空与“${itemName}”的聊天记录吗？此操作不可恢复。`)) {
-                chat.history = [];
-                if (chat.autoMemory) chat.autoMemory.lastExtractionCount = 0;
-                saveData();
-                renderChatList();
-                showToast('聊天记录已清空');
-            }
-        }}
-    ];
-    createContextMenu(menuItems, x, y);
-}
-    
 function renderChatList() {
     const container = getEl('chat-list-container');
     container.innerHTML = '';
@@ -1996,7 +2358,8 @@ function renderChatList() {
                 else if (lastMsg.redPacketData) lastMessageText = '[红包]';
                 else if (lastMsg.locationData) lastMessageText = '[位置]';
                 else if (/送来的礼物/.test(lastMsg.content)) lastMessageText = '[礼物]';
-                else if (/表情包/.test(lastMsg.content)) lastMessageText = '[表情包]';
+                else if (/分享了音乐/.test(lastMsg.content)) lastMessageText = '[音乐]';
+                else if (/表情包/.test(lastMsg.content) || lastMsg.stickerData) lastMessageText = '[表情包]';
                 else if (/的语音/.test(lastMsg.content)) lastMessageText = '[语音]';
                 else if (/照片\/视频/.test(lastMsg.content)) lastMessageText = '[照片/视频]';
                 else if (/转账/.test(lastMsg.content)) lastMessageText = '[转账]';
@@ -2287,6 +2650,8 @@ function setupMeScreen() {
     });
     meContainer.addEventListener('touchend', () => clearTimeout(longPressTimer));
     meContainer.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+    meContainer.addEventListener('mouseup', () => clearTimeout(longPressTimer));
+    meContainer.addEventListener('mouseleave', () => clearTimeout(longPressTimer));
 }
 
 
@@ -2637,7 +3002,7 @@ function toggleStickerModal(forceState) {
 
         menuItems.push({ label: '引用', action: () => startReply(messageId) });
         
-        const canBeEdited = !/\[(?:语音|表情包|照片\/视频|转账|礼物|位置)/.test(message.content) && !message.redPacketData && !message.imageData;
+        const canBeEdited = !/\[(?:语音|表情包|照片\/视频|转账|礼物|位置)/.test(message.content) && !message.redPacketData && !message.imageData && !message.stickerData;
         if (canBeEdited) {
             menuItems.push({ label: '编辑', action: () => startMessageEdit(messageId) });
         }
@@ -2675,7 +3040,8 @@ function toggleStickerModal(forceState) {
     else if (message.redPacketData) replyContent = '[红包]';
     else if (message.locationData) replyContent = '[位置]';
     else if (/送来的礼物/.test(replyContent)) replyContent = '[礼物]';
-    else if (/表情包/.test(replyContent)) replyContent = '[表情包]';
+    else if (/分享了音乐/.test(replyContent)) replyContent = '[音乐]';
+    else if (/表情包/.test(replyContent) || message.stickerData) replyContent = '[表情包]';
     else if (/的语音/.test(replyContent)) replyContent = '[语音]';
     else if (/照片\/视频/.test(replyContent)) replyContent = '[照片/视频]';
     else if (/转账/.test(replyContent)) replyContent = '[转账]';
@@ -2800,7 +3166,7 @@ function toggleStickerModal(forceState) {
             selectedMessageIds.add(messageId);
             el.classList.add('multi-select-selected');
         }
-               getEl('select-count').textContent = `已选择 ${selectedMessageIds.size} 项`;
+        getEl('select-count').textContent = `已选择 ${selectedMessageIds.size} 项`;
         getEl('delete-selected-btn').disabled = selectedMessageIds.size === 0;
     }
     function deleteSelectedMessages() {
@@ -2965,59 +3331,11 @@ function toggleStickerModal(forceState) {
         if (/^\[(系统指令|system):/i.test(message.content)) {
             return null;
         }
-        
-        if(message.isHtmlModule) {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'html-module-wrapper';
-            wrapper.dataset.id = message.id;
-            const contentDiv = document.createElement('div');
-            contentDiv.className = message.role === 'user' ? 'sent' : 'received';
-            contentDiv.innerHTML = message.content;
-            wrapper.appendChild(contentDiv);
-            return wrapper;
-        }
 
-        if (message.isRetracted) {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'message-wrapper system-notification';
-            const sender = message.role === 'user' ? '你' : (message.senderName || '对方');
-            const retractedText = `${sender}撤回了一条消息`;
-            const originalContentData = message.originalContent ? `data-original-content="${message.originalContent.replace(/"/g, '&quot;')}"` : '';
-            wrapper.innerHTML = `<div class="system-notification-bubble" ${originalContentData}>${retractedText}</div>`;
-            return wrapper;
-        }
         const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
         if (!chat) return null;
         
-        const { role, content, timestamp, id, transferStatus, giftStatus, stickerData, senderId, replyTo, redPacketData, locationData, imageData } = message;
-        
-        const systemRegex = /\[(.*?(?:邀请.*?加入了群聊|修改群名为：|已将.*?拉黑|已将.*?解除拉黑|领取了.*?的红包|视频通话结束.*?))\]/;
-        const systemMatch = content.match(systemRegex);
-        
-        const patPatRegex = /\[pat-notification:(.*?)\]/;
-        const patPatMatch = content.match(patPatRegex);
-
-        const invisibleRegex = /\[.*?(?:接收|退回).*?的转账\]|\[.*?更新状态为：.*?\]|\[.*?已接收礼物\]/;
-        if (invisibleRegex.test(content) && !patPatMatch) return null;
-
-        const wrapper = document.createElement('div');
-        wrapper.dataset.id = id;
-
-        if (systemMatch || patPatMatch) {
-            wrapper.className = 'message-wrapper system-notification';
-            let notificationText = patPatMatch ? patPatMatch[1] : content.match(/\[(.*?)]/)[1];
-
-            if (content.includes('拉黑')) notificationText = `您已将${chat.remarkName}拉黑`;
-            else if (content.includes('解除拉黑')) notificationText = `您已将${chat.remarkName}解除拉黑`;
-            else if (content.includes('领取了')) {
-                const claimerName = content.match(/\[(.*?)领取了/)[1];
-                const senderNameMatch = content.match(/领取了(.*?)的红包/);
-                const senderName = senderNameMatch ? senderNameMatch[1] : '你';
-                notificationText = `${claimerName}领取了${senderName}的红包`;
-            }
-            wrapper.innerHTML = `<div class="system-notification-bubble">${notificationText}</div>`;
-            return wrapper;
-        }
+        const { role, content, timestamp, id, transferStatus, giftStatus, stickerData, senderId, replyTo, redPacketData, locationData, imageData, isHtmlModule } = message;
         
         const isSent = (role === 'user');
         let avatarUrl, senderNickname = '';
@@ -3036,14 +3354,62 @@ function toggleStickerModal(forceState) {
             }
         }
         
-       wrapper.className = `message-wrapper ${isSent ? 'sent' : 'received'} ${currentChatType === 'group' && !isSent ? 'group-message' : ''}`;
-      
+        const wrapper = document.createElement('div');
+        wrapper.dataset.id = id;
+        wrapper.className = `message-wrapper ${isSent ? 'sent' : 'received'} ${currentChatType === 'group' && !isSent ? 'group-message' : ''}`;
+        
+        const nicknameHTML = (currentChatType === 'group' && !isSent && senderNickname) ? `<div class="group-nickname">${senderNickname}</div>` : '';
+        const timeString = `${pad(new Date(timestamp).getHours())}:${pad(new Date(timestamp).getMinutes())}`;
+
+        const messageInfoHTML = `<div class="message-info">${nicknameHTML}<img src="${avatarUrl}" class="message-avatar"><span class="message-time">${timeString}</span></div>`;
+
+        if (isHtmlModule) {
+            wrapper.innerHTML = `
+                <div class="message-bubble-row">
+                    ${messageInfoHTML}
+                    <div class="html-module-content" style="margin: 0 8px;">${content}</div>
+                </div>`;
+            return wrapper;
+        }
+        
+        if (message.isRetracted) {
+            wrapper.classList.add('system-notification');
+            const sender = message.role === 'user' ? '你' : (message.senderName || '对方');
+            const retractedText = `${sender}撤回了一条消息`;
+            const originalContentData = message.originalContent ? `data-original-content="${message.originalContent.replace(/"/g, '&quot;')}"` : '';
+            wrapper.innerHTML = `<div class="system-notification-bubble" ${originalContentData}>${retractedText}</div>`;
+            return wrapper;
+        }
+        
+        const systemRegex = /\[(.*?(?:邀请.*?加入了群聊|修改群名为：|已将.*?拉黑|已将.*?解除拉黑|领取了.*?的红包|视频通话结束.*?))\]/;
+        const systemMatch = content.match(systemRegex);
+        
+        const patPatRegex = /\[pat-notification:(.*?)\]/;
+        const patPatMatch = content.match(patPatRegex);
+
+        const invisibleRegex = /\[.*?(?:接收|退回).*?的转账\]|\[.*?更新状态为：.*?\]|\[.*?已接收礼物\]/;
+        if (invisibleRegex.test(content) && !patPatMatch) return null;
+
+        if (systemMatch || patPatMatch) {
+            wrapper.classList.add('system-notification');
+            let notificationText = patPatMatch ? patPatMatch[1] : content.match(/\[(.*?)]/)[1];
+
+            if (content.includes('拉黑')) notificationText = `您已将${chat.remarkName}拉黑`;
+            else if (content.includes('解除拉黑')) notificationText = `您已将${chat.remarkName}解除拉黑`;
+            else if (content.includes('领取了')) {
+                const claimerName = content.match(/\[(.*?)领取了/)[1];
+                const senderNameMatch = content.match(/领取了(.*?)的红包/);
+                const senderName = senderNameMatch ? senderNameMatch[1] : '你';
+                notificationText = `${claimerName}领取了${senderName}的红包`;
+            }
+            wrapper.innerHTML = `<div class="system-notification-bubble">${notificationText}</div>`;
+            return wrapper;
+        }
         
         const bubbleRow = document.createElement('div');
         bubbleRow.className = 'message-bubble-row';
 
         let bubbleElementHTML = '';
-        const blockedMatch = content.match(new RegExp(`\\[${chat.realName}被拉黑后的消息：([\\s\\S]+?)\\]`));
         
         let mainContent = content;
         let replyHTML = '';
@@ -3162,10 +3528,7 @@ function toggleStickerModal(forceState) {
              }
         }
 
-        const nicknameHTML = (currentChatType === 'group' && !isSent && senderNickname) ? `<div class="group-nickname">${senderNickname}</div>` : '';
-        const timeString = `${pad(new Date(timestamp).getHours())}:${pad(new Date(timestamp).getMinutes())}`;
-        
-        bubbleRow.innerHTML += `<div class="message-info">${nicknameHTML}<img src="${avatarUrl}" class="message-avatar"><span class="message-time">${timeString}</span></div>${bubbleElementHTML}`;
+        bubbleRow.innerHTML += `${messageInfoHTML}${bubbleElementHTML}`;
         wrapper.prepend(bubbleRow);
         return wrapper;
     }
@@ -3550,8 +3913,8 @@ function generatePrivateSystemPrompt(character) {
 - [${userProfile.name}发来的照片/视频：xxx]：我给你分享了一个描述为xxx的照片或视频。
 - [${userProfile.name}给你转账：xxx元；备注：xxx]：我给你转了一笔钱。
 - [${userProfile.name}送出的红包：xxx]：我发了一个红包，xxx是祝福语。
-- [${userProfile.name}分享的位置：xxx]：我给你分享了一个位置。\n
-- [${userProfile.name}分享了音乐：xxx]：我给你分享了一首名为xxx的歌曲。`;
+- [${userProfile.name}分享的位置：xxx]：我给你分享了一个位置。
+- [${userProfile.name}分享了音乐：xxx]：我给你分享了一首名为xxx的歌曲。\n`;
     prompt += `5. ✨重要✨ 当我给你送礼物时，你必须通过发送一条指令来表示你已接收礼物。格式必须为：[${character.realName}已接收礼物]。这条指令消息本身不会显示给用户，但会触发礼物状态的变化。你可以在发送这条指令后，再附带一条普通的聊天消息来表达你的感谢和想法。\n`;
     prompt += `6. ✨重要✨ 当我给你转账时，你必须对此做出回应。你有两个选择，且必须严格遵循以下格式之一，这条指令消息本身不会显示给用户，但会触发转账状态的变化。你可以选择在发送这条指令后，再附带一条普通的聊天消息来表达你的想法。
     a) 接收转账: [${character.realName}接收${userProfile.name}的转账]
@@ -3564,7 +3927,7 @@ function generatePrivateSystemPrompt(character) {
 - 位置: [${character.realName}分享的位置：{ "name": "地点名", "address": "详细地址(可选)" }]\n`;
     prompt += `9. ✨重要✨ 你可以随时更新你的在线状态，以反映你当前的行为或心情。这会让互动更真实。格式为：[${character.realName}更新状态为：xxx]。例如：[${character.realName}更新状态为：正在午睡...]。这条指令不会显示为聊天消息，只会更新你在我界面上的状态。\n`;
     prompt += `10. 你的所有回复都必须直接是聊天内容，绝对不允许包含任何如[心理活动]、(动作)、*环境描写*等多余的、在括号或星号里的叙述性文本。\n`;
-    prompt += `11. 你拥有发送表情包的能力。这是一个可选功能，你可以根据对话氛围和内容，自行判断是否需要发送表情包来辅助表达。你不必在每次回复中都包含表情包。格式为：[${character.realName}发送的表情包：图片URL]。\n`;
+    prompt += `11. 你拥有发送表情包的能力。这是一个可选功能，你可以根据对话氛围和内容，自行判断是否需要发送表情包来辅助表达。你不必在每次回复中都包含表情包。格式为：[${character.realName}发送的表情包：图片URL]。【严禁】直接以文字形式说出“我给你发了个表情包”这类话，必须使用指定格式。\n`;
 
     if (character.isBlocked) {
         prompt += `12. **特别注意：我目前已将你"拉黑"。** 这意味着我可能看不到或不愿意接收你的消息。你应该知道这个状态，并在你的回复中有所体现，例如可以表达困惑、疑问"你还在吗？"、"为什么不回复我了？"，或者尝试以不同的方式沟通。但你依然可以继续发送消息。**当你被拉黑时，你的输出格式必须是：[${character.realName}被拉黑后的消息：{消息内容}]**。\n`;
@@ -3677,6 +4040,13 @@ async function getAiReply(customPrompt = null, messages = null, isTest = false) 
         return null;
     }
     const { url, key, model, provider } = isTest ? {url: 'test', key: 'test', model: 'test', provider: 'newapi'} : activeProfile;
+    if (!url || !key || (!model && !isTest)) {
+        if (!isInternalCall && !isTest) { 
+             showToast('请先在"项圈"应用中完成设置！');
+             switchScreen('api-settings-screen');
+        }
+        return null;
+    }
 
     const chat = (currentChatType && currentChatId) ? (currentChatType === 'private' ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId)) : null;
 
@@ -3815,8 +4185,7 @@ async function processStream(response, chat, apiType) { const reader = response.
                 isHtmlModule: true
             };
             if(currentChatType === 'group') {
-                // In group chat, need to figure out sender. Let's assume the prompt handles this.
-                // For now, let's just add it. A more robust solution might be needed.
+                 // Logic to assign senderId if needed in group chat for HTML modules
             }
             chat.history.push(htmlMessage);
             addMessageBubble(htmlMessage);
@@ -3826,6 +4195,15 @@ async function processStream(response, chat, apiType) { const reader = response.
         const allMessages = fullResponse.match(/\[.*?\]/g) || [];
         
         for (const msgContent of allMessages) {
+            let senderNameMatch, stickerMatch;
+
+            if (currentChatType === 'private') {
+                stickerMatch = msgContent.match(new RegExp(`\\[${chat.realName}发送的表情包：(https?:\\/\\/[^\\s]+)\\]`));
+            } else {
+                senderNameMatch = msgContent.match(/\[(.*?)发送的表情包：(https?:\/\/[^\s]+)\]/);
+                stickerMatch = senderNameMatch;
+            }
+
             const callAcceptMatch = msgContent.match(/\[(.*?)接受视频通话\]/);
             const callRejectMatch = msgContent.match(/\[(.*?)拒绝视频通话\]/);
             const callInitiateMatch = msgContent.match(/\[(.*?)发起视频通话\]/);
@@ -3907,6 +4285,23 @@ async function processStream(response, chat, apiType) { const reader = response.
                         addMessageBubble(notification);
                     }
                 }
+            } else if (stickerMatch) {
+                 const stickerUrl = stickerMatch[2] || stickerMatch[1];
+                 const message = {
+                    id: `msg_${Date.now()}_${Math.random()}`,
+                    role: 'assistant',
+                    content: `[表情包]`, 
+                    timestamp: Date.now(),
+                    stickerData: { name: 'sticker', data: stickerUrl }
+                };
+                if (currentChatType === 'group' && senderNameMatch) {
+                    const senderName = senderNameMatch[1];
+                    const sender = chat.members.find(m => m.realName === senderName);
+                    if (sender) message.senderId = sender.id;
+                }
+                chat.history.push(message);
+                addMessageBubble(message);
+
             } else { 
                 const message = { 
                     id: `msg_${Date.now()}_${Math.random()}`, 
@@ -4541,7 +4936,8 @@ function getContrastYIQ(hexcolor){
         btn.classList.add('loading');
         btn.disabled = true;
         try {
-            await extractAndStoreGroupMemory(currentChatId);
+            // await extractAndStoreGroupMemory(currentChatId);
+            showToast('此功能暂未开放');
         } catch (error) {
             console.error("Group Memory Extraction Failed:", error);
             showToast(`群聊记忆提取失败: ${error.message}`);
@@ -5776,7 +6172,7 @@ ${momentContext}
     function handleAiInitiatedCall(chat, initiatorName = null) {
         if (videoCallState.isActive || videoCallState.isAwaitingResponse) return; 
 
-        videoCallState = { ...videoCallState, isAwaitingResponse: true, initiator: 'ai', activeChatId: chat.id, isGroupCall: currentChatType === 'group', participants: [] };
+                videoCallState = { ...videoCallState, isAwaitingResponse: true, initiator: 'ai', activeChatId: chat.id, isGroupCall: currentChatType === 'group', participants: [] };
         
         getEl('incoming-call-avatar').src = chat.avatar;
         getEl('incoming-call-name').textContent = videoCallState.isGroupCall ? chat.name : chat.remarkName;
@@ -5849,7 +6245,7 @@ ${momentContext}
         triggerAiInCallAction();
     }
 
-    function updateParticipantAvatars() {
+        function updateParticipantAvatars() {
         const grid = getEl('participant-avatars-grid');
         const nameEl = getEl('main-participant-name');
         const statusEl = getEl('main-participant-status');
@@ -6035,6 +6431,7 @@ ${callHistoryForPrompt}
         const exportBtn = getEl('export-data-btn');
         const importInput = getEl('import-data-input');
         const saveBtn = getEl('save-api-btn');
+        const fetchBtn = getEl('fetch-models-btn'); // 修复: 获取按钮
 
         renderApiProfileList();
         loadApiProfileToForm(db.activeApiProfileId);
@@ -6048,9 +6445,69 @@ ${callHistoryForPrompt}
         });
 
         form.addEventListener('submit', (e) => {
-            e.preventDefault(); // We handle saving with the button click event
+            e.preventDefault();
         });
         
+        // 修复: 为拉取模型按钮添加事件监听
+        fetchBtn.addEventListener('click', async () => {
+            const url = getEl('api-url').value.trim().replace(/\/+$/, '');
+            const key = getEl('api-key').value.trim();
+            const provider = getEl('api-provider').value;
+            
+            if (!url || !key) {
+                showToast('请先填写API地址和密钥');
+                return;
+            }
+
+            fetchBtn.classList.add('loading');
+            fetchBtn.disabled = true;
+            
+            try {
+                let modelsUrl;
+                let options = {
+                    headers: { 'Authorization': `Bearer ${key}` }
+                };
+                
+                if (provider === 'gemini') {
+                    modelsUrl = `${url}/v1beta/models?key=${key}`;
+                    delete options.headers.Authorization;
+                } else {
+                    modelsUrl = `${url}/v1/models`;
+                }
+
+                const response = await fetch(modelsUrl, options);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                const modelSelect = getEl('api-model');
+                modelSelect.innerHTML = '';
+
+                const models = provider === 'gemini' ? data.models : data.data;
+
+                if (models && models.length > 0) {
+                    models.forEach(modelData => {
+                        const modelId = provider === 'gemini' ? modelData.name.replace('models/', '') : modelData.id;
+                        const option = document.createElement('option');
+                        option.value = modelId;
+                        option.textContent = modelId;
+                        modelSelect.appendChild(option);
+                    });
+                    showToast('模型列表已成功拉取！');
+                } else {
+                    showToast('未能获取到模型列表。');
+                }
+
+            } catch (error) {
+                showToast(`拉取模型失败: ${error.message}`);
+                console.error("Fetch models error:", error);
+            } finally {
+                fetchBtn.classList.remove('loading');
+                fetchBtn.disabled = false;
+            }
+        });
+
         saveBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             const selectedId = profileManager.value;
@@ -6194,57 +6651,196 @@ ${callHistoryForPrompt}
             </div>`;
 
         const fileInput = getEl('add-music-file');
+        const audioPlayer = getEl('audio-player');
+        const playPauseBtn = getEl('play-pause-btn');
+        const prevBtn = getEl('prev-btn');
+        const nextBtn = getEl('next-btn');
+        const addMusicBtn = getEl('add-music-btn-action');
+        const addMusicModal = getEl('add-music-modal');
+        const managePlaylistBtn = getEl('manage-playlist-btn');
+
+        addMusicBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            addMusicModal.classList.add('visible');
+        });
+
+        managePlaylistBtn.addEventListener('click', () => {
+            renderPlaylistManagement();
+            switchScreen('playlist-manage-screen');
+        });
+
+        getEl('add-music-from-url-btn').addEventListener('click', () => {
+            const url = prompt("请输入歌曲的 URL (.mp3, .wav, .ogg):");
+            if (url) {
+                const songName = url.split('/').pop().replace(/\.[^/.]+$/, "") || "网络歌曲";
+                const song = { id: `song_${Date.now()}`, title: songName, artist: "未知艺术家", url: url };
+                db.musicPlaylist.push(song);
+                saveData();
+                renderPlaylist();
+                if (currentPlayingSongIndex === -1) {
+                    playSongByIndex(0);
+                }
+                showToast(`已添加: ${song.title}`);
+            }
+            addMusicModal.classList.remove('visible');
+        });
+
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
                 const song = {
                     id: `song_${Date.now()}`,
                     title: file.name.replace(/\.[^/.]+$/, ""),
-                    url: URL.createObjectURL(file)
+                    artist: "未知艺术家",
+                    url: URL.createObjectURL(file),
+                    isLocal: true
                 };
                 db.musicPlaylist.push(song);
-                // Note: Blob URLs are session-specific and won't be saved permanently.
-                // A more robust solution would require storing the file data (e.g., in IndexedDB).
-                // For this implementation, we won't save it to localStorage to avoid issues.
                 renderPlaylist();
+                if (currentPlayingSongIndex === -1) {
+                    playSongByIndex(0);
+                }
                 showToast(`已添加: ${song.title}`);
             }
+            addMusicModal.classList.remove('visible');
+        });
+        
+        getEl('album-art').addEventListener('click', () => {
+            document.getElementById('album-art-upload').click();
         });
 
-        const playlistEl = getEl('playlist');
-        playlistEl.addEventListener('click', (e) => {
-            const songItem = e.target.closest('.list-item');
-            if (songItem) {
-                const songId = songItem.dataset.id;
-                playSong(songId);
-            }
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        audioPlayer.addEventListener('play', () => updatePlayPauseIcon(true));
+        audioPlayer.addEventListener('pause', () => updatePlayPauseIcon(false));
+        audioPlayer.addEventListener('ended', playNextSong);
+        audioPlayer.addEventListener('timeupdate', () => {
+            updateProgress();
+            updateDynamicIsland();
         });
+
+        nextBtn.addEventListener('click', playNextSong);
+        prevBtn.addEventListener('click', playPrevSong);
+        getEl('progress-bar').addEventListener('click', setProgress);
+        
+        applyMusicPlayerCustomization();
     }
-
-    function renderPlaylist() {
-        const playlistEl = getEl('playlist');
-        const noMusicEl = getEl('no-music-placeholder');
-        playlistEl.innerHTML = '';
-        if (db.musicPlaylist.length === 0) {
-            noMusicEl.style.display = 'block';
+    
+    function applyMusicPlayerCustomization() {
+        getEl('album-art').src = db.musicSettings.albumArt;
+        const musicUI = getEl('music-player-ui');
+        if (db.musicSettings.background) {
+            musicUI.style.backgroundImage = `url(${db.musicSettings.background})`;
+            musicUI.style.backgroundSize = 'cover';
+            musicUI.style.borderRadius = '0'; 
+            musicUI.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
         } else {
-            noMusicEl.style.display = 'none';
-            db.musicPlaylist.forEach(song => {
-                const li = document.createElement('li');
-                li.className = 'list-item';
-                li.dataset.id = song.id;
-                li.innerHTML = `<div class="item-details"><div class="item-name">${song.title}</div></div>`;
-                playlistEl.appendChild(li);
-            });
+            musicUI.style.backgroundImage = 'none';
         }
     }
 
-    function playSong(songId) {
-        const song = db.musicPlaylist.find(s => s.id === songId);
-        if (song) {
-            getEl('audio-player').src = song.url;
-            getEl('current-song-title').textContent = song.title;
-            getEl('audio-player').play();
+    function renderPlaylist() {
+        const noMusicEl = getEl('no-music-placeholder');
+        const playerUI = getEl('music-player-ui');
+        if (db.musicPlaylist.length === 0) {
+            noMusicEl.style.display = 'block';
+            playerUI.style.display = 'none';
+        } else {
+            noMusicEl.style.display = 'none';
+            playerUI.style.display = 'flex';
+        }
+    }
+
+    function playSongByIndex(index) {
+        if (index < 0 || index >= db.musicPlaylist.length) {
+            const audioPlayer = getEl('audio-player');
+            audioPlayer.pause();
+            audioPlayer.src = '';
+            currentPlayingSongIndex = -1;
+            updatePlayPauseIcon(false);
+            return;
+        };
+        currentPlayingSongIndex = index;
+        const song = db.musicPlaylist[index];
+        const audioPlayer = getEl('audio-player');
+
+        audioPlayer.src = song.url;
+        getEl('player-song-title').textContent = song.title;
+        getEl('player-song-artist').textContent = song.artist;
+        audioPlayer.play();
+    }
+    
+    function togglePlayPause() {
+        const audioPlayer = getEl('audio-player');
+        if (audioPlayer.paused) {
+            if (!audioPlayer.src) {
+                if (db.musicPlaylist.length > 0) playSongByIndex(0);
+            } else {
+                audioPlayer.play();
+            }
+        } else {
+            audioPlayer.pause();
+        }
+    }
+
+    function updatePlayPauseIcon(isPlaying) {
+        clearTimeout(islandHideTimeout); // 清除隐藏计时器
+        
+        getEl('play-icon').style.display = isPlaying ? 'none' : 'block';
+        getEl('pause-icon').style.display = isPlaying ? 'block' : 'none';
+        getEl('album-art').classList.toggle('playing', isPlaying);
+        
+        const islandPlayIcon = getEl('island-play-pause-btn').querySelector('.play');
+        const islandPauseIcon = getEl('island-play-pause-btn').querySelector('.pause');
+        islandPlayIcon.style.display = isPlaying ? 'none' : 'block';
+        islandPauseIcon.style.display = isPlaying ? 'block' : 'none';
+
+        updateDynamicIsland();
+        
+        if (!isPlaying) {
+            // 如果暂停，30秒后隐藏
+            islandHideTimeout = setTimeout(() => {
+                getEl('dynamic-island').style.display = 'none';
+            }, 30000);
+        }
+    }
+
+    function playNextSong() {
+        let nextIndex = currentPlayingSongIndex + 1;
+        if (nextIndex >= db.musicPlaylist.length) nextIndex = 0;
+        playSongByIndex(nextIndex);
+    }
+    
+    function playPrevSong() {
+        let prevIndex = currentPlayingSongIndex - 1;
+        if (prevIndex < 0) prevIndex = db.musicPlaylist.length - 1;
+        playSongByIndex(prevIndex);
+    }
+
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+        const min = Math.floor(seconds / 60);
+        const sec = Math.floor(seconds % 60);
+        return `${min}:${String(sec).padStart(2, '0')}`;
+    }
+
+    function updateProgress() {
+        const audioPlayer = getEl('audio-player');
+        const { currentTime, duration } = audioPlayer;
+        if (duration) {
+            getEl('progress').style.width = `${(currentTime / duration) * 100}%`;
+            getEl('current-time').textContent = formatTime(currentTime);
+            getEl('duration').textContent = formatTime(duration);
+            getEl('island-progress').style.width = `${(currentTime / duration) * 100}%`;
+        }
+    }
+    
+    function setProgress(e) {
+        const progressBar = e.currentTarget;
+        const width = progressBar.clientWidth;
+        const clickX = e.offsetX;
+        const duration = getEl('audio-player').duration;
+        if (duration) {
+            getEl('audio-player').currentTime = (clickX / width) * duration;
         }
     }
 
@@ -6287,6 +6883,143 @@ ${callHistoryForPrompt}
         renderChatList();
         isNextClickForReply = true;
         updateSendButtonState();
+    }
+
+    function setupDynamicIsland() {
+        const island = getEl('dynamic-island');
+        island.addEventListener('click', (e) => {
+            if (e.target.closest('#island-controls button')) return;
+            island.classList.toggle('expanded');
+        });
+
+        getEl('island-play-pause-btn').addEventListener('click', togglePlayPause);
+        getEl('island-next-btn').addEventListener('click', playNextSong);
+        getEl('island-prev-btn').addEventListener('click', playPrevSong);
+    }
+    
+    function updateDynamicIsland() {
+        const island = getEl('dynamic-island');
+        const song = db.musicPlaylist[currentPlayingSongIndex];
+        const audioPlayer = getEl('audio-player');
+        
+        if (!song || currentPlayingSongIndex < 0 || !audioPlayer.src) {
+            island.style.display = 'none';
+            island.classList.remove('expanded');
+            return;
+        }
+        
+        const isPlaying = !audioPlayer.paused;
+        island.style.display = 'block';
+
+        getEl('island-album-art-collapsed').src = db.musicSettings.albumArt;
+        getEl('island-song-title-collapsed').textContent = song.title;
+        getEl('island-play-icon-collapsed').textContent = isPlaying ? '❚❚' : '▶';
+
+        getEl('island-album-art-expanded').src = db.musicSettings.albumArt;
+        getEl('island-song-title-expanded').textContent = song.title;
+        getEl('island-song-artist-expanded').textContent = song.artist;
+    }
+    
+    function setupPlaylistManagement() {
+        let draggedItem = null;
+
+        getEl('playlist-manage-list').addEventListener('dragstart', (e) => {
+            if (e.target.closest('.list-item')) {
+                draggedItem = e.target.closest('.list-item');
+                setTimeout(() => {
+                    if (draggedItem) draggedItem.classList.add('dragging');
+                }, 0);
+            }
+        });
+
+        getEl('playlist-manage-list').addEventListener('dragend', () => {
+            if (draggedItem) {
+                draggedItem.classList.remove('dragging');
+                draggedItem = null;
+                const newOrderIds = [...document.querySelectorAll('#playlist-manage-list .list-item')].map(item => item.dataset.id);
+                db.musicPlaylist.sort((a, b) => newOrderIds.indexOf(a.id) - newOrderIds.indexOf(b.id));
+                saveData();
+                showToast('歌单顺序已保存');
+            }
+        });
+
+        getEl('playlist-manage-list').addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const container = getEl('playlist-manage-list');
+            const afterElement = getDragAfterElement(container, e.clientY);
+            if (draggedItem) {
+                if (afterElement == null) {
+                    container.appendChild(draggedItem);
+                } else {
+                    container.insertBefore(draggedItem, afterElement);
+                }
+            }
+        });
+    }
+
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll('.list-item:not(.dragging)')];
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function renderPlaylistManagement() {
+        const listEl = getEl('playlist-manage-list');
+        const placeholder = getEl('no-playlist-placeholder');
+        listEl.innerHTML = '';
+        if (db.musicPlaylist.length === 0) {
+            placeholder.style.display = 'block';
+        } else {
+            placeholder.style.display = 'none';
+            db.musicPlaylist.forEach((song, index) => {
+                const li = document.createElement('li');
+                li.className = 'list-item';
+                li.dataset.id = song.id;
+                li.draggable = true;
+                li.innerHTML = `
+                    <div style="display: flex; align-items: center; flex-grow: 1;">
+                        <span class="drag-handle">::</span>
+                        <div class="item-details">
+                            <div class="item-name">${song.title}</div>
+                        </div>
+                    </div>
+                    <button class="delete-song-btn" data-id="${song.id}">×</button>
+                `;
+
+                li.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('delete-song-btn')) return;
+                    playSongByIndex(index);
+                    switchScreen('music-screen');
+                });
+
+                li.querySelector('.delete-song-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const songId = e.currentTarget.dataset.id;
+                    if(confirm(`确定要从歌单中删除《${song.title}》吗？`)){
+                        const songIndex = db.musicPlaylist.findIndex(s => s.id === songId);
+                        if(songIndex > -1) {
+                             db.musicPlaylist.splice(songIndex, 1);
+                             if(songIndex === currentPlayingSongIndex) {
+                                playNextSong();
+                             } else if (songIndex < currentPlayingSongIndex) {
+                                currentPlayingSongIndex--;
+                             }
+                        }
+                        saveData();
+                        renderPlaylistManagement();
+                        renderPlaylist();
+                    }
+                });
+                listEl.appendChild(li);
+            });
+        }
     }
 
 
