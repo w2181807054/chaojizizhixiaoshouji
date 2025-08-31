@@ -180,7 +180,7 @@
             border-radius: 12px;
             pointer-events: none;
         }
-        .message-info { display: flex; flex-direction: column; align-items: center; position: relative; }
+        .message-info { display: flex; flex-direction: column; align-items: center; position: relative; flex-shrink: 0; }
         .group-nickname { position: absolute; top: -15px; font-size: 11px; color: #888; white-space: nowrap; width: 70px; text-align: center; overflow: hidden; text-overflow: ellipsis; }
         .message-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; cursor: pointer; }
         .message-time { font-size: 9px; color: #aaa; margin-top: 3px; }
@@ -518,7 +518,7 @@
         .settings-sidebar .header { padding: 15px; border-bottom: 1px solid #eee; font-weight: bold; text-align: center; color: var(--secondary-color); }
         .settings-sidebar .content { padding: 20px; overflow-y: auto; flex-grow: 1; }
         .settings-sidebar .form-group textarea { height: 100px; resize: vertical; }
-        .settings-sidebar .avatar-setting { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .settings-sidebar .avatar-setting { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 15px; }
         .settings-sidebar .avatar-preview { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); cursor: pointer; }
         .settings-sidebar .profile-selector { display: flex; align-items: center; background-color: #f9f9f9; border-radius: 12px; padding: 10px; margin-bottom: 10px; }
         .settings-sidebar .profile-selector .avatar-container { flex-shrink: 0; cursor: pointer; }
@@ -551,10 +551,10 @@
         .wallpaper-preview { width: 100%; aspect-ratio: 9 / 16; max-height: 400px; border-radius: var(--border-radius); margin-bottom: 15px; background-size: cover; background-position: center; border: 3px dashed var(--primary-color); display: flex; align-items: center; justify-content: center; color: var(--secondary-color); font-style: italic; background-color: var(--bg-color); }
         .toast { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.7); color: white; padding: 10px 20px; border-radius: 15px; font-size: 14px; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s; z-index: 1000; }
         .toast.show { opacity: 1; visibility: visible; }
-        #world-book-selection-modal, #invite-member-modal, #character-select-modal, #profile-select-modal, #theme-select-modal, #heart-voice-modal { z-index: 102; }
+        #world-book-selection-modal, #invite-member-modal, #character-select-modal, #profile-select-modal, #theme-select-modal, #heart-voice-modal, #listen-together-modal { z-index: 102; }
         #batch-sticker-modal { z-index: 103; }
         .modal-window { width: 90%; max-width: 380px; }
-        #world-book-selection-list, #invite-member-selection-list, #character-selection-list, #profile-selection-list { list-style: none; padding: 0; margin: 0; max-height: 40vh; overflow-y: auto; }
+        #world-book-selection-list, #invite-member-selection-list, #character-selection-list, #profile-selection-list, #listen-together-char-list { list-style: none; padding: 0; margin: 0; max-height: 40vh; overflow-y: auto; }
         .selection-item { display: flex; align-items: center; padding: 12px 5px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background-color 0.2s; }
         .selection-item:hover { background-color: var(--bg-color); }
         .selection-item:last-child { border-bottom: none; }
@@ -602,6 +602,8 @@
         .qq-tab-panel .content { flex-grow: 1; overflow-y: auto; }
         .contact-actions { display: flex; gap: 10px; }
         #moments-screen-panel .content { padding: 0; }
+        #moments-settings-screen .avatar-setting { flex-direction: row; }
+        #moments-settings-screen .form-group > label { text-align: center; }
         .moments-header { position: relative; width: 100%; height: 250px; margin-bottom: 20px; }
         .moments-header-bg { width: 100%; height: 100%; object-fit: cover; }
         .moments-user-info { position: absolute; bottom: -15px; right: 20px; display: flex; align-items: center; gap: 15px; }
@@ -912,27 +914,36 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            background-color: #f8f8f8;
         }
         #music-player-ui {
-            padding: 20px;
+            padding: 20px 20px 0 20px;
             display: flex;
             flex-direction: column;
+            flex-grow: 1;
             align-items: center;
-            justify-content: center;
-            gap: 25px;
-            height: 100%;
+            justify-content: space-around;
             background-size: cover;
             background-position: center;
+            color: #333;
+        }
+         #music-player-ui.has-bg {
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        #music-player-ui.has-bg #song-info .artist {
+            color: #eee;
+        }
+         #music-player-ui.has-bg .control-btn, #music-player-ui.has-bg .action-row .control-btn {
+            color: white;
         }
         #album-art {
-            width: 220px;
-            height: 220px;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
             object-fit: cover;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            border: 8px solid white;
-            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            border: 8px solid rgba(255,255,255,0.8);
         }
         #album-art.playing {
             animation: spin 8s linear infinite;
@@ -943,21 +954,33 @@
         }
         #song-info {
             text-align: center;
+            width: 100%;
         }
         #song-info .title {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
-            color: var(--text-color);
             margin: 0;
         }
         #song-info .artist {
             font-size: 16px;
             color: #888;
-            margin-top: 5px;
+            margin-top: 8px;
         }
+        .action-row {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .action-row .control-btn {
+            background: none; border: none; cursor: pointer; color: #555;
+        }
+        .action-row .control-btn svg { width: 28px; height: 28px; fill: currentColor; }
+        .action-row .control-btn.liked svg { fill: #E53935; }
+
         #music-progress-container {
             width: 100%;
-            max-width: 300px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -982,6 +1005,7 @@
             align-items: center;
             justify-content: center;
             gap: 30px;
+            width: 100%;
         }
         .control-btn {
             background: none;
@@ -990,13 +1014,24 @@
             color: var(--text-color);
         }
         .control-btn svg {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             fill: currentColor;
         }
         #play-pause-btn svg {
-            width: 48px;
-            height: 48px;
+            width: 64px;
+            height: 64px;
+        }
+        #music-footer-controls {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            padding: 15px 20px calc(15px + env(safe-area-inset-bottom));
+        }
+         #music-footer-controls .control-btn svg {
+            width: 26px;
+            height: 26px;
         }
         #playlist-manage-screen .list-item {
             justify-content: space-between;
@@ -1227,6 +1262,7 @@
         <div id="moment-comment-modal" class="modal-overlay"></div>
         <div id="create-moment-modal" class="modal-overlay"></div>
         <div id="share-music-modal" class="modal-overlay"></div>
+        <div id="listen-together-modal" class="modal-overlay"></div>
 
         <div id="add-music-modal" class="action-sheet-overlay">
             <div class="action-sheet">
@@ -1631,8 +1667,7 @@ function injectHTML() {
             <header class="app-header">
                 <button class="back-btn" data-target="home-screen">‹</button>
                 <div class="title-container"><h1 class="title">汪汪音乐</h1></div>
-                <div class="action-btn-group">
-                     <button id="manage-playlist-btn" class="action-btn" style="font-size: 22px; padding: 0; width: 40px; height: 40px;">☰</button>
+                 <div class="action-btn-group">
                      <label id="add-music-btn-action" class="action-btn" style="font-size: 28px; padding: 0; width: 40px; height: 40px; cursor: pointer;">+</label>
                      <input type="file" id="add-music-file" accept="audio/*" style="display:none;">
                 </div>
@@ -1643,6 +1678,11 @@ function injectHTML() {
                     <div id="song-info">
                         <p class="title" id="player-song-title">选择一首歌</p>
                         <p class="artist" id="player-song-artist">开始播放吧</p>
+                    </div>
+                    <div class="action-row">
+                        <button class="control-btn" id="listen-together-btn"><svg viewBox="0 0 24 24"><path d="M12,3A4,4 0 0,0 8,7V11A4,4 0 0,0 12,15A4,4 0 0,0 16,11V7A4,4 0 0,0 12,3M19,11C19,14.54 16.27,17.43 12.75,17.93V21H11.25V17.93C7.73,17.43 5,14.54 5,11H6.5A4.5,4.5 0 0,1 11,15.5V17.5A6.5,6.5 0 0,0 17.5,11H19Z"/></svg></button>
+                        <button class="control-btn" id="share-song-btn"><svg viewBox="0 0 24 24"><path d="M18,16.08C17.24,16.08 16.56,16.38 16.04,16.85L8.91,12.7C8.96,12.47 9,12.24 9,12C9,11.76 8.96,11.53 8.91,11.3L15.96,7.2C16.5,7.62 17.21,7.92 18,7.92C19.66,7.92 21,6.58 21,5C21,3.42 19.66,2 18,2C16.34,2 15,3.42 15,5C15,5.24 15.04,5.47 15.09,5.7L8.04,9.8C7.5,9.38 6.79,9.08 6,9.08C4.34,9.08 3,10.42 3,12C3,13.58 4.34,14.92 6,14.92C6.79,14.92 7.5,14.62 8.04,14.2L16.16,18.35C16.11,18.58 16.08,18.79 16.08,19C16.08,20.66 17.42,22 19,22C20.58,22 21.92,20.66 21.92,19C21.92,17.34 20.58,16.08 19,16.08Z"/></svg></button>
+                        <button class="control-btn" id="like-song-btn"><svg viewBox="0 0 24 24"><path d="M12.1,18.55L12,18.65L11.89,18.55C7.14,14.24 4,11.39 4,8.5C4,6.5 5.5,5 7.5,5C9.04,5 10.54,6 11.07,7.36H12.93C13.46,6 14.96,5 16.5,5C18.5,5 20,6.5 20,8.5C20,11.39 16.86,14.24 12.1,18.55M16.5,3C14.76,3 13.09,3.81 12,5.08C10.91,3.81 9.24,3 7.5,3C4.42,3 2,5.41 2,8.5C2,12.27 5.4,15.36 10.55,20.03L12,21.35L13.45,20.03C18.6,15.36 22,12.27 22,8.5C22,5.41 19.58,3 16.5,3Z"/></svg></button>
                     </div>
                     <div id="music-progress-container">
                         <span id="current-time">0:00</span>
@@ -1656,6 +1696,17 @@ function injectHTML() {
                             <svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M14,19H18V5H14M6,19H10V5H6V19Z" /></svg>
                         </button>
                         <button class="control-btn" id="next-btn"><svg viewBox="0 0 24 24"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" /></svg></button>
+                    </div>
+                    <div id="music-footer-controls">
+                         <button class="control-btn" id="playback-mode-btn">
+                            <svg class="mode-sequential" viewBox="0 0 24 24"><path d="M2,6V8H21V6H2M2,11V13H21V11H2M2,16V18H21V16H2Z"/></svg>
+                            <svg class="mode-shuffle" style="display:none;" viewBox="0 0 24 24"><path d="M10.59,9.17L5.41,4L4,5.41L9.17,10.59L10.59,9.17M14.83,13.41L13.41,14.83L18.59,20L20,18.59L14.83,13.41M5.41,20L4,18.59L18.59,4L20,5.41L5.41,20Z"/></svg>
+                            <svg class="mode-repeat-one" style="display:none;" viewBox="0 0 24 24"><path d="M7,7H17V10L21,6L17,2V5H5V12H7V7M17,17H7V14L3,18L7,22V19H19V12H17V17M13,10.25V13.75L15.25,12L13,10.25Z"/></svg>
+                        </button>
+                        <span></span>
+                        <button class="control-btn" id="playlist-btn">
+                            <svg viewBox="0 0 24 24"><path d="M3,13H15V11H3M3,6H15V8H3M3,18V16H15V18M17,11V13H21V11M17,6V8H21V6M17,18V16H21V18Z" /></svg>
+                        </button>
                     </div>
                 </div>
                 <div class="placeholder-text" id="no-music-placeholder" style="display: block;"><p>你的播放列表是空的~</p><p>点击右上角的“+”添加音乐文件吧！</p></div>
@@ -1719,7 +1770,7 @@ let isExtractingMemory = false;
 let callTimerInterval = null;
 let longPressJustFired = false;
 let currentPlayingSongIndex = -1;
-let islandHideTimeout = null; // 新增: 灵动岛自动隐藏计时器
+let islandHideTimeout = null;
 
 let videoCallState = {
     isActive: false,
@@ -1780,12 +1831,18 @@ const loadData = () => {
         },
         musicSettings: {
             albumArt: 'https://i.postimg.cc/7Z06F59G/IMG-20250828-151340.jpg',
-            background: ''
+            background: '',
+            playbackMode: 'sequential' // 'sequential', 'shuffle', 'repeat-one'
         },
         musicPlaylist: [],
     };
     db = data ? { ...defaultDb, ...JSON.parse(data) } : defaultDb;
     db.musicPlaylist = db.musicPlaylist || [];
+     db.musicPlaylist.forEach(song => {
+        if (song.isLiked === undefined) {
+            song.isLiked = false;
+        }
+    });
 
     if (db.apiSettings && Object.keys(db.apiSettings).length > 0) {
         const defaultProfile = {
@@ -2431,7 +2488,7 @@ function renderChatList() {
     });
 }
 
- function setupContactsScreen() {
+function setupContactsScreen() {
     const container = getEl('contacts-list-container');
     container.addEventListener('click', e => {
         if (longPressJustFired) {
@@ -3376,25 +3433,28 @@ function toggleStickerModal(forceState) {
 
         if (isHtmlModule) {
             const moduleWrapper = document.createElement('div');
-            moduleWrapper.className = 'html-module-wrapper';
+            moduleWrapper.className = `message-bubble-row`;
+             if (isSent) {
+                moduleWrapper.style.flexDirection = 'row-reverse';
+            }
             
             const contentContainer = document.createElement('div');
-            contentContainer.className = isSent ? 'sent' : 'received';
+            contentContainer.className = 'html-module-content';
+            contentContainer.style.margin = '0 8px';
             
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = content;
             const scriptTags = tempDiv.querySelectorAll('script');
 
-            contentContainer.innerHTML = content; // Set innerHTML first
+            contentContainer.innerHTML = tempDiv.innerHTML;
 
-            // Append scripts separately to execute them
             scriptTags.forEach(originalScript => {
                 const newScript = document.createElement('script');
                 newScript.textContent = originalScript.textContent;
-                originalScript.remove(); // Remove original script to avoid double execution if any
+                originalScript.remove(); 
                 contentContainer.appendChild(newScript);
             });
-
+            moduleWrapper.innerHTML = messageInfoHTML;
             moduleWrapper.appendChild(contentContainer);
             wrapper.appendChild(moduleWrapper);
             return wrapper;
@@ -4057,23 +4117,26 @@ function generateGroupSystemPrompt(group) {
     return prompt;
 }
 
-async function getAiReply(customPrompt = null, messages = null, isTest = false) {
+async function getAiReply(customPrompt = null, messages = null, isTest = false, testConfig = null) {
     const isInternalCall = !!customPrompt;
-    if (isGenerating && !isInternalCall) return; 
+    if (isGenerating && !isInternalCall) return;
 
-    const activeProfile = db.apiProfiles.find(p => p.id === db.activeApiProfileId);
-    if (!activeProfile && !isTest) {
+    const activeProfile = isTest ? testConfig : db.apiProfiles.find(p => p.id === db.activeApiProfileId);
+
+    if (!activeProfile) {
         if (!isInternalCall) {
-             showToast('请先在"项圈"应用中完成并激活一个API配置！');
-             switchScreen('api-settings-screen');
+            showToast('请先在"项圈"应用中完成并激活一个API配置！');
+            switchScreen('api-settings-screen');
         }
         return null;
     }
-    const { url, key, model, provider } = isTest ? {url: 'test', key: 'test', model: 'test', provider: 'newapi'} : activeProfile;
-    if (!url || !key || (!model && !isTest)) {
-        if (!isInternalCall && !isTest) { 
-             showToast('请先在"项圈"应用中完成设置！');
-             switchScreen('api-settings-screen');
+
+    const { url, key, model, provider } = activeProfile;
+
+    if (!url || !key || !model) {
+        if (!isInternalCall) { 
+            showToast('请先在"项圈"应用中完成设置！');
+            switchScreen('api-settings-screen');
         }
         return null;
     }
@@ -5905,7 +5968,7 @@ function getContrastYIQ(hexcolor){
         memoryListContainer.addEventListener('touchmove', () => clearTimeout(longPressTimer));
     }
     
-    function setupMemoryCoreSettingsApp() {
+        function setupMemoryCoreSettingsApp() {
         getEl('memory-core-settings-screen').addEventListener('submit', (e) => {
             if(e.target.id === 'memory-settings-form') {
                 e.preventDefault();
@@ -5923,7 +5986,7 @@ function getContrastYIQ(hexcolor){
         getEl('memory-extraction-prompt').value = db.memorySettings.extractionPrompt;
     }
 
-        function renderMemoryCoreList() {
+    function renderMemoryCoreList() {
         const container = getEl('memory-core-list-container');
         container.innerHTML = '';
         getEl('no-memories-placeholder').style.display = db.memoryEntries.length === 0 ? 'block' : 'none';
@@ -6511,7 +6574,7 @@ ${callHistoryForPrompt}
         saveData();
     }
     
-       // --- NEW FUNCTIONS FOR API MANAGER & DATA I/O ---
+    // --- NEW FUNCTIONS FOR API MANAGER & DATA I/O ---
 
     function setupApiManager() {
         const form = getEl('api-form');
@@ -6638,7 +6701,7 @@ ${callHistoryForPrompt}
             testButton.classList.add('loading');
             testButton.disabled = true;
             try {
-                await getAiReply(null, null, true);
+                await getAiReply(null, null, true, { ...newProfileData });
                 saveData();
                 renderApiProfileList();
                 loadApiProfileToForm(newActiveId);
@@ -6749,6 +6812,12 @@ ${callHistoryForPrompt}
                 <ul id="share-music-list" class="list-container" style="max-height: 40vh; overflow-y: auto;"></ul>
             </div>`;
 
+         getEl('listen-together-modal').innerHTML = `
+            <div class="modal-window">
+                <h3>邀请谁一起听?</h3>
+                <ul id="listen-together-char-list" class="list-container" style="max-height: 40vh; overflow-y: auto;"></ul>
+            </div>`;
+
         const fileInput = getEl('add-music-file');
         const audioPlayer = getEl('audio-player');
         const playPauseBtn = getEl('play-pause-btn');
@@ -6756,7 +6825,11 @@ ${callHistoryForPrompt}
         const nextBtn = getEl('next-btn');
         const addMusicBtn = getEl('add-music-btn-action');
         const addMusicModal = getEl('add-music-modal');
-        const managePlaylistBtn = getEl('manage-playlist-btn');
+        const managePlaylistBtn = getEl('playlist-btn');
+        const playbackModeBtn = getEl('playback-mode-btn');
+        const likeSongBtn = getEl('like-song-btn');
+        const shareSongBtn = getEl('share-song-btn');
+        const listenTogetherBtn = getEl('listen-together-btn');
 
         addMusicBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -6772,7 +6845,7 @@ ${callHistoryForPrompt}
             const url = prompt("请输入歌曲的 URL (.mp3, .wav, .ogg):");
             if (url) {
                 const songName = url.split('/').pop().replace(/\.[^/.]+$/, "") || "网络歌曲";
-                const song = { id: `song_${Date.now()}`, title: songName, artist: "未知艺术家", url: url };
+                const song = { id: `song_${Date.now()}`, title: songName, artist: "未知艺术家", url: url, isLiked: false };
                 db.musicPlaylist.push(song);
                 saveData();
                 renderPlaylist();
@@ -6792,7 +6865,8 @@ ${callHistoryForPrompt}
                     title: file.name.replace(/\.[^/.]+$/, ""),
                     artist: "未知艺术家",
                     url: URL.createObjectURL(file),
-                    isLocal: true
+                    isLocal: true,
+                    isLiked: false
                 };
                 db.musicPlaylist.push(song);
                 renderPlaylist();
@@ -6811,7 +6885,7 @@ ${callHistoryForPrompt}
         playPauseBtn.addEventListener('click', togglePlayPause);
         audioPlayer.addEventListener('play', () => updatePlayPauseIcon(true));
         audioPlayer.addEventListener('pause', () => updatePlayPauseIcon(false));
-        audioPlayer.addEventListener('ended', playNextSong);
+        audioPlayer.addEventListener('ended', handleSongEnd);
         audioPlayer.addEventListener('timeupdate', () => {
             updateProgress();
             updateDynamicIsland();
@@ -6821,7 +6895,16 @@ ${callHistoryForPrompt}
         prevBtn.addEventListener('click', playPrevSong);
         getEl('progress-bar').addEventListener('click', setProgress);
         
+        playbackModeBtn.addEventListener('click', togglePlaybackMode);
+        likeSongBtn.addEventListener('click', toggleLikeSong);
+        shareSongBtn.addEventListener('click', () => {
+             const song = db.musicPlaylist[currentPlayingSongIndex];
+             if(song) openShareMusicModal(song);
+        });
+        listenTogetherBtn.addEventListener('click', openListenTogetherModal);
+        
         applyMusicPlayerCustomization();
+        updatePlaybackModeIcon();
     }
     
     function applyMusicPlayerCustomization() {
@@ -6829,11 +6912,10 @@ ${callHistoryForPrompt}
         const musicUI = getEl('music-player-ui');
         if (db.musicSettings.background) {
             musicUI.style.backgroundImage = `url(${db.musicSettings.background})`;
-            musicUI.style.backgroundSize = 'cover';
-            musicUI.style.borderRadius = '0'; 
-            musicUI.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+            musicUI.classList.add('has-bg');
         } else {
             musicUI.style.backgroundImage = 'none';
+             musicUI.classList.remove('has-bg');
         }
     }
 
@@ -6865,6 +6947,7 @@ ${callHistoryForPrompt}
         audioPlayer.src = song.url;
         getEl('player-song-title').textContent = song.title;
         getEl('player-song-artist').textContent = song.artist;
+        updateLikeButton(song.isLiked);
         audioPlayer.play();
     }
     
@@ -6882,7 +6965,7 @@ ${callHistoryForPrompt}
     }
 
     function updatePlayPauseIcon(isPlaying) {
-        clearTimeout(islandHideTimeout); // 清除隐藏计时器
+        clearTimeout(islandHideTimeout); 
         
         getEl('play-icon').style.display = isPlaying ? 'none' : 'block';
         getEl('pause-icon').style.display = isPlaying ? 'block' : 'none';
@@ -6896,7 +6979,6 @@ ${callHistoryForPrompt}
         updateDynamicIsland();
         
         if (!isPlaying) {
-            // 如果暂停，30秒后隐藏
             islandHideTimeout = setTimeout(() => {
                 getEl('dynamic-island').style.display = 'none';
             }, 30000);
@@ -6904,8 +6986,13 @@ ${callHistoryForPrompt}
     }
 
     function playNextSong() {
-        let nextIndex = currentPlayingSongIndex + 1;
-        if (nextIndex >= db.musicPlaylist.length) nextIndex = 0;
+        let nextIndex;
+        if (db.musicSettings.playbackMode === 'shuffle') {
+            nextIndex = Math.floor(Math.random() * db.musicPlaylist.length);
+        } else {
+            nextIndex = currentPlayingSongIndex + 1;
+            if (nextIndex >= db.musicPlaylist.length) nextIndex = 0;
+        }
         playSongByIndex(nextIndex);
     }
     
@@ -6913,6 +7000,47 @@ ${callHistoryForPrompt}
         let prevIndex = currentPlayingSongIndex - 1;
         if (prevIndex < 0) prevIndex = db.musicPlaylist.length - 1;
         playSongByIndex(prevIndex);
+    }
+
+    function handleSongEnd() {
+        if (db.musicSettings.playbackMode === 'repeat-one') {
+            playSongByIndex(currentPlayingSongIndex);
+        } else {
+            playNextSong();
+        }
+    }
+
+    function togglePlaybackMode() {
+        const modes = ['sequential', 'shuffle', 'repeat-one'];
+        const currentModeIndex = modes.indexOf(db.musicSettings.playbackMode);
+        const nextModeIndex = (currentModeIndex + 1) % modes.length;
+        db.musicSettings.playbackMode = modes[nextModeIndex];
+        saveData();
+        updatePlaybackModeIcon();
+
+        const modeText = { 'sequential': '顺序播放', 'shuffle': '随机播放', 'repeat-one': '单曲循环' };
+        showToast(modeText[db.musicSettings.playbackMode]);
+    }
+
+    function updatePlaybackModeIcon() {
+        const btn = getEl('playback-mode-btn');
+        btn.querySelectorAll('svg').forEach(svg => svg.style.display = 'none');
+        btn.querySelector(`.mode-${db.musicSettings.playbackMode}`).style.display = 'block';
+    }
+
+    function toggleLikeSong() {
+        if (currentPlayingSongIndex > -1) {
+            const song = db.musicPlaylist[currentPlayingSongIndex];
+            song.isLiked = !song.isLiked;
+            saveData();
+            updateLikeButton(song.isLiked);
+            showToast(song.isLiked ? '已添加到我喜欢' : '已取消喜欢');
+        }
+    }
+
+    function updateLikeButton(isLiked) {
+        const btn = getEl('like-song-btn');
+        btn.classList.toggle('liked', isLiked);
     }
 
     function formatTime(seconds) {
@@ -6943,18 +7071,19 @@ ${callHistoryForPrompt}
         }
     }
 
-    function openShareMusicModal() {
+    function openShareMusicModal(songToShare) {
         const listEl = getEl('share-music-list');
         listEl.innerHTML = '';
-        if (db.musicPlaylist.length === 0) {
-            listEl.innerHTML = '<li class="placeholder-text">没有可分享的音乐</li>';
+        const chats = [...db.characters, ...db.groups];
+        if (chats.length === 0) {
+            listEl.innerHTML = '<li class="placeholder-text">没有可以分享的聊天</li>';
         } else {
-            db.musicPlaylist.forEach(song => {
+            chats.forEach(chat => {
                 const li = document.createElement('li');
-                li.className = 'list-item';
-                li.innerHTML = `<div class="item-details"><div class="item-name">${song.title}</div></div>`;
+                li.className = 'selection-item';
+                li.innerHTML = `<img src="${chat.avatar}" class="chat-avatar ${chat.members ? 'group-avatar' : ''}"><span>${chat.name || chat.remarkName}</span>`;
                 li.addEventListener('click', () => {
-                    shareSong(song);
+                    shareSongToChat(songToShare, chat.id, chat.members ? 'group' : 'private');
                     getEl('share-music-modal').classList.remove('visible');
                 });
                 listEl.appendChild(li);
@@ -6962,11 +7091,72 @@ ${callHistoryForPrompt}
         }
         getEl('share-music-modal').classList.add('visible');
     }
+    
+    function openListenTogetherModal() {
+        const listEl = getEl('listen-together-char-list');
+        listEl.innerHTML = '';
+        const onlineChars = db.characters.filter(c => c.status !== '离线');
+        if (onlineChars.length === 0) {
+            listEl.innerHTML = '<li class="placeholder-text">没有在线的小伙伴可以邀请</li>';
+        } else {
+            onlineChars.forEach(char => {
+                 const li = document.createElement('li');
+                li.className = 'selection-item';
+                li.innerHTML = `<img src="${char.avatar}" class="chat-avatar"><span>${char.remarkName}</span>`;
+                li.addEventListener('click', () => {
+                    inviteToListenTogether(char.id);
+                    getEl('listen-together-modal').classList.remove('visible');
+                });
+                listEl.appendChild(li);
+            });
+        }
+         getEl('listen-together-modal').classList.add('visible');
+    }
 
-    function shareSong(song) {
-        const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
-        const userProfile = db.userProfiles.find(p => p.id === (currentChatType === 'private' ? chat.userProfileId : chat.me.profileId));
-        const myName = (currentChatType === 'private') ? userProfile.name : chat.me.nickname;
+    async function inviteToListenTogether(characterId) {
+        const song = db.musicPlaylist[currentPlayingSongIndex];
+        const character = db.characters.find(c => c.id === characterId);
+        if (!song || !character) return;
+        
+        showToast(`已邀请 ${character.remarkName} 一起听歌...`);
+        
+        const userProfile = db.userProfiles.find(p => p.id === character.userProfileId);
+        const prompt = `你正在扮演角色“${character.realName}”，人设是：${character.persona}。
+        用户“${userProfile.name}”刚刚邀请你一起听一首名为《${song.title}》的歌。
+        请根据你的人设，生成1-2条简短、口语化的聊天消息作为回应。
+        格式严格要求为：[${character.realName}的消息：你的回应内容]`;
+
+        const response = await getAiReply(prompt);
+        if(response) {
+            const messages = response.match(/\[.*?\]/g) || [];
+            messages.forEach(msgContent => {
+                const message = {
+                    id: `msg_${Date.now()}_${Math.random()}`,
+                    role: 'assistant',
+                    content: msgContent.trim(),
+                    timestamp: Date.now()
+                };
+                character.history.push(message);
+            });
+            saveData();
+            
+            showTopNotification({
+                avatar: character.avatar,
+                title: character.remarkName,
+                preview: '发来一条新消息',
+                target: 'chat-room-screen',
+                chatId: character.id,
+                chatType: 'private'
+            });
+            renderChatList();
+        }
+    }
+
+
+    function shareSongToChat(song, chatId, chatType) {
+        const chat = (chatType === 'private') ? db.characters.find(c => c.id === chatId) : db.groups.find(g => g.id === chatId);
+        const userProfile = db.userProfiles.find(p => p.id === (chatType === 'private' ? chat.userProfileId : chat.me.profileId));
+        const myName = (chatType === 'private') ? userProfile.name : chat.me.nickname;
         
         const message = {
             id: `msg_${Date.now()}`,
@@ -6974,14 +7164,17 @@ ${callHistoryForPrompt}
             content: `[${myName}分享了音乐：${song.title}]`,
             timestamp: Date.now()
         };
-        if(currentChatType === 'group') message.senderId = 'user_me';
+        if(chatType === 'group') message.senderId = 'user_me';
 
         chat.history.push(message);
-        addMessageBubble(message);
+        chat.unreadCount = 0; // Don't count self-shares as unread
         saveData();
+        
+        showToast(`已分享到与 ${chat.name || chat.remarkName} 的聊天`);
+        if(currentChatId === chatId && getEl('chat-room-screen').classList.contains('active')) {
+             addMessageBubble(message);
+        }
         renderChatList();
-        isNextClickForReply = true;
-        updateSendButtonState();
     }
 
     function setupDynamicIsland() {
