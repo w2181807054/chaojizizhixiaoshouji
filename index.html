@@ -12,7 +12,25 @@
         @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
         
         :root {
-            --primary-color: #FFD97D; --secondary-color: #B78460; --bg-color: rgba(255, 217, 125, 0.08); --top-pinned-bg: rgba(255, 217, 125, 0.15); --accent-color: #A0D8EF; --text-color: #5D4037; --white-color: #FDFBF6; --border-radius: 22px; --phone-corner-radius: 0px; --font-family: 'Varela Round', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; --online-status-color: #4CAF50; --moments-bg: #FFFFFF; --moments-interactions-bg: #F7F7F7;
+            --primary-color: #FFD97D; 
+            --primary-color-rgb: 255, 217, 125;
+            --secondary-color: #B78460; 
+            --accent-color: #A0D8EF;
+            --accent-color-rgb: 160, 216, 239;
+            --danger-color: #ef5350;
+            --danger-color-rgb: 239, 83, 80;
+            --neutral-color: #bdbdbd;
+            --neutral-color-rgb: 189, 189, 189;
+            --bg-color: rgba(255, 217, 125, 0.08); 
+            --top-pinned-bg: rgba(255, 217, 125, 0.15); 
+            --text-color: #5D4037; 
+            --white-color: #FDFBF6; 
+            --border-radius: 22px; 
+            --phone-corner-radius: 0px; 
+            --font-family: 'Varela Round', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; 
+            --online-status-color: #4CAF50; 
+            --moments-bg: #FFFFFF; 
+            --moments-interactions-bg: #F7F7F7;
         }
         *, *::before, *::after { box-sizing: border-box; }
         body { font-family: var(--font-family); margin: 0; padding: 0; background: linear-gradient(135deg, #FFEBCD, #D2B48C); display: flex; align-items: center; justify-content: center; min-height: 100vh; }
@@ -45,7 +63,12 @@
         #cancel-multi-select-btn { font-size: 14px !important; font-weight: 500 !important; color: var(--text-color) !important; background-color: var(--primary-color) !important; border-radius: 10px !important; padding: 5px 10px !important; width: auto !important; height: auto !important; }
         .app-header .action-btn-group { display: flex; align-items: center; gap: 10px; }
         .app-header .action-btn-group .action-btn { font-size: 16px; font-weight: 600; width: auto; padding: 6px 12px; border-radius: 10px; }
-        .app-header .action-btn-group #create-group-btn { background-color: var(--primary-color); color: var(--text-color); }
+        .app-header .action-btn-group #create-group-btn {
+            background-color: rgba(var(--primary-color-rgb), 0.7);
+            color: var(--text-color);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
         .app-header .action-btn-group #add-item-btn { font-size: 28px; padding: 0; width: 40px; height: 40px; background-color: transparent; color: var(--primary-color); border-radius: 50%; }
         .app-header .action-btn svg { width: 26px; height: 26px; }
         .app-header .action-btn img { width: 28px; height: 28px; }
@@ -58,12 +81,12 @@
         .time-widget { text-align: center; padding: 0 20px; color: var(--text-color); }
         .time-widget .time { font-size: 72px; font-weight: 600; }
         .time-widget .date { font-size: 18px; color: #666; }
+        #home-screen.day-mode .time-widget, #home-screen.day-mode .time-widget .date, #home-screen.day-mode .app-icon .app-name { color: var(--white-color); text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
         .home-layout { display: flex; padding: 20px 40px; gap: 20px; align-items: center; justify-content: center; margin-top: 20px; flex-grow: 1; }
         .home-layout-left { flex-shrink: 0; margin-right: 10px; }
         .home-layout-right { flex-grow: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
         .app-icon-large .icon-img { width: 130px; height: 130px; border-radius: 34px; }
         .app-icon-large .app-name { font-size: 14px; }
-        #home-screen.day-mode .time-widget, #home-screen.day-mode .time-widget .date, #home-screen.day-mode .app-icon .app-name { color: var(--white-color); text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
         .dock { display: flex; justify-content: center; align-items: center; padding: 10px; background-color: rgba(253, 251, 246, 0.75); backdrop-filter: blur(10px); border-radius: 28px; margin: 0 20px; min-height: 80px; gap: 30px; }
         .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; text-decoration: none; }
         .icon-img { width: 60px; height: 60px; border-radius: 18px; margin-bottom: 8px; box-shadow: 0 8px 25px rgba(183, 132, 96, 0.15); transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease; object-fit: cover; border: 3px solid rgba(255, 255, 255, 0.5); }
@@ -120,6 +143,7 @@
         .action-sheet-button { width: 100%; background: white; border: none; padding: 15px; font-size: 16px; color: var(--secondary-color); font-weight: 500; cursor: pointer; border-radius: 10px; margin-bottom: 8px; text-align: center; }
         .action-sheet-button.danger { color: #e53935; }
         .action-sheet-button:last-child { margin-bottom: 0; }
+        .action-sheet label.action-sheet-button { text-align: center; display: block; }
         #world-book-screen .content, #memory-core-screen .content { padding: 10px 0 0 0; }
         .list-container { list-style: none; margin: 0; padding: 0; }
         .list-item { display: flex; align-items: center; padding: 10px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0; transition: background-color 0.2s ease, border-left 0.2s ease, padding-left 0.2s ease; position: relative; border-left: 4px solid transparent; }
@@ -157,11 +181,13 @@
             margin-bottom: 12px;
             width: 100%;
         }
-        .html-module-wrapper > .sent {
-            margin-left: auto;
+        .html-module-wrapper.sent {
+             flex-direction: row-reverse;
         }
-        .html-module-wrapper > .received {
-            margin-right: auto;
+        .html-module-content {
+             margin: 0 8px;
+             max-width: calc(100% - 60px); /* Avatar width + margins */
+             overflow: auto;
         }
         .message-wrapper.sent { align-items: flex-end; }
         .message-wrapper.received { align-items: flex-start; }
@@ -504,13 +530,56 @@
             width: 20px;
             height: 20px;
         }
-        .chat-plus-menu { height: 0; background-color: #f7f7f7; overflow: hidden; transition: height 0.3s ease-in-out; padding: 0 20px; }
-        .chat-plus-menu.visible { height: 210px; padding: 20px 20px calc(20px + env(safe-area-inset-bottom)); }
+        .chat-plus-menu { 
+            height: 0; 
+            background-color: #f7f7f7; 
+            overflow: hidden; 
+            transition: height 0.3s ease-in-out; 
+            padding: 0 20px; 
+            position: relative;
+        }
+        .chat-plus-menu.visible { 
+            height: 230px; 
+            padding: 20px 0 calc(20px + env(safe-area-inset-bottom));
+        }
+        .plus-menu-pages-wrapper {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE 10+ */
+        }
+        .plus-menu-pages-wrapper::-webkit-scrollbar {
+            display: none; /* Safari and Chrome */
+        }
+        .plus-menu-page {
+            flex: 0 0 100%;
+            scroll-snap-align: start;
+            padding: 0 20px;
+        }
         .plus-menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
         .plus-menu-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .plus-menu-item .icon-background { width: 60px; height: 60px; background-color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .plus-menu-item svg { width: 32px; height: 32px; fill: #444; }
         .plus-menu-item span { font-size: 12px; color: #666; }
+        .plus-menu-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+        .plus-menu-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #ccc;
+            transition: background-color 0.3s;
+        }
+        .plus-menu-dot.active {
+            background-color: #888;
+        }
         #multi-select-bar { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); display: none; justify-content: space-between; align-items: center; padding: 10px 20px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid #eee; z-index: 20; border-bottom-left-radius: var(--phone-corner-radius); border-bottom-right-radius: var(--phone-corner-radius); animation: slideUp 0.3s ease-out; }
         #multi-select-bar.visible { display: flex; }
         .settings-sidebar { position: absolute; top: 0; right: -100%; width: 80%; height: 100%; background: #fff; box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: right 0.4s ease-in-out; z-index: 101; display: flex; flex-direction: column; }
@@ -533,25 +602,54 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-color); }
         .form-group.radio-group { display: flex; gap: 20px; align-items: center; }
         .form-group.radio-group label { margin-bottom: 0; }
-        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; }
+        
+        /* New Glassmorphism Button Styles */
+        .btn {
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-align: center;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        #chat-settings-sidebar .form-group, #group-settings-sidebar .form-group {
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+        }
         .btn:active { transform: scale(0.97); }
-        .btn-primary { background-color: var(--primary-color); color: var(--text-color); }
-        .btn-primary:hover { background-color: var(--secondary-color); box-shadow: 0 4px 15px rgba(255, 217, 125, 0.5); }
+
+        .btn-primary { background-color: rgba(var(--primary-color-rgb), 0.7); color: var(--text-color); }
+        .btn-primary:hover { background-color: rgba(var(--primary-color-rgb), 0.85); box-shadow: 0 4px 20px rgba(var(--primary-color-rgb), 0.4); }
         label.btn-primary { color: var(--text-color) !important; }
+
+        .btn-secondary { background-color: rgba(var(--accent-color-rgb), 0.7); color: var(--white-color); margin-bottom: 15px; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .btn-secondary:hover { background-color: rgba(var(--accent-color-rgb), 0.85); box-shadow: 0 4px 20px rgba(var(--accent-color-rgb), 0.4); }
+
+        .btn-neutral { background-color: rgba(var(--neutral-color-rgb), 0.6); color: var(--white-color); }
+        .btn-neutral:hover { background-color: rgba(var(--neutral-color-rgb), 0.75); }
+
+        .btn-danger { background-color: rgba(var(--danger-color-rgb), 0.7); color: white; }
+        .btn-danger:hover { background-color: rgba(var(--danger-color-rgb), 0.85); }
+        
         .btn-small { padding: 8px 16px; font-size: 14px; width: auto; }
-        .btn-secondary { background-color: var(--accent-color); color: var(--white-color); margin-bottom: 15px; }
-        .btn-secondary:hover { background-color: #64b5f6; box-shadow: 0 4px 15px rgba(144, 202, 249, 0.5); }
-        .btn-neutral { background-color: #bdbdbd; color: var(--white-color); }
-        .btn-neutral:hover { background-color: #9e9e9e; }
-        .btn-danger { background-color: #ef5350; color: white; }
         .btn .spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255, 255, 255, 0.5); border-top-color: var(--white-color); border-radius: 50%; animation: spin 1s linear infinite; }
         .btn.loading .spinner { display: block; }
         .btn.loading .btn-text { display: none; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        
         .wallpaper-preview { width: 100%; aspect-ratio: 9 / 16; max-height: 400px; border-radius: var(--border-radius); margin-bottom: 15px; background-size: cover; background-position: center; border: 3px dashed var(--primary-color); display: flex; align-items: center; justify-content: center; color: var(--secondary-color); font-style: italic; background-color: var(--bg-color); }
         .toast { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.7); color: white; padding: 10px 20px; border-radius: 15px; font-size: 14px; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s; z-index: 1000; }
         .toast.show { opacity: 1; visibility: visible; }
-        #world-book-selection-modal, #invite-member-modal, #character-select-modal, #profile-select-modal, #theme-select-modal, #heart-voice-modal, #listen-together-modal { z-index: 102; }
+        #world-book-selection-modal, #invite-member-modal, #character-select-modal, #profile-select-modal, #theme-select-modal, #heart-voice-modal, #listen-together-modal, #lyrics-modal { z-index: 102; }
         #batch-sticker-modal { z-index: 103; }
         .modal-window { width: 90%; max-width: 380px; }
         #world-book-selection-list, #invite-member-selection-list, #character-selection-list, #profile-selection-list, #listen-together-char-list { list-style: none; padding: 0; margin: 0; max-height: 40vh; overflow-y: auto; }
@@ -1183,6 +1281,106 @@
             width: 32px;
             height: 32px;
         }
+
+        /* NEW Music Card Styles */
+        .music-share-card, .listen-together-card {
+            width: 230px;
+            border-radius: 12px;
+            margin: 0 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(90, 90, 90, 0.2);
+            color: white;
+            background-color: #333;
+            cursor: pointer;
+        }
+        .music-card-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px) brightness(0.6);
+            transform: scale(1.1);
+            z-index: 1;
+        }
+        .music-card-content {
+            padding: 15px;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .music-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .music-card-album-art {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .music-card-info .title {
+            font-size: 16px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .music-card-info .artist {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        .music-card-footer {
+            font-size: 12px;
+            margin-top: auto;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0.7;
+        }
+        .listen-together-card .music-card-footer {
+            background-color: rgba(0,0,0,0.3);
+            margin: 10px -15px -15px;
+            padding: 10px 15px;
+            text-align: center;
+            border-top: none;
+            font-weight: bold;
+            opacity: 1;
+        }
+
+        /* NEW Lyrics Styles */
+        #lyrics-modal .modal-window {
+            width: 90%;
+            max-width: 400px;
+        }
+        #lyrics-content {
+            max-height: 50vh;
+            overflow-y: auto;
+            text-align: center;
+            line-height: 2;
+            font-size: 16px;
+            color: var(--text-color);
+            scroll-behavior: smooth;
+        }
+        #lyrics-content .lyric-line {
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+        #lyrics-content .lyric-line.active {
+            opacity: 1;
+            font-weight: bold;
+            transform: scale(1.1);
+            color: var(--secondary-color);
+        }
+        #edit-lyrics-textarea {
+            width: 100%;
+            height: 40vh;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
@@ -1263,6 +1461,7 @@
         <div id="create-moment-modal" class="modal-overlay"></div>
         <div id="share-music-modal" class="modal-overlay"></div>
         <div id="listen-together-modal" class="modal-overlay"></div>
+        <div id="lyrics-modal" class="modal-overlay"></div>
 
         <div id="add-music-modal" class="action-sheet-overlay">
             <div class="action-sheet">
@@ -1419,7 +1618,7 @@ function injectHTML() {
                 </div>
             </footer>
         `,
-        'chat-room-screen': `<header class="app-header" id="chat-room-header-default"><button class="back-btn" data-target="chat-list-screen">‹</button><div class="title-container"><h1 class="title" id="chat-room-title">...</h1><div class="subtitle" id="chat-room-subtitle"><div class="online-indicator"></div><span id="chat-room-status-text">在线</span></div></div><div class="action-btn-group"><button class="action-btn" id="show-heart-voice-btn" style="display:none;">${heartVoiceSVG}</button><button class="action-btn" id="chat-settings-btn">${settingsSVG}</button></div></header><header class="app-header" id="chat-room-header-select" style="display: none;"><button class="action-btn" id="cancel-multi-select-btn">取消</button><div class="title-container"><h1 class="title" id="multi-select-title">选择消息</h1></div><div class="placeholder"></div></header><main class="content"><div class="message-area" id="message-area"></div><div class="typing-indicator" id="typing-indicator"></div></main><div class="chat-input-wrapper"><div id="reply-preview-bar" class="reply-preview-bar"></div><div class="message-input-area" id="message-input-default"><button id="plus-menu-btn" class="icon-btn"><svg viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" /></svg></button><input type="text" id="message-input" placeholder="输入消息..."><button id="sticker-toggle-btn" class="icon-btn"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg></button><button id="send-or-reply-btn" class="icon-btn send-btn"></button></div><div class="message-input-area" id="message-edit-bar" style="display: none;"><input type="text" id="message-edit-input"><button id="save-edit-btn" class="icon-btn send-btn">✓</button><button id="cancel-edit-btn" class="icon-btn" style="background-color: #aaa;">✗</button></div><div id="chat-plus-menu" class="chat-plus-menu"><div class="plus-menu-grid"></div></div></div><div id="multi-select-bar"><span id="select-count">已选择 0 项</span><button class="btn btn-danger" id="delete-selected-btn" style="width: auto; padding: 8px 16px;">删除已选</button></div><div id="sticker-modal"><div class="header"><span>我的表情</span><div><button class="btn btn-secondary btn-small" id="batch-add-sticker-btn" style="margin-right: 8px;">批量导入</button><button class="btn btn-primary btn-small" id="add-new-sticker-btn">添加新表情</button></div></div><div class="sticker-grid" id="sticker-grid-container"></div></div>`,
+        'chat-room-screen': `<header class="app-header" id="chat-room-header-default"><button class="back-btn" data-target="chat-list-screen">‹</button><div class="title-container"><h1 class="title" id="chat-room-title">...</h1><div class="subtitle" id="chat-room-subtitle"><div class="online-indicator"></div><span id="chat-room-status-text">在线</span></div></div><div class="action-btn-group"><button class="action-btn" id="show-heart-voice-btn" style="display:none;">${heartVoiceSVG}</button><button class="action-btn" id="chat-settings-btn">${settingsSVG}</button></div></header><header class="app-header" id="chat-room-header-select" style="display: none;"><button class="action-btn" id="cancel-multi-select-btn">取消</button><div class="title-container"><h1 class="title" id="multi-select-title">选择消息</h1></div><div class="placeholder"></div></header><main class="content"><div class="message-area" id="message-area"></div><div class="typing-indicator" id="typing-indicator"></div></main><div class="chat-input-wrapper"><div id="reply-preview-bar" class="reply-preview-bar"></div><div class="message-input-area" id="message-input-default"><button id="plus-menu-btn" class="icon-btn"><svg viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" /></svg></button><input type="text" id="message-input" placeholder="输入消息..."><button id="sticker-toggle-btn" class="icon-btn"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg></button><button id="send-or-reply-btn" class="icon-btn send-btn"></button></div><div class="message-input-area" id="message-edit-bar" style="display: none;"><input type="text" id="message-edit-input"><button id="save-edit-btn" class="icon-btn send-btn">✓</button><button id="cancel-edit-btn" class="icon-btn" style="background-color: #aaa;">✗</button></div><div id="chat-plus-menu" class="chat-plus-menu"><div class="plus-menu-pages-wrapper" id="plus-menu-pages-wrapper"></div><div class="plus-menu-dots" id="plus-menu-dots"></div></div></div><div id="multi-select-bar"><span id="select-count">已选择 0 项</span><button class="btn btn-danger" id="delete-selected-btn" style="width: auto; padding: 8px 16px;">删除已选</button></div><div id="sticker-modal"><div class="header"><span>我的表情</span><div><button class="btn btn-secondary btn-small" id="batch-add-sticker-btn" style="margin-right: 8px;">批量导入</button><button class="btn btn-primary btn-small" id="add-new-sticker-btn">添加新表情</button></div></div><div class="sticker-grid" id="sticker-grid-container"></div></div>`,
         'world-book-screen': `<header class="app-header"><button class="back-btn" data-target="home-screen">‹</button><div class="title-container"><h1 class="title">爪印书</h1></div><button class="action-btn" id="add-world-book-btn">${pawIcon}</button></header><main class="content"><ul class="list-container" id="world-book-list-container"></ul><div class="placeholder-text" id="no-world-books-placeholder" style="display: none;"><p>你的世界一片混沌...</p><p>点击右上角的爪印创造第一个设定吧！</p></div></main>`,
         'edit-world-book-screen': `<header class="app-header"><button class="back-btn" data-target="world-book-screen">‹</button><div class="title-container"><h1 class="title" id="edit-world-book-title">创建/编辑条目</h1></div><div class="placeholder"></div></header><main class="content"><form id="edit-world-book-form"><input type="hidden" id="world-book-id"><div class="form-group"><label for="world-book-name">条目名称</label><input type="text" id="world-book-name" placeholder="例如：世界观背景、魔法体系" required></div><div class="form-group"><label for="world-book-content">条目内容</label><textarea id="world-book-content" rows="8" placeholder="详细描述此项设定..." required></textarea></div><div class="form-group"><label>注入位置</label><div class="form-group radio-group"><label><input type="radio" name="world-book-position" value="before" checked> 前</label><label><input type="radio" name="world-book-position" value="after"> 后</label></div></div><button type="submit" class="btn btn-primary">保存条目</button></form></main>`,
         'moments-settings-screen': `<header class="app-header"><button class="back-btn" data-target="chat-list-screen">‹</button><div class="title-container"><h1 class="title">朋友圈设置</h1></div><div class="placeholder"></div></header><main class="content"><div class="form-group"><label>我的朋友圈头像</label><div class="avatar-setting" style="justify-content: center;"><img src="" alt="我的头像" id="moments-my-avatar-preview" class="avatar-preview" style="width:80px;height:80px;border-radius:12px;"><input type="file" id="moments-avatar-upload" accept="image/*" style="display:none;"><label for="moments-avatar-upload" class="btn btn-secondary" style="margin-left:15px; margin-bottom:0;">更换头像</label></div></div><hr><div class="form-group"><label>朋友圈封面</label><div class="wallpaper-preview" id="moments-bg-preview" style="height:150px; margin-bottom:10px;"></div><input type="file" id="moments-bg-upload" accept="image/*" style="display:none;"><label for="moments-bg-upload" class="btn btn-primary">更换封面</label></div><hr><form id="moments-settings-form"><div class="form-group"><label>AI自动发布动态</label><div class="form-group radio-group"><label><input type="radio" name="moments-enabled" value="true"> 开启</label><label><input type="radio" name="moments-enabled" value="false"> 关闭</label></div></div><div class="form-group"><label for="moments-frequency">发布频率</label><select id="moments-frequency" name="frequency"><option value="high">高 (1-2小时/条)</option><option value="medium">中 (4-8小时/条)</option><option value="low">低 (12-24小时/条)</option></select></div><button type="submit" class="btn btn-primary">保存设置</button></form><hr style="border:none; border-top:1px solid #eee; margin: 20px 0;"><button type="button" class="btn btn-danger" id="clear-moments-btn">清空所有动态</button></main>`,
@@ -1430,7 +1629,7 @@ function injectHTML() {
                         <label for="api-profile-manager">API 配置管理器</label>
                         <div style="display: flex; gap: 10px; align-items: center;">
                             <select id="api-profile-manager" style="flex-grow: 1;"></select>
-                            <button type="button" class="btn btn-secondary btn-small" id="delete-api-profile-btn" style="padding: 12px 16px; margin-bottom: 0;">删除</button>
+                            <button type="button" class="btn btn-danger btn-small" id="delete-api-profile-btn" style="padding: 12px 16px; margin-bottom: 0;">删除</button>
                         </div>
                     </div>
 
@@ -1532,8 +1731,8 @@ function injectHTML() {
         'memory-core-settings-screen': `<header class="app-header"><button class="back-btn" data-target="memory-core-screen">‹</button><div class="title-container"><h1 class="title">记忆核心设置</h1></div><div class="placeholder"></div></header><main class="content"><form id="memory-settings-form"><div class="form-group"><label for="memory-injection-prompt">记忆注入提示词</label><textarea id="memory-injection-prompt" rows="8" placeholder="描述如何将角色的个人记忆注入到主提示词中。使用 {{memories}} 作为记忆内容的占位符。"></textarea></div><div class="form-group"><label for="memory-extraction-prompt">记忆提取提示词</label><textarea id="memory-extraction-prompt" rows="8" placeholder="描述如何从对话历史中提取和总结新的记忆点。使用 {{history}} 作为对话历史占位符，{{memories}} 作为已有记忆占位符。"></textarea></div><button type="submit" class="btn btn-primary">保存设置</button></form></main>`,
         'add-char-modal': `<div class="modal-window"><h3>创建新伙伴</h3><form id="add-char-form"><div class="form-group"><label for="char-real-name">伙伴姓名</label><input type="text" id="char-real-name" placeholder="伙伴的真实姓名" required></div><div class="form-group"><label for="char-remark-name">伙伴备注 (昵称)</label><input type="text" id="char-remark-name" placeholder="你对Ta的称呼" required></div><div class="form-group"><label>伙伴头像</label><div class="avatar-setting" style="justify-content: center;"><img src="https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/k10U/1440X1440/Camera_XHS_17539526492361000g0082nu3tbm2k800g5nt289hgbmblr8ib1t8.jpg" alt="伙伴头像" id="add-char-avatar-preview" class="avatar-preview" style="cursor: pointer;"><input type="file" id="add-char-avatar-upload" accept="image/*" style="display:none;"></div></div><div class="form-group"><label for="add-char-persona">伙伴人设</label><textarea id="add-char-persona" rows="4" placeholder="简单描述一下Ta的性格特点吧..."></textarea></div><button type="submit" class="btn btn-primary">创建</button></form></div>`,
         'edit-contact-modal': `<div class="modal-window"><h3>编辑伙伴信息</h3><form id="edit-contact-form"><input type="hidden" id="edit-contact-id"><div class="form-group"><label for="edit-contact-real-name">伙伴姓名</label><input type="text" id="edit-contact-real-name" required></div><div class="form-group"><label for="edit-contact-remark-name">伙伴备注 (昵称)</label><input type="text" id="edit-contact-remark-name" required></div><div class="form-group"><label>伙伴头像</label><div class="avatar-setting" style="justify-content: center;"><img src="" alt="伙伴头像" id="edit-contact-avatar-preview" class="avatar-preview" style="cursor: pointer;"><input type="file" id="edit-contact-avatar-upload" accept="image/*" style="display:none;"></div></div><div class="form-group"><label for="edit-contact-persona">伙伴人设</label><textarea id="edit-contact-persona" rows="4"></textarea></div><button type="submit" class="btn btn-primary">保存</button></form></div>`,
-        'create-profile-modal': `<div class="modal-window"><h3>创建我的身份卡</h3><form id="create-profile-form"><div class="form-group"><label for="create-profile-name">我的姓名</label><input type="text" id="create-profile-name" required></div><div class="form-group"><label>我的头像</label><div class="avatar-setting" style="justify-content: center;"><img src="https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/jgQe/1440X1440/Camera_XHS_17539526514131000g0082nu3tbm2k80105nt289hgbmbld5nkhi8.jpg" alt="我的头像" id="create-profile-avatar-preview" class="avatar-preview" style="cursor: pointer;"><input type="file" id="create-profile-avatar-upload" accept="image/*" style="display:none;"></div></div><div class="form-group"><label for="create-profile-persona">我的人设</label><textarea id="create-profile-persona" rows="4"></textarea></div><button type="submit" class="btn btn-primary">创建</button></form></div>`,
-        'edit-profile-modal': `<div class="modal-window"><h3>编辑我的身份卡</h3><form id="edit-profile-form"><input type="hidden" id="edit-profile-id"><div class="form-group"><label for="edit-profile-name">我的姓名</label><input type="text" id="edit-profile-name" required></div><div class="form-group"><label>我的头像</label><div class="avatar-setting" style="justify-content: center;"><img src="" alt="我的头像" id="edit-profile-avatar-preview" class="avatar-preview" style="cursor: pointer;"><input type="file" id="edit-profile-avatar-upload" accept="image/*" style="display:none;"></div></div><div class="form-group"><label for="edit-profile-persona">我的人设</label><textarea id="edit-profile-persona" rows="4"></textarea></div><button type="submit" class="btn btn-primary">保存</button></form></div>`,
+        'create-profile-modal': `<div class="modal-window"><h3>创建我的身份卡</h3><form id="create-profile-form"><div class="form-group"><label for="create-profile-name">我的姓名</label><input type="text" id="create-profile-name" required></div><div class="form-group"><label>我的头像</label><div class="avatar-setting" style="justify-content: center;"><img src="https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/jgQe/1440X1440/Camera_XHS_17539526514131000g0082nu3tbm2k80105nt289hgbmbld5nkhi8.jpg" alt="我的头像" id="create-profile-avatar-preview" class="avatar-preview" style="cursor: pointer;"><input type="file" id="create-profile-avatar-upload" accept="image/*" style="display:none;"></div></div><div class="form-group"><label for="create-profile-persona">我的人设</label><textarea id="create-profile-persona" rows="4"></textarea></div><div class="form-group"><label for="create-profile-wallet">钱包余额 (元)</label><input type="number" id="create-profile-wallet" step="0.01" value="520.00"></div><div class="form-group"><label for="create-profile-region">地区</label><input type="text" id="create-profile-region" value="地球"></div><button type="submit" class="btn btn-primary">创建</button></form></div>`,
+        'edit-profile-modal': `<div class="modal-window"><h3>编辑我的身份卡</h3><form id="edit-profile-form"><input type="hidden" id="edit-profile-id"><div class="form-group"><label for="edit-profile-name">我的姓名</label><input type="text" id="edit-profile-name" required></div><div class="form-group"><label>我的头像</label><div class="avatar-setting" style="justify-content: center;"><img src="" alt="我的头像" id="edit-profile-avatar-preview" class="avatar-preview" style="cursor: pointer;"><input type="file" id="edit-profile-avatar-upload" accept="image/*" style="display:none;"></div></div><div class="form-group"><label for="edit-profile-persona">我的人设</label><textarea id="edit-profile-persona" rows="4"></textarea></div><div class="form-group"><label for="edit-profile-wallet">钱包余额 (元)</label><input type="number" id="edit-profile-wallet" step="0.01"></div><div class="form-group"><label for="edit-profile-region">地区</label><input type="text" id="edit-profile-region"></div><button type="submit" class="btn btn-primary">保存</button></form></div>`,
         'add-sticker-modal': `<div class="modal-window"><h3 id="add-sticker-modal-title">添加新表情</h3><form id="add-sticker-form"><input type="hidden" id="sticker-edit-id"><div id="sticker-preview"><span>预览</span></div><div class="form-group"><label for="sticker-name">表情名称</label><input type="text" id="sticker-name" placeholder="如：开心" required></div><div class="form-group"><label for="sticker-url-input">表情URL</label><input type="url" id="sticker-url-input" placeholder="粘贴图片URL"></div><p style="text-align:center; color:#888; margin: -10px 0 15px;">或</p><input type="file" id="sticker-file-upload" accept="image/*" style="display:none;"><label for="sticker-file-upload" class="btn btn-secondary" style="width:100%; margin-bottom: 20px;">从本地上传</label><button type="submit" class="btn btn-primary">保存</button></form></div>`,
         'batch-sticker-modal': `<div class="modal-window"><h3>批量导入表情包</h3><form id="batch-sticker-form"><div class="form-group"><label for="batch-sticker-input">粘贴内容</label><textarea id="batch-sticker-input" rows="8" placeholder="格式：\n表情名1 https://.../1.png,\n表情名2 https://.../2.png" required></textarea><p style="font-size:12px; color:#888; margin-top:5px;">请使用英文逗号 (,) 分隔每个表情包。</p></div><button type="submit" class="btn btn-primary">确认导入</button></form></div>`,
         'sticker-actionsheet': `<div class="action-sheet"><button class="action-sheet-button" id="edit-sticker-btn">编辑</button><button class="action-sheet-button danger" id="delete-sticker-btn">删除</button></div>`,
@@ -1556,8 +1755,8 @@ function injectHTML() {
             <div class="form-group"><label>自动提取记忆</label><div class="form-group radio-group"><label><input type="radio" name="auto-memory" value="true"> 开启</label><label><input type="radio" name="auto-memory" value="false"> 关闭</label></div></div>
             <div class="form-group"><label for="auto-memory-frequency">提取频率</label><select id="auto-memory-frequency"><option value="15">每 15 条消息后</option><option value="30">每 30 条消息后</option><option value="50">每 50 条消息后</option></select></div>
             <hr>
-            <div class="form-group"><button type="button" class="btn btn-secondary" id="link-world-book-btn">关联爪印书</button></div>
-            <div class="form-group">
+            <div class="form-group" style="width:100%"><button type="button" class="btn btn-secondary" id="link-world-book-btn">关联爪印书</button></div>
+            <div class="form-group" style="width:100%">
                 <button type="button" class="btn btn-primary" id="open-theme-modal-btn">气泡主题</button>
             </div>
              <div class="form-group">
@@ -1571,7 +1770,7 @@ function injectHTML() {
                 <input type="range" id="setting-chat-font-size" min="12" max="18" value="15" step="1" style="width: 100%;">
             </div>
             <div class="form-group"><label for="setting-max-memory">最大记忆轮数</label><input type="number" id="setting-max-memory" value="10" min="1"></div>
-            <div class="form-group"><label for="setting-chat-bg-upload" class="btn btn-primary">更换聊天背景</label><input type="file" id="setting-chat-bg-upload" accept="image/*" style="display:none;"></div>
+            <div class="form-group" style="width:100%"><label for="setting-chat-bg-upload" class="btn btn-primary">更换聊天背景</label><input type="file" id="setting-chat-bg-upload" accept="image/*" style="display:none;"></div>
             <button type="submit" class="btn btn-primary">保存设置</button>
         </form><hr><button type="button" class="btn btn-danger" id="block-contact-btn">拉黑</button><hr><button type="button" class="btn btn-secondary" id="extract-memory-btn" style="margin-bottom: 15px;"><span class="btn-text">提取聊天记忆</span><div class="spinner"></div></button><button type="button" class="btn btn-danger" id="clear-chat-history-btn">清空聊天记录</button></div>`,
         'world-book-selection-modal': `<div class="modal-window"><h3>选择要关联的爪印书</h3><ul id="world-book-selection-list"></ul><button class="btn btn-primary" id="save-world-book-selection-btn" style="margin-top: 20px;">确认</button></div>`,
@@ -1589,8 +1788,8 @@ function injectHTML() {
             <hr style="border:none; border-top:1px solid #eee; margin: 20px 0;">
             <div class="form-group"><label>群成员</label><div class="group-members-list" id="group-members-list-container"></div></div>
             <hr>
-            <div class="form-group"><button type="button" class="btn btn-secondary" id="link-group-world-book-btn">关联爪印书</button></div>
-            <div class="form-group">
+            <div class="form-group" style="width:100%"><button type="button" class="btn btn-secondary" id="link-group-world-book-btn">关联爪印书</button></div>
+            <div class="form-group" style="width:100%">
                 <button type="button" class="btn btn-primary" id="open-group-theme-modal-btn">气泡主题</button>
             </div>
              <div class="form-group">
@@ -1603,7 +1802,7 @@ function injectHTML() {
                 <label for="setting-group-chat-font-size" id="setting-group-chat-font-size-label">聊天字体大小 15px</label>
                 <input type="range" id="setting-group-chat-font-size" min="12" max="18" value="15" step="1" style="width: 100%;">
             </div>
-            <div class="form-group"><label for="setting-group-max-memory">最大记忆轮数</label><input type="number" id="setting-group-max-memory" value="10" min="1"></div><div class="form-group"><label for="setting-group-chat-bg-upload" class="btn btn-primary">更换聊天背景</label><input type="file" id="setting-group-chat-bg-upload" accept="image/*" style="display:none;"></div>
+            <div class="form-group"><label for="setting-group-max-memory">最大记忆轮数</label><input type="number" id="setting-group-max-memory" value="10" min="1"></div><div class="form-group" style="width:100%"><label for="setting-group-chat-bg-upload" class="btn btn-primary">更换聊天背景</label><input type="file" id="setting-group-chat-bg-upload" accept="image/*" style="display:none;"></div>
             <button type="submit" class="btn btn-primary">保存设置</button></form>
             <hr style="border:none; border-top:1px solid #eee; margin: 20px 0;">
             <button type="button" class="btn btn-secondary" id="extract-group-memory-btn" style="margin-bottom: 15px;"><span class="btn-text">提取群聊记忆</span><div class="spinner"></div></button>
@@ -1680,9 +1879,9 @@ function injectHTML() {
                         <p class="artist" id="player-song-artist">开始播放吧</p>
                     </div>
                     <div class="action-row">
-                        <button class="control-btn" id="listen-together-btn"><svg viewBox="0 0 24 24"><path d="M12,3A4,4 0 0,0 8,7V11A4,4 0 0,0 12,15A4,4 0 0,0 16,11V7A4,4 0 0,0 12,3M19,11C19,14.54 16.27,17.43 12.75,17.93V21H11.25V17.93C7.73,17.43 5,14.54 5,11H6.5A4.5,4.5 0 0,1 11,15.5V17.5A6.5,6.5 0 0,0 17.5,11H19Z"/></svg></button>
-                        <button class="control-btn" id="share-song-btn"><svg viewBox="0 0 24 24"><path d="M18,16.08C17.24,16.08 16.56,16.38 16.04,16.85L8.91,12.7C8.96,12.47 9,12.24 9,12C9,11.76 8.96,11.53 8.91,11.3L15.96,7.2C16.5,7.62 17.21,7.92 18,7.92C19.66,7.92 21,6.58 21,5C21,3.42 19.66,2 18,2C16.34,2 15,3.42 15,5C15,5.24 15.04,5.47 15.09,5.7L8.04,9.8C7.5,9.38 6.79,9.08 6,9.08C4.34,9.08 3,10.42 3,12C3,13.58 4.34,14.92 6,14.92C6.79,14.92 7.5,14.62 8.04,14.2L16.16,18.35C16.11,18.58 16.08,18.79 16.08,19C16.08,20.66 17.42,22 19,22C20.58,22 21.92,20.66 21.92,19C21.92,17.34 20.58,16.08 19,16.08Z"/></svg></button>
-                        <button class="control-btn" id="like-song-btn"><svg viewBox="0 0 24 24"><path d="M12.1,18.55L12,18.65L11.89,18.55C7.14,14.24 4,11.39 4,8.5C4,6.5 5.5,5 7.5,5C9.04,5 10.54,6 11.07,7.36H12.93C13.46,6 14.96,5 16.5,5C18.5,5 20,6.5 20,8.5C20,11.39 16.86,14.24 12.1,18.55M16.5,3C14.76,3 13.09,3.81 12,5.08C10.91,3.81 9.24,3 7.5,3C4.42,3 2,5.41 2,8.5C2,12.27 5.4,15.36 10.55,20.03L12,21.35L13.45,20.03C18.6,15.36 22,12.27 22,8.5C22,5.41 19.58,3 16.5,3Z"/></svg></button>
+                        <button class="control-btn" id="listen-together-btn" title="一起听"><svg viewBox="0 0 24 24"><path d="M12,3A4,4 0 0,0 8,7V11A4,4 0 0,0 12,15A4,4 0 0,0 16,11V7A4,4 0 0,0 12,3M19,11C19,14.54 16.27,17.43 12.75,17.93V21H11.25V17.93C7.73,17.43 5,14.54 5,11H6.5A4.5,4.5 0 0,1 11,15.5V17.5A6.5,6.5 0 0,0 17.5,11H19Z"/></svg></button>
+                        <button class="control-btn" id="share-song-btn" title="分享"><svg viewBox="0 0 24 24"><path d="M18,16.08C17.24,16.08 16.56,16.38 16.04,16.85L8.91,12.7C8.96,12.47 9,12.24 9,12C9,11.76 8.96,11.53 8.91,11.3L15.96,7.2C16.5,7.62 17.21,7.92 18,7.92C19.66,7.92 21,6.58 21,5C21,3.42 19.66,2 18,2C16.34,2 15,3.42 15,5C15,5.24 15.04,5.47 15.09,5.7L8.04,9.8C7.5,9.38 6.79,9.08 6,9.08C4.34,9.08 3,10.42 3,12C3,13.58 4.34,14.92 6,14.92C6.79,14.92 7.5,14.62 8.04,14.2L16.16,18.35C16.11,18.58 16.08,18.79 16.08,19C16.08,20.66 17.42,22 19,22C20.58,22 21.92,20.66 21.92,19C21.92,17.34 20.58,16.08 19,16.08Z"/></svg></button>
+                        <button class="control-btn" id="like-song-btn" title="喜欢"><svg viewBox="0 0 24 24"><path d="M12.1,18.55L12,18.65L11.89,18.55C7.14,14.24 4,11.39 4,8.5C4,6.5 5.5,5 7.5,5C9.04,5 10.54,6 11.07,7.36H12.93C13.46,6 14.96,5 16.5,5C18.5,5 20,6.5 20,8.5C20,11.39 16.86,14.24 12.1,18.55M16.5,3C14.76,3 13.09,3.81 12,5.08C10.91,3.81 9.24,3 7.5,3C4.42,3 2,5.41 2,8.5C2,12.27 5.4,15.36 10.55,20.03L12,21.35L13.45,20.03C18.6,15.36 22,12.27 22,8.5C22,5.41 19.58,3 16.5,3Z"/></svg></button>
                     </div>
                     <div id="music-progress-container">
                         <span id="current-time">0:00</span>
@@ -1698,13 +1897,15 @@ function injectHTML() {
                         <button class="control-btn" id="next-btn"><svg viewBox="0 0 24 24"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" /></svg></button>
                     </div>
                     <div id="music-footer-controls">
-                         <button class="control-btn" id="playback-mode-btn">
+                         <button class="control-btn" id="playback-mode-btn" title="播放模式">
                             <svg class="mode-sequential" viewBox="0 0 24 24"><path d="M2,6V8H21V6H2M2,11V13H21V11H2M2,16V18H21V16H2Z"/></svg>
                             <svg class="mode-shuffle" style="display:none;" viewBox="0 0 24 24"><path d="M10.59,9.17L5.41,4L4,5.41L9.17,10.59L10.59,9.17M14.83,13.41L13.41,14.83L18.59,20L20,18.59L14.83,13.41M5.41,20L4,18.59L18.59,4L20,5.41L5.41,20Z"/></svg>
                             <svg class="mode-repeat-one" style="display:none;" viewBox="0 0 24 24"><path d="M7,7H17V10L21,6L17,2V5H5V12H7V7M17,17H7V14L3,18L7,22V19H19V12H17V17M13,10.25V13.75L15.25,12L13,10.25Z"/></svg>
                         </button>
-                        <span></span>
-                        <button class="control-btn" id="playlist-btn">
+                        <button class="control-btn" id="lyrics-btn" title="歌词">
+                           <svg viewBox="0 0 24 24"><path d="M20 2H4C2.9 2 2 2.9 2 4V20C2 21.1 2.9 22 4 22H20C21.1 22 22 21.1 22 20V4C22 2.9 21.1 2 20 2M11 6H13V18H11V6M7 10H9V18H7V10M15 13H17V18H15V13Z"></path></svg>
+                        </button>
+                        <button class="control-btn" id="playlist-btn" title="播放列表">
                             <svg viewBox="0 0 24 24"><path d="M3,13H15V11H3M3,6H15V8H3M3,18V16H15V18M17,11V13H21V11M17,6V8H21V6M17,18V16H21V18Z" /></svg>
                         </button>
                     </div>
@@ -1771,6 +1972,8 @@ let callTimerInterval = null;
 let longPressJustFired = false;
 let currentPlayingSongIndex = -1;
 let islandHideTimeout = null;
+let currentLyrics = null;
+let lyricsInterval = null;
 
 let videoCallState = {
     isActive: false,
@@ -1861,11 +2064,19 @@ const loadData = () => {
             id: 'profile_default_user',
             name: '我',
             avatar: 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/jgQe/1440X1440/Camera_XHS_17539526514131000g0082nu3tbm2k80105nt289hgbmbld5nkhi8.jpg',
-            persona: ''
+            persona: '',
+            walletBalance: 520,
+            region: '地球'
         });
         saveData();
     }
     
+    // Data Migration for existing user profiles
+    db.userProfiles.forEach(p => {
+        if (p.walletBalance === undefined) p.walletBalance = 520;
+        if (p.region === undefined) p.region = '地球';
+    });
+
     if (!db.myStickers || db.myStickers.length === 0) {
         const defaultStickersRaw = `眼睛亮晶晶/期待 https://files.catbox.moe/i0ov5h.png,不要和我说话 https://files.catbox.moe/wnr64t.png,不对劲 https://files.catbox.moe/itw2h1.png,啧 https://files.catbox.moe/w206rr.png,哭哭 https://files.catbox.moe/rw1cfk.png,讨好 https://files.catbox.moe/7fwfte.png,问号 https://files.catbox.moe/to45ts.png,盯—— https://files.catbox.moe/9za97q.png,“草” https://files.catbox.moe/9b800k.png,震惊 https://files.catbox.moe/q7683x.png,委屈哭哭 https://files.catbox.moe/u94gd8.png,爱心 https://files.catbox.moe/ne6dii.png,偷看你 https://files.catbox.moe/72wkme.png,老实 https://files.catbox.moe/hgfgj3.png,泪流成河 https://files.catbox.moe/nh9r23.png,炸毛生气 https://files.catbox.moe/si6f0k.png,我恨 https://files.catbox.moe/r6g32h.png,大脑短路 https://files.catbox.moe/d41e2q.png,打电话哭哭 https://files.catbox.moe/8ejal5.png,揉脸 https://files.catbox.moe/9lmwuz.png,这是屎吗 https://files.catbox.moe/r26gox.png,哀怨/不满 https://files.catbox.moe/3xu8xr.png,生气/不满 https://files.catbox.moe/2fskww.png,满脸疑惑 https://files.catbox.moe/skv9p6.png,哈特软软/好喜欢 https://files.catbox.moe/0bmbi0.png,OK https://files.catbox.moe/71kn5e.png,被训 https://files.catbox.moe/sgkcwv.png,哀怨/生闷气 https://files.catbox.moe/1n905b.png,蹭蹭/撒娇 https://files.catbox.moe/9p0x2t.png,喜欢 https://files.catbox.moe/opqz7o.png,嫌弃 https://files.catbox.moe/t2e0nt.png,被吓一跳 https://files.catbox.moe/26xc9h.png,心虚 https://files.catbox.moe/zt4t1s.png,淋雨哭泣 https://files.catbox.moe/l68nws.png,睡了 https://files.catbox.moe/7wbc1d.png,无语 https://files.catbox.moe/wgkwjh.png,升天了 https://files.catbox.moe/o8td90.png,非常认可 https://files.catbox.moe/3s5ipf.png,竖中指 https://files.catbox.moe/z25fao.png,尴尬 https://files.catbox.moe/8eaawd.png,害羞 https://files.catbox.moe/bsomey.png,投降 https://files.catbox.moe/f4ogyw.png,生气 https://files.catbox.moe/b5egx6.png,晚安 https://files.catbox.moe/duzx7n.png,爱你 https://files.catbox.moe/p67llx.png,生气 https://files.catbox.moe/xsmgb0.png,睡会儿/困 https://files.catbox.moe/6u5ch8.png,精神涣散 https://files.catbox.moe/4oeevo.png,多喝热水 https://files.catbox.moe/gs9ppe.png,吐魂 https://files.catbox.moe/7yejey.png,打哈欠/好困 https://files.catbox.moe/fuyq6d.png,大脑过载 https://files.catbox.moe/kq9i8f.png,已老实 https://files.catbox.moe/6eyzlg.png,我想想 https://files.catbox.moe/324d33.png,按头 https://files.catbox.moe/pfnrya.png,无语 https://files.catbox.moe/00lj4d.png,爆哭 https://files.catbox.moe/dbyrdf.png,期待 https://files.catbox.moe/81c7qy.png,捏爆地球 https://files.catbox.moe/h1kt1u.png,来啦来啦 https://files.catbox.moe/afuns1.png,那咋了 https://files.catbox.moe/dhp2gr.png,想咋地 https://files.catbox.moe/3ruhin.png,哈？ https://files.catbox.moe/k0uru3.png,心虚 https://files.catbox.moe/6uqxds.png,怎么样打死我 https://files.catbox.moe/doag9c.png,围观 https://files.catbox.moe/428w1c.png,好厉害（不走心） https://files.catbox.moe/tt548x.png,坏笑 https://files.catbox.moe/vnpmxr.png,装酷 https://files.catbox.moe/p9v3sq.png,红温 https://files.catbox.moe/gmvx6d.png,可怜兮兮 https://files.catbox.moe/u77bks.png,大惊失色 https://files.catbox.moe/w7olag.png,难过 https://files.catbox.moe/ydyx59.png,爆哭 https://files.catbox.moe/69kl2l.png,自闭 https://files.catbox.moe/nhtazq.png,摆烂 https://files.catbox.moe/cq6ipd.png,那又如何 https://files.catbox.moe/do83tr.png,思考 https://files.catbox.moe/32ql1h.png,爱你 https://files.catbox.moe/x5u5sm.png`;
         db.myStickers = parseAndAddStickers(defaultStickersRaw, true);
@@ -2244,13 +2455,15 @@ function applyThemeColor(hexColor) {
         if (!hexColor) return;
         const root = document.documentElement;
         const primaryColor = hexColor;
+        
+        let r = parseInt(primaryColor.slice(1, 3), 16);
+        let g = parseInt(primaryColor.slice(3, 5), 16);
+        let b = parseInt(primaryColor.slice(5, 7), 16);
+        
         const secondaryColor = adjustColor(hexColor, -10);
 
-        const r = parseInt(primaryColor.slice(1, 3), 16);
-        const g = parseInt(primaryColor.slice(3, 5), 16);
-        const b = parseInt(primaryColor.slice(5, 7), 16);
-
         root.style.setProperty('--primary-color', primaryColor);
+        root.style.setProperty('--primary-color-rgb', `${r}, ${g}, ${b}`);
         root.style.setProperty('--secondary-color', secondaryColor);
         root.style.setProperty('--bg-color', `rgba(${r}, ${g}, ${b}, 0.08)`);
         root.style.setProperty('--top-pinned-bg', `rgba(${r}, ${g}, ${b}, 0.15)`);
@@ -2332,7 +2545,7 @@ function setupQQApp() {
         const menuItems = [
             { label: chat.isPinned ? '取消置顶' : '置顶聊天', action: () => { chat.isPinned = !chat.isPinned; saveData(); renderChatList(); } },
             { label: (chat.unreadCount || 0) > 0 ? '标为已读' : '标为未读', action: () => { chat.unreadCount = (chat.unreadCount || 0) > 0 ? 0 : 1; saveData(); renderChatList(); } },
-            { label: '删除聊天记录', danger: true, action: () => {
+                        { label: '删除聊天记录', danger: true, action: () => {
                 if (confirm(`确定要清空与“${itemName}”的聊天记录吗？此操作不可恢复。`)) {
                     chat.history = [];
                     if (chat.autoMemory) chat.autoMemory.lastExtractionCount = 0;
@@ -2419,8 +2632,9 @@ function renderChatList() {
                 else if(lastMsg.imageData) lastMessageText = '[图片]';
                 else if (lastMsg.redPacketData) lastMessageText = '[红包]';
                 else if (lastMsg.locationData) lastMessageText = '[位置]';
+                else if (lastMsg.musicShareData) lastMessageText = `[音乐] ${lastMsg.musicShareData.title}`;
+                else if (lastMsg.listenTogetherData) lastMessageText = '[邀请] 一起听歌';
                 else if (/送来的礼物/.test(lastMsg.content)) lastMessageText = '[礼物]';
-                else if (/分享了音乐/.test(lastMsg.content)) lastMessageText = '[音乐]';
                 else if (/表情包/.test(lastMsg.content) || lastMsg.stickerData) lastMessageText = '[表情包]';
                 else if (/的语音/.test(lastMsg.content)) lastMessageText = '[语音]';
                 else if (/照片\/视频/.test(lastMsg.content)) lastMessageText = '[照片/视频]';
@@ -2634,6 +2848,8 @@ function setupMeScreen() {
             name: getEl('create-profile-name').value,
             avatar: getEl('create-profile-avatar-preview').src,
             persona: getEl('create-profile-persona').value,
+            walletBalance: parseFloat(getEl('create-profile-wallet').value) || 0,
+            region: getEl('create-profile-region').value || '未知'
         };
         db.userProfiles.push(newProfile);
         saveData();
@@ -2654,6 +2870,8 @@ function setupMeScreen() {
             profile.name = getEl('edit-profile-name').value;
             profile.avatar = getEl('edit-profile-avatar-preview').src;
             profile.persona = getEl('edit-profile-persona').value;
+            profile.walletBalance = parseFloat(getEl('edit-profile-wallet').value) || 0;
+            profile.region = getEl('edit-profile-region').value || '未知';
             saveData();
             renderUserProfilesList();
             getEl('edit-profile-modal').classList.remove('visible');
@@ -2671,6 +2889,8 @@ function setupMeScreen() {
                 getEl('edit-profile-name').value = profile.name;
                 getEl('edit-profile-avatar-preview').src = profile.avatar;
                 getEl('edit-profile-persona').value = profile.persona;
+                getEl('edit-profile-wallet').value = profile.walletBalance;
+                getEl('edit-profile-region').value = profile.region;
                 getEl('edit-profile-modal').classList.add('visible');
             }
         }
@@ -2837,6 +3057,12 @@ function setupChatRoom() {
             handleRedPacketClick(redPacket);
             return;
         }
+        
+        const musicCard = e.target.closest('.music-share-card, .listen-together-card');
+        if (musicCard) {
+            handleMusicCardClick(musicCard);
+            return;
+        }
 
         const voiceBubble = e.target.closest('.voice-bubble');
         if (voiceBubble) {
@@ -2981,10 +3207,9 @@ function toggleStickerModal(forceState) {
     }
     adjustContentPadding(show);
 }
-
-    function renderPlusMenu() {
-        const menuGrid = getEl('chat-plus-menu').querySelector('.plus-menu-grid');
-        const menuItems = [
+    
+function renderPlusMenu() {
+        const menuItemsPage1 = [
             { id: 'photo-video-btn', label: '相册', icon: '<path d="M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19M8.5,13.5L11,16.5L14.5,12L19,18H5L8.5,13.5Z" />' },
             { id: 'camera-btn', label: '拍摄', icon: '<path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" />' },
             { id: 'video-call-btn', label: '视频通话', icon: '<path d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z" />' },
@@ -2993,19 +3218,49 @@ function toggleStickerModal(forceState) {
             { id: 'gift-btn', label: '礼物', icon: '<path d="M20,8L12,13L4,8V6H20M20,4H4A2,2 0 0,0 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6A2,2 0 0,0 20,4M12.5,18C12.5,17.29 12.17,16.65 11.64,16.27C12.17,15.89 12.5,15.26 12.5,14.55C12.5,13.6 11.83,12.79 11,12.58V12H13V10H11V8H13V6H11V5C11,4.45 10.55,4 10,4H8C7.45,4 7,4.45 7,5V6H9V8H7V10H9V12H7V12.58C6.17,12.79 5.5,13.6 5.5,14.55C5.5,15.26 5.83,15.89 6.36,16.27C5.83,16.65 5.5,17.29 5.5,18H12.5Z" />' },
             { id: 'transfer-btn', label: '转账', icon: '<path d="M16.13,15.13L18.26,13L16.13,10.88L17.54,9.47L22.07,14L17.54,18.53L16.13,17.12M7.88,9.88L5.75,12L7.88,14.13L6.47,15.54L2,11L6.47,6.47L7.88,7.88M12.25,5C12.6,5 12.92,5.21 13.09,5.54L16.5,12H14.83L12.25,7.03L9.67,12H8L11.41,5.54C11.58,5.21 11.9,5 12.25,5Z" />' },
             { id: 'voice-message-btn', label: '语音输入', icon: '<path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>' },
+        ];
+        const menuItemsPage2 = [
             { id: 'music-share-btn', label: '音乐', icon: '<path d="M12,3V12.26C11.5,12.09 11,12 10.5,12C8,12 6,14 6,16.5C6,19 8,21 10.5,21C13,21 15,19 15,16.5V6H19V3H12Z" />' }
         ];
 
-        menuGrid.innerHTML = menuItems.map(item => `
-            <div class="plus-menu-item" id="${item.id}">
-                <div class="icon-background">
-                    <svg viewBox="0 0 24 24">${item.icon}</svg>
-                </div>
-                <span>${item.label}</span>
-            </div>
-        `).join('');
+        const pagesWrapper = getEl('plus-menu-pages-wrapper');
+        const dotsContainer = getEl('plus-menu-dots');
+        pagesWrapper.innerHTML = '';
+        dotsContainer.innerHTML = '';
 
-        menuGrid.addEventListener('click', (e) => {
+        const pages = [menuItemsPage1, menuItemsPage2];
+        pages.forEach((pageItems, pageIndex) => {
+            const pageDiv = document.createElement('div');
+            pageDiv.className = 'plus-menu-page';
+            const gridDiv = document.createElement('div');
+            gridDiv.className = 'plus-menu-grid';
+            
+            gridDiv.innerHTML = pageItems.map(item => `
+                <div class="plus-menu-item" id="${item.id}">
+                    <div class="icon-background">
+                        <svg viewBox="0 0 24 24">${item.icon}</svg>
+                    </div>
+                    <span>${item.label}</span>
+                </div>
+            `).join('');
+            
+            pageDiv.appendChild(gridDiv);
+            pagesWrapper.appendChild(pageDiv);
+            
+            const dot = document.createElement('div');
+            dot.className = `plus-menu-dot ${pageIndex === 0 ? 'active' : ''}`;
+            dotsContainer.appendChild(dot);
+        });
+
+        pagesWrapper.addEventListener('scroll', () => {
+            const pageWidth = pagesWrapper.offsetWidth;
+            const currentPage = Math.round(pagesWrapper.scrollLeft / pageWidth);
+            dotsContainer.querySelectorAll('.plus-menu-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentPage);
+            });
+        });
+
+        pagesWrapper.addEventListener('click', (e) => {
             const item = e.target.closest('.plus-menu-item');
             if (!item) return;
 
@@ -3042,7 +3297,7 @@ function toggleStickerModal(forceState) {
                     handleInitiateCall();
                     break;
                 case 'music-share-btn':
-                    openShareMusicModal();
+                    openShareMusicModal(db.musicPlaylist[currentPlayingSongIndex]);
                     break;
             }
         });
@@ -3051,7 +3306,7 @@ function toggleStickerModal(forceState) {
     
 
     function handleMessageLongPress(event, messageWrapper) {
-        const validTargets = '.message-bubble, .image-bubble, .voice-bubble, .pv-card, .transfer-card, .red-packet-card, .location-card, .gift-card-flipper, [class*="html-module-wrapper"]';
+        const validTargets = '.message-bubble, .image-bubble, .voice-bubble, .pv-card, .transfer-card, .red-packet-card, .location-card, .gift-card-flipper, [class*="html-module-wrapper"], .music-share-card, .listen-together-card';
         if (!event.target.closest(validTargets)) {
             return;
         }
@@ -3070,7 +3325,7 @@ function toggleStickerModal(forceState) {
 
         menuItems.push({ label: '引用', action: () => startReply(messageId) });
         
-        const canBeEdited = !/\[(?:语音|表情包|照片\/视频|转账|礼物|位置)/.test(message.content) && !message.redPacketData && !message.imageData && !message.stickerData;
+        const canBeEdited = !/\[(?:语音|表情包|照片\/视频|转账|礼物|位置)/.test(message.content) && !message.redPacketData && !message.imageData && !message.stickerData && !message.musicShareData && !message.listenTogetherData;
         if (canBeEdited) {
             menuItems.push({ label: '编辑', action: () => startMessageEdit(messageId) });
         }
@@ -3107,8 +3362,9 @@ function toggleStickerModal(forceState) {
     if(message.imageData) replyContent = '[图片]';
     else if (message.redPacketData) replyContent = '[红包]';
     else if (message.locationData) replyContent = '[位置]';
+    else if (message.musicShareData) replyContent = `[音乐]: ${message.musicShareData.title}`;
+    else if (message.listenTogetherData) replyContent = `[邀请]: 一起听《${message.listenTogetherData.title}》`;
     else if (/送来的礼物/.test(replyContent)) replyContent = '[礼物]';
-    else if (/分享了音乐/.test(replyContent)) replyContent = '[音乐]';
     else if (/表情包/.test(replyContent) || message.stickerData) replyContent = '[表情包]';
     else if (/的语音/.test(replyContent)) replyContent = '[语音]';
     else if (/照片\/视频/.test(replyContent)) replyContent = '[照片/视频]';
@@ -3403,7 +3659,7 @@ function toggleStickerModal(forceState) {
         const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
         if (!chat) return null;
         
-        const { role, content, timestamp, id, transferStatus, giftStatus, stickerData, senderId, replyTo, redPacketData, locationData, imageData, isHtmlModule } = message;
+        const { role, content, timestamp, id, transferStatus, giftStatus, stickerData, senderId, replyTo, redPacketData, locationData, imageData, isHtmlModule, musicShareData, listenTogetherData } = message;
         
         const isSent = (role === 'user');
         let avatarUrl, senderNickname = '';
@@ -3424,6 +3680,14 @@ function toggleStickerModal(forceState) {
         
         const wrapper = document.createElement('div');
         wrapper.dataset.id = id;
+        
+        if (isHtmlModule) {
+            wrapper.className = `html-module-wrapper ${isSent ? 'sent' : 'received'}`;
+            const messageInfoHTML = `<div class="message-info"><img src="${avatarUrl}" class="message-avatar"></div>`;
+            wrapper.innerHTML = `${messageInfoHTML}<div class="html-module-content">${content.replace('[html_card:]', '')}</div>`;
+            return wrapper;
+        }
+
         wrapper.className = `message-wrapper ${isSent ? 'sent' : 'received'} ${currentChatType === 'group' && !isSent ? 'group-message' : ''}`;
         
         const nicknameHTML = (currentChatType === 'group' && !isSent && senderNickname) ? `<div class="group-nickname">${senderNickname}</div>` : '';
@@ -3431,35 +3695,6 @@ function toggleStickerModal(forceState) {
 
         const messageInfoHTML = `<div class="message-info">${nicknameHTML}<img src="${avatarUrl}" class="message-avatar"><span class="message-time">${timeString}</span></div>`;
 
-        if (isHtmlModule) {
-            const moduleWrapper = document.createElement('div');
-            moduleWrapper.className = `message-bubble-row`;
-             if (isSent) {
-                moduleWrapper.style.flexDirection = 'row-reverse';
-            }
-            
-            const contentContainer = document.createElement('div');
-            contentContainer.className = 'html-module-content';
-            contentContainer.style.margin = '0 8px';
-            
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = content;
-            const scriptTags = tempDiv.querySelectorAll('script');
-
-            contentContainer.innerHTML = tempDiv.innerHTML;
-
-            scriptTags.forEach(originalScript => {
-                const newScript = document.createElement('script');
-                newScript.textContent = originalScript.textContent;
-                originalScript.remove(); 
-                contentContainer.appendChild(newScript);
-            });
-            moduleWrapper.innerHTML = messageInfoHTML;
-            moduleWrapper.appendChild(contentContainer);
-            wrapper.appendChild(moduleWrapper);
-            return wrapper;
-        }
-        
         if (message.isRetracted) {
             wrapper.classList.add('system-notification');
             const sender = message.role === 'user' ? '你' : (message.senderName || '对方');
@@ -3518,7 +3753,39 @@ function toggleStickerModal(forceState) {
             if (textMatch) mainContent = textMatch[1];
         }
 
-        if (redPacketData) {
+        if (musicShareData) {
+            bubbleElementHTML = `
+                <div class="music-share-card" data-song-id="${musicShareData.id}">
+                    <div class="music-card-bg" style="background-image: url('${musicShareData.albumArt}')"></div>
+                    <div class="music-card-content">
+                        <div class="music-card-header">
+                            <img src="${musicShareData.albumArt}" class="music-card-album-art">
+                            <div class="music-card-info">
+                                <div class="title">${musicShareData.title}</div>
+                                <div class="artist">${musicShareData.artist}</div>
+                            </div>
+                        </div>
+                        <div class="music-card-footer">分享音乐</div>
+                    </div>
+                </div>
+            `;
+        } else if (listenTogetherData) {
+             bubbleElementHTML = `
+                <div class="listen-together-card" data-song-id="${listenTogetherData.id}">
+                    <div class="music-card-bg" style="background-image: url('${listenTogetherData.albumArt}')"></div>
+                    <div class="music-card-content">
+                        <div class="music-card-header">
+                            <img src="${listenTogetherData.albumArt}" class="music-card-album-art">
+                            <div class="music-card-info">
+                                <div class="title">${listenTogetherData.title}</div>
+                                <div class="artist">${listenTogetherData.artist}</div>
+                            </div>
+                        </div>
+                        <div class="music-card-footer">${isSent ? '邀请发出' : '▶ 一起听'}</div>
+                    </div>
+                </div>
+            `;
+        } else if (redPacketData) {
             const isClaimed = redPacketData.status === 'claimed';
             const cardClass = isClaimed ? 'red-packet-card claimed' : 'red-packet-card';
             const footerText = isClaimed ? '已被领取' : '汪汪红包';
@@ -3834,10 +4101,16 @@ function toggleStickerModal(forceState) {
         updateSendButtonState();
     }
 
-    function sendMyTransfer(amount, remark) { 
+    function sendMyTransfer(amount, remark) {
         const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
         const userProfileId = currentChatType === 'private' ? chat.userProfileId : chat.me.profileId;
         const userProfile = db.userProfiles.find(p => p.id === userProfileId);
+        if (amount > userProfile.walletBalance) {
+            showToast('钱包余额不足！');
+            return;
+        }
+        userProfile.walletBalance -= amount;
+
         const myName = (currentChatType === 'private') ? userProfile.name : chat.me.nickname;
         const message = { id: `msg_${Date.now()}`, role: 'user', content: `[${myName}给你转账：${amount}元；备注：${remark}]`, timestamp: Date.now(), transferStatus: 'pending' }; 
         if(currentChatType === 'group') message.senderId = 'user_me';
@@ -4002,7 +4275,8 @@ function generatePrivateSystemPrompt(character) {
 - [${userProfile.name}给你转账：xxx元；备注：xxx]：我给你转了一笔钱。
 - [${userProfile.name}送出的红包：xxx]：我发了一个红包，xxx是祝福语。
 - [${userProfile.name}分享的位置：xxx]：我给你分享了一个位置。
-- [${userProfile.name}分享了音乐：xxx]：我给你分享了一首名为xxx的歌曲。\n`;
+- [${userProfile.name}分享了音乐：xxx]：我给你分享了一首名为xxx的歌曲。
+- [${userProfile.name}邀请你一起听：xxx]：我邀请你一起听一首名为xxx的歌。\n`;
     prompt += `5. ✨重要✨ 当我给你送礼物时，你必须通过发送一条指令来表示你已接收礼物。格式必须为：[${character.realName}已接收礼物]。这条指令消息本身不会显示给用户，但会触发礼物状态的变化。你可以在发送这条指令后，再附带一条普通的聊天消息来表达你的感谢和想法。\n`;
     prompt += `6. ✨重要✨ 当我给你转账时，你必须对此做出回应。你有两个选择，且必须严格遵循以下格式之一，这条指令消息本身不会显示给用户，但会触发转账状态的变化。你可以选择在发送这条指令后，再附带一条普通的聊天消息来表达你的想法。
     a) 接收转账: [${character.realName}接收${userProfile.name}的转账]
@@ -4016,7 +4290,7 @@ function generatePrivateSystemPrompt(character) {
     prompt += `9. ✨重要✨ 你可以随时更新你的在线状态，以反映你当前的行为或心情。这会让互动更真实。格式为：[${character.realName}更新状态为：xxx]。例如：[${character.realName}更新状态为：正在午睡...]。这条指令不会显示为聊天消息，只会更新你在我界面上的状态。\n`;
     prompt += `10. 你的所有回复都必须直接是聊天内容，绝对不允许包含任何如[心理活动]、(动作)、*环境描写*等多余的、在括号或星号里的叙述性文本。\n`;
     prompt += `11. 你拥有发送表情包的能力。这是一个可选功能，你可以根据对话氛围和内容，自行判断是否需要发送表情包来辅助表达。你不必在每次回复中都包含表情包。格式为：[${character.realName}发送的表情包：图片URL]。【严禁】直接以文字形式说出“我给你发了个表情包”这类话，必须使用指定格式。\n`;
-    prompt += `12. ✨新增功能：HTML模块✨ 你可以发送包含HTML, CSS, 甚至JavaScript的动态消息模块。这可以用来创建更丰富的交互体验，比如模拟一个手机界面、一个论坛帖子、一个可点击的卡片等。模块内容必须包裹在 \`<div class="html-module-content">...</div>\` 标签内。格式为：<div class="html-module-wrapper"><div class="received html-module-content">你的HTML代码...<script>你的JS代码...<\/script></div></div>。请大胆地创造性地使用这个功能！\n`;
+    prompt += `12. ✨新增功能：HTML模块✨ 你可以发送包含HTML, CSS, 甚至JavaScript的动态消息模块。这可以用来创建更丰富的交互体验，比如模拟一个手机界面、一个论坛帖子、一个可点击的卡片等。模块内容必须包裹在 \`<div class="html-module-content">...</div>\` 标签内。格式为：[html_card:<div class="html-module-wrapper"><div class="received html-module-content">你的HTML代码...<script>你的JS代码...<\/script></div></div>]。请大胆地创造性地使用这个功能！\n`;
 
     if (character.isBlocked) {
         prompt += `13. **特别注意：我目前已将你"拉黑"。** 这意味着我可能看不到或不愿意接收你的消息。你应该知道这个状态，并在你的回复中有所体现，例如可以表达困惑、疑问"你还在吗？"、"为什么不回复我了？"，或者尝试以不同的方式沟通。但你依然可以继续发送消息。**当你被拉黑时，你的输出格式必须是：[${character.realName}被拉黑后的消息：{消息内容}]**。\n`;
@@ -4038,7 +4312,7 @@ function generatePrivateSystemPrompt(character) {
 - 给我的红包: [${character.realName}的红包：{祝福语}]
 - 分享位置: [${character.realName}分享的位置：{ "name": "地点名", "address": "详细地址(可选)" }]
 - 表情包/图片: [${character.realName}发送的表情包：{图片URL}]
-- HTML/JS模块: <div class="html-module-wrapper"><div class="received html-module-content">...</div></div>
+- HTML/JS模块: [html_card:<div class="html-module-wrapper"><div class="received html-module-content">...</div></div>]
 - 对我礼物的回应(此条不显示): [${character.realName}已接收礼物]
 - 对我转账的回应(此条不显示): [${character.realName}接收${userProfile.name}的转账] 或 [${character.realName}退回${userProfile.name}的转账]
 - 对我红包的回应(此条不显示): [${character.realName}领取了${userProfile.name}的红包]
@@ -4306,7 +4580,7 @@ async function processStream(response, chat, apiType) {
     }
 
     // Final cleanup of the response
-    fullResponse = fullResponse.replace(/\[DONE\]/g, '').trim();
+    fullResponse = fullResponse.replace(/DONE/g, '').trim();
 
     if (fullResponse) {
         const currentChat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
@@ -4321,27 +4595,33 @@ async function processStream(response, chat, apiType) {
             fullResponse = fullResponse.replace(heartVoiceMatch[0], '').trim();
         }
 
-        const htmlModuleRegex = /<div class="html-module-wrapper">([\s\S]+?)<\/div>/g;
+        const htmlModuleRegex = /\[html_card:([\s\S]+?)\]/g;
         let match;
         const htmlModules = [];
-        while ((match = htmlModuleRegex.exec(fullResponse)) !== null) {
-            htmlModules.push(match[0]);
-        }
+        fullResponse = fullResponse.replace(htmlModuleRegex, (match, htmlContent) => {
+            htmlModules.push(htmlContent);
+            return ''; // Remove from main string
+        });
         
         htmlModules.forEach(htmlContent => {
+            const senderNameMatch = htmlContent.match(/<div class="group-nickname">(.*?)<\/div>/);
+            let senderId = null;
+            if (currentChatType === 'group' && senderNameMatch && senderNameMatch[1]) {
+                const member = currentChat.members.find(m => m.groupNickname === senderNameMatch[1]);
+                if(member) senderId = member.id;
+            }
+
             const htmlMessage = { 
                 id: `msg_html_${Date.now()}_${Math.random()}`, 
                 role: 'assistant', 
                 content: htmlContent, 
                 timestamp: Date.now(),
-                isHtmlModule: true
+                isHtmlModule: true,
+                senderId: senderId
             };
-            if(currentChatType === 'group') {
-                // Future logic to assign senderId if needed
-            }
+
             currentChat.history.push(htmlMessage);
             addMessageBubble(htmlMessage);
-            fullResponse = fullResponse.replace(htmlContent, '').trim();
         });
 
         const allMessages = fullResponse.match(/\[.*?\]/g) || [];
@@ -4676,7 +4956,7 @@ async function processStream(response, chat, apiType) {
 
     function setupWalletSystem() { 
         getEl('send-transfer-modal').addEventListener('click', (e) => { if (e.target === getEl('send-transfer-modal')) getEl('send-transfer-modal').classList.remove('visible'); }); 
-        getEl('send-transfer-form').addEventListener('submit', (e) => { e.preventDefault(); const amount = getEl('transfer-amount-input').value; const remark = getEl('transfer-remark-input').value.trim(); if (amount > 0) sendMyTransfer(amount, remark); else showToast('请输入有效的金额'); }); 
+        getEl('send-transfer-form').addEventListener('submit', (e) => { e.preventDefault(); const amount = parseFloat(getEl('transfer-amount-input').value); const remark = getEl('transfer-remark-input').value.trim(); if (amount > 0) sendMyTransfer(amount, remark); else showToast('请输入有效的金额'); }); 
         getEl('receive-transfer-actionsheet').addEventListener('click', (e) => { if(e.target === getEl('receive-transfer-actionsheet')) { getEl('receive-transfer-actionsheet').classList.remove('visible'); currentTransferMessageId = null; } }); 
         getEl('accept-transfer-btn').addEventListener('click', () => respondToTransfer('received')); 
         getEl('return-transfer-btn').addEventListener('click', () => respondToTransfer('returned')); 
@@ -4707,6 +4987,12 @@ async function processStream(response, chat, apiType) {
 
         const userProfileId = currentChatType === 'private' ? chat.userProfileId : chat.me.profileId;
         const userProfile = db.userProfiles.find(p => p.id === userProfileId);
+        if (amount > userProfile.walletBalance) {
+            showToast('钱包余额不足！');
+            return;
+        }
+        userProfile.walletBalance -= amount;
+        
         const myName = (currentChatType === 'private') ? userProfile.name : chat.me.nickname;
         
         const message = {
@@ -5388,7 +5674,20 @@ function getContrastYIQ(hexcolor){
     
     function generateMomentReactionPrompt(reactor, momentToReact, replyingToComment = null) {
         const postAuthor = db.characters.find(c => c.id === momentToReact.characterId) || { remarkName: '我', id: 'user_me' };
-        let prompt = `你正在扮演角色“${reactor.realName}”，你的设定是：${reactor.persona || '一个友好的人'}。\n你正在看“${postAuthor.remarkName}”的朋友圈动态。\n\n--- 动态内容 ---\n${postAuthor.remarkName}: ${momentToReact.content}\n`;
+        
+        const reactorGroups = db.groups.filter(g => g.members.some(m => m.originalCharId === reactor.id));
+        const authorGroups = db.groups.filter(g => g.members.some(m => m.originalCharId === postAuthor.id));
+        const areFriends = reactorGroups.some(rg => authorGroups.some(ag => ag.id === rg.id));
+
+        let prompt = `你正在扮演角色“${reactor.realName}”，你的设定是：${reactor.persona || '一个友好的人'}。\n你正在看“${postAuthor.remarkName}”的朋友圈动态。\n`;
+
+        if (areFriends) {
+            prompt += `你和“${postAuthor.remarkName}”在同一个群聊里，你们是朋友。\n`;
+        } else if (postAuthor.id !== 'user_me') {
+            prompt += `你和“${postAuthor.remarkName}”不在任何共同的群聊中，你们是陌生人。请用更礼貌、通用的方式互动。\n`;
+        }
+
+        prompt += `\n--- 动态内容 ---\n${postAuthor.remarkName}: ${momentToReact.content}\n`;
         if (momentToReact.comments.length > 0) {
             prompt += `\n--- 已有评论 ---\n`;
             momentToReact.comments.forEach(comment => { 
@@ -5452,26 +5751,34 @@ function getContrastYIQ(hexcolor){
     async function triggerAiReactions(momentId, replyingToComment = null) {
         const moment = db.moments.find(m => m.id === momentId);
         if (!moment) return;
-
+    
         let reactors = [];
         if (replyingToComment) {
-            if (moment.characterId !== 'user_me') {
+            // If replying to a comment, the original post author should be the one to reply.
+            if (moment.characterId !== 'user_me' && moment.characterId !== replyingToComment.characterId) {
                 const author = db.characters.find(c => c.id === moment.characterId);
-                if (author && author.id !== replyingToComment.characterId) reactors.push(author);
+                if (author) reactors.push(author);
             }
         } else {
-            const potentialReactors = db.characters.filter(c => 
-                c.id !== moment.characterId && 
-                !moment.likes.includes(c.id) && 
-                !moment.comments.some(cmt => cmt.characterId === c.id) 
-            );
-            if (moment.characterId !== 'user_me') {
-                const author = db.characters.find(c => c.id === moment.characterId);
-                if(author) potentialReactors.push(author);
-            }
-            if (potentialReactors.length > 0) {
-                const reactionCount = Math.floor(Math.random() * Math.min(3, potentialReactors.length)) + 1;
-                reactors = potentialReactors.sort(() => 0.5 - Math.random()).slice(0, reactionCount);
+            // If it's a new reaction to the post itself
+            if (moment.characterId === 'user_me') { 
+                // If the user posted, all characters are potential reactors
+                reactors = db.characters.filter(c => 
+                    !moment.likes.includes(c.id) && 
+                    !moment.comments.some(cmt => cmt.characterId === c.id)
+                );
+            } else {
+                // If a character posted, other characters might react
+                const potentialReactors = db.characters.filter(c => 
+                    c.id !== moment.characterId && 
+                    !moment.likes.includes(c.id) && 
+                    !moment.comments.some(cmt => cmt.characterId === c.id)
+                );
+                // Randomly select a few to react
+                if (potentialReactors.length > 0) {
+                    const reactionCount = Math.floor(Math.random() * Math.min(3, potentialReactors.length)) + 1;
+                    reactors = potentialReactors.sort(() => 0.5 - Math.random()).slice(0, reactionCount);
+                }
             }
         }
 
@@ -5808,7 +6115,10 @@ function getContrastYIQ(hexcolor){
             const replyToId = getEl('moment-comment-reply-id').value;
             if (replyToId) {
                 const replyToName = getEl('moment-comment-reply-name').value;
-                newComment.replyTo = { id: replyToId, name: replyToName };
+                const originalComment = moment.comments.find(c => c.id === replyToId);
+                if(originalComment) {
+                    newComment.replyTo = { id: replyToId, name: replyToName, characterId: originalComment.characterId };
+                }
             }
             
             moment.comments.push(newComment);
@@ -6161,7 +6471,7 @@ function getContrastYIQ(hexcolor){
         }
     }
     
-    function generateProactiveChatPrompt(character) {
+        function generateProactiveChatPrompt(character) {
         const lastMessage = character.history.length > 0 ? character.history[character.history.length - 1] : null;
         const currentTime = new Date().toLocaleString('zh-CN', { hour12: false });
         const lastMessageTime = lastMessage ? new Date(lastMessage.timestamp).toLocaleString('zh-CN', { hour12: false }) : '从未';
@@ -6200,12 +6510,13 @@ ${momentContext}
 
 请你主动发送一条消息，让对话继续下去。你的消息必须非常自然、符合人设，就像一个真实的人在思考后重新发起对话。
 【重要】请参考当前时间和上次对话的时间差来决定你的开场白。例如，如果是第二天早上，可以说“早上好”；如果只是过了几个小时，可以接着之前的话题说，或者引用朋友圈的互动来开启新话题。
+【重要】你还可以根据情景和人设，选择性地发起【礼物】、【红包】、【转账】、【语音/视频通话】等特殊互动来开启对话，让互动更有惊喜感。
 【禁止】使用“在吗？”、“你好”等干巴巴的开场白。
 
 【要求】
 1.  **消息拆分**: 你必须生成 **2到4条** 简短的、独立的聊天消息。
 2.  **口语化**: 每条消息都应该非常口语化、自然，就像真实的线上聊天一样，避免书面语。
-3.  **格式严格**: 每一条独立的消息都必须用一个完整的 \`[${character.realName}的消息：...]\` 包裹。
+3.  **格式严格**: 每一条独立的消息都必须用一个完整的 \`[${character.realName}的消息：...]\` 或其他特殊格式（如红包、礼物等）包裹。
 4.  **内容连贯**: 这几条消息在内容上应该是连贯的，共同构成一个完整的话题开启或问候。
 
 【示例】
@@ -6817,6 +7128,17 @@ ${callHistoryForPrompt}
                 <h3>邀请谁一起听?</h3>
                 <ul id="listen-together-char-list" class="list-container" style="max-height: 40vh; overflow-y: auto;"></ul>
             </div>`;
+            
+        getEl('lyrics-modal').innerHTML = `
+            <div class="modal-window">
+                <h3 id="lyrics-song-title">歌曲歌词</h3>
+                <div id="lyrics-content"><p>暂无歌词</p></div>
+                <textarea id="edit-lyrics-textarea" style="display:none;"></textarea>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button id="edit-lyrics-btn" class="btn btn-secondary" style="flex:1; margin:0;">编辑歌词</button>
+                    <button id="save-lyrics-btn" class="btn btn-primary" style="flex:1; margin:0; display:none;">保存歌词</button>
+                </div>
+            </div>`;
 
         const fileInput = getEl('add-music-file');
         const audioPlayer = getEl('audio-player');
@@ -6830,6 +7152,7 @@ ${callHistoryForPrompt}
         const likeSongBtn = getEl('like-song-btn');
         const shareSongBtn = getEl('share-song-btn');
         const listenTogetherBtn = getEl('listen-together-btn');
+        const lyricsBtn = getEl('lyrics-btn');
 
         addMusicBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -6845,7 +7168,7 @@ ${callHistoryForPrompt}
             const url = prompt("请输入歌曲的 URL (.mp3, .wav, .ogg):");
             if (url) {
                 const songName = url.split('/').pop().replace(/\.[^/.]+$/, "") || "网络歌曲";
-                const song = { id: `song_${Date.now()}`, title: songName, artist: "未知艺术家", url: url, isLiked: false };
+                const song = { id: `song_${Date.now()}`, title: songName, artist: "未知艺术家", url: url, isLiked: false, lyrics: '' };
                 db.musicPlaylist.push(song);
                 saveData();
                 renderPlaylist();
@@ -6866,7 +7189,8 @@ ${callHistoryForPrompt}
                     artist: "未知艺术家",
                     url: URL.createObjectURL(file),
                     isLocal: true,
-                    isLiked: false
+                    isLiked: false,
+                    lyrics: ''
                 };
                 db.musicPlaylist.push(song);
                 renderPlaylist();
@@ -6889,6 +7213,7 @@ ${callHistoryForPrompt}
         audioPlayer.addEventListener('timeupdate', () => {
             updateProgress();
             updateDynamicIsland();
+            updateLyrics();
         });
 
         nextBtn.addEventListener('click', playNextSong);
@@ -6902,6 +7227,7 @@ ${callHistoryForPrompt}
              if(song) openShareMusicModal(song);
         });
         listenTogetherBtn.addEventListener('click', openListenTogetherModal);
+        lyricsBtn.addEventListener('click', openLyricsModal);
         
         applyMusicPlayerCustomization();
         updatePlaybackModeIcon();
@@ -6948,6 +7274,7 @@ ${callHistoryForPrompt}
         getEl('player-song-title').textContent = song.title;
         getEl('player-song-artist').textContent = song.artist;
         updateLikeButton(song.isLiked);
+        parseLyrics(song.lyrics || '');
         audioPlayer.play();
     }
     
@@ -7072,6 +7399,10 @@ ${callHistoryForPrompt}
     }
 
     function openShareMusicModal(songToShare) {
+        if (!songToShare) {
+            showToast("请先播放一首歌");
+            return;
+        }
         const listEl = getEl('share-music-list');
         listEl.innerHTML = '';
         const chats = [...db.characters, ...db.groups];
@@ -7093,6 +7424,11 @@ ${callHistoryForPrompt}
     }
     
     function openListenTogetherModal() {
+        const song = db.musicPlaylist[currentPlayingSongIndex];
+        if (!song) {
+            showToast("请先播放一首歌");
+            return;
+        }
         const listEl = getEl('listen-together-char-list');
         listEl.innerHTML = '';
         const onlineChars = db.characters.filter(c => c.status !== '离线');
@@ -7121,6 +7457,30 @@ ${callHistoryForPrompt}
         showToast(`已邀请 ${character.remarkName} 一起听歌...`);
         
         const userProfile = db.userProfiles.find(p => p.id === character.userProfileId);
+        
+        const listenTogetherMessage = {
+            id: `msg_${Date.now()}`,
+            role: 'user',
+            content: `[${userProfile.name}邀请你一起听：${song.title}]`,
+            timestamp: Date.now(),
+            listenTogetherData: {
+                id: song.id,
+                title: song.title,
+                artist: song.artist,
+                albumArt: db.musicSettings.albumArt,
+                url: song.url
+            }
+        };
+
+        character.history.push(listenTogetherMessage);
+        saveData();
+        
+        // Immediately add the invitation card to the UI
+        if (currentChatId === characterId && getEl('chat-room-screen').classList.contains('active')) {
+            addMessageBubble(listenTogetherMessage);
+        }
+        renderChatList();
+        
         const prompt = `你正在扮演角色“${character.realName}”，人设是：${character.persona}。
         用户“${userProfile.name}”刚刚邀请你一起听一首名为《${song.title}》的歌。
         请根据你的人设，生成1-2条简短、口语化的聊天消息作为回应。
@@ -7149,6 +7509,9 @@ ${callHistoryForPrompt}
                 chatType: 'private'
             });
             renderChatList();
+             if (currentChatId === characterId && getEl('chat-room-screen').classList.contains('active')) {
+                messages.forEach(msg => addMessageBubble({ ...msg, role: 'assistant', content: msg, timestamp: Date.now() }));
+            }
         }
     }
 
@@ -7162,7 +7525,14 @@ ${callHistoryForPrompt}
             id: `msg_${Date.now()}`,
             role: 'user',
             content: `[${myName}分享了音乐：${song.title}]`,
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            musicShareData: {
+                id: song.id,
+                title: song.title,
+                artist: song.artist,
+                albumArt: db.musicSettings.albumArt,
+                url: song.url
+            }
         };
         if(chatType === 'group') message.senderId = 'user_me';
 
@@ -7311,6 +7681,133 @@ ${callHistoryForPrompt}
                 });
                 listEl.appendChild(li);
             });
+        }
+    }
+    
+    function handleMusicCardClick(card) {
+        const songId = card.dataset.songId;
+        const song = db.musicPlaylist.find(s => s.id === songId);
+        if (song) {
+            const songIndex = db.musicPlaylist.indexOf(song);
+            switchScreen('music-screen');
+            playSongByIndex(songIndex);
+        } else {
+            showToast("找不到这首歌了");
+        }
+    }
+    
+    // --- NEW LYRICS FUNCTIONS ---
+    function openLyricsModal() {
+        const song = db.musicPlaylist[currentPlayingSongIndex];
+        if (!song) {
+            showToast("请先播放歌曲");
+            return;
+        }
+
+        getEl('lyrics-song-title').textContent = song.title;
+        const lyricsContent = getEl('lyrics-content');
+        const editBtn = getEl('edit-lyrics-btn');
+        const saveBtn = getEl('save-lyrics-btn');
+        const editArea = getEl('edit-lyrics-textarea');
+
+        lyricsContent.style.display = 'block';
+        editArea.style.display = 'none';
+        editBtn.style.display = 'inline-flex';
+        saveBtn.style.display = 'none';
+        
+        renderLyrics();
+        
+        getEl('lyrics-modal').classList.add('visible');
+
+        editBtn.onclick = () => {
+            lyricsContent.style.display = 'none';
+            editArea.style.display = 'block';
+            editBtn.style.display = 'none';
+            saveBtn.style.display = 'inline-flex';
+            editArea.value = song.lyrics || '';
+        };
+
+        saveBtn.onclick = () => {
+            lyricsContent.style.display = 'block';
+            editArea.style.display = 'none';
+            editBtn.style.display = 'inline-flex';
+            saveBtn.style.display = 'none';
+
+            song.lyrics = editArea.value;
+            saveData();
+            parseLyrics(song.lyrics);
+            renderLyrics();
+            showToast("歌词已保存");
+        };
+    }
+    
+    function parseLyrics(lrcText) {
+        if (!lrcText) {
+            currentLyrics = null;
+            return;
+        }
+        const lines = lrcText.split('\n');
+        const parsed = [];
+        const timeRegex = /\[(\d{2}):(\d{2})\.(\d{2,3})\]/;
+
+        for (const line of lines) {
+            const match = line.match(timeRegex);
+            if (match) {
+                const minutes = parseInt(match[1], 10);
+                const seconds = parseInt(match[2], 10);
+                const milliseconds = parseInt(match[3].padEnd(3, '0'), 10);
+                const time = minutes * 60 + seconds + milliseconds / 1000;
+                const text = line.replace(timeRegex, '').trim();
+                if (text) {
+                    parsed.push({ time, text });
+                }
+            }
+        }
+        currentLyrics = parsed.sort((a,b) => a.time - b.time);
+    }
+    
+    function renderLyrics() {
+        const container = getEl('lyrics-content');
+        if (!currentLyrics || currentLyrics.length === 0) {
+            container.innerHTML = '<p>暂无歌词或歌词格式不正确</p>';
+            return;
+        }
+        container.innerHTML = currentLyrics.map((line, index) => `<p class="lyric-line" data-index="${index}">${line.text}</p>`).join('');
+    }
+
+    function updateLyrics() {
+        if (!currentLyrics || !getEl('lyrics-modal').classList.contains('visible')) return;
+        
+        const audioPlayer = getEl('audio-player');
+        const currentTime = audioPlayer.currentTime;
+        const container = getEl('lyrics-content');
+
+        let activeIndex = -1;
+        for (let i = 0; i < currentLyrics.length; i++) {
+            if (currentTime >= currentLyrics[i].time) {
+                activeIndex = i;
+            } else {
+                break;
+            }
+        }
+
+        const activeLine = container.querySelector('.lyric-line.active');
+        if (activeLine && parseInt(activeLine.dataset.index) === activeIndex) {
+            return; // No change needed
+        }
+
+        if (activeLine) activeLine.classList.remove('active');
+        
+        if (activeIndex > -1) {
+            const newActiveLine = container.querySelector(`.lyric-line[data-index="${activeIndex}"]`);
+            if (newActiveLine) {
+                newActiveLine.classList.add('active');
+                // Scroll into view
+                const containerRect = container.getBoundingClientRect();
+                const lineRect = newActiveLine.getBoundingClientRect();
+                const scrollOffset = lineRect.top - containerRect.top - (containerRect.height / 2) + (lineRect.height / 2);
+                container.scrollBy({ top: scrollOffset, behavior: 'smooth' });
+            }
         }
     }
 
