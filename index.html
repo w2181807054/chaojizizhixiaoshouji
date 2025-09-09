@@ -60,7 +60,7 @@
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: rgba(253, 251, 246, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid #eee; flex-shrink: 0; position: relative; z-index: 10; }
         .app-header .back-btn, .app-header .action-btn { background: none; border: none; font-size: 24px; font-weight: bold; color: var(--secondary-color); cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease; }
         .app-header .back-btn:active, .app-header .action-btn:active { transform: scale(0.9); }
-        #cancel-multi-select-btn { font-size: 14px !important; font-weight: 500 !important; color: var(--text-color) !important; background-color: var(--primary-color) !important; border-radius: 10px !important; padding: 5px 10px !important; width: auto !important; height: auto !important; }
+        #cancel-multi-select-btn { font-size: 14px !important; font-weight: 500 !important; color: var(--text-color) !important; background-color: rgba(var(--primary-color-rgb), 0.7) !important; border-radius: 10px !important; padding: 5px 10px !important; width: auto !important; height: auto !important; }
         .app-header .action-btn-group { display: flex; align-items: center; gap: 10px; }
         .app-header .action-btn-group .action-btn { font-size: 16px; font-weight: 600; width: auto; padding: 6px 12px; border-radius: 10px; }
         .app-header .action-btn-group #create-group-btn {
@@ -168,7 +168,6 @@
         .pin-badge { background-color: var(--primary-color); color: var(--text-color); font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 5px; white-space: nowrap; flex-shrink: 0; }
         #chat-room-screen { background-size: cover; background-position: center; }
         #chat-room-screen .content { display: flex; flex-direction: column; padding: 10px; padding-bottom: 10px; transition: padding-bottom 0.3s ease; }
-        #chat-room-screen.multi-select-active .content { padding-bottom: 70px; }
         .message-area { 
             flex-grow: 1; 
             overflow-y: auto; 
@@ -211,6 +210,7 @@
             right: -4px;
             bottom: -2px;
             background-color: rgba(144, 202, 249, 0.25);
+            border: 2px solid #90caf9;
             border-radius: 12px;
             pointer-events: none;
         }
@@ -494,6 +494,39 @@
         .gift-card-received-stamp { position: absolute; top: 5px; right: 5px; font-size: 14px; font-weight: bold; color: var(--primary-color); border: 2px solid var(--primary-color); border-radius: 8px; padding: 2px 6px; transform: rotate(15deg) scale(1); opacity: 0; transition: opacity 0.3s, transform 0.3s; font-family: 'Comic Sans MS', 'Chalkduster', 'Handwriting', cursive; }
         .gift-card.received .gift-card-received-stamp { opacity: 1; transform: rotate(15deg) scale(1); }
         
+        .file-card {
+            width: 230px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            margin: 0 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+        .file-icon {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+        }
+        .file-details {
+            overflow: hidden;
+        }
+        .file-name {
+            font-weight: 600;
+            color: var(--text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .file-size {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 4px;
+        }
+
         .load-more-btn { background-color: #e0e0e0; color: #757575; border: none; padding: 8px 16px; margin: 10px auto; border-radius: 15px; cursor: pointer; display: block; font-size: 13px; font-weight: 500; }
         .load-more-btn:hover { background-color: #d1d1d1; }
         .typing-indicator { text-align: center; color: #aaa; font-style: italic; font-size: 14px; padding: 10px 0; display: none; }
@@ -1426,11 +1459,131 @@
             height: 40vh;
             margin-top: 15px;
         }
+        /* NEW Collection & Diary Styles */
+        #collection-screen .list-item, #diary-bookshelf-screen .list-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .collection-source, .collection-time {
+            font-size: 12px;
+            color: #888;
+        }
+        .collection-content {
+            width: 100%;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+        #diary-bookshelf {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .diary-book {
+            aspect-ratio: 3/4;
+            background-color: #D2B48C;
+            border-radius: 8px 4px 4px 8px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+            color: white;
+            cursor: pointer;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+        .diary-book::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: rgba(0,0,0,0.1);
+        }
+        .diary-book-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid white;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .diary-book-name {
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        #diary-view-screen .content {
+            padding: 0;
+            perspective: 2000px;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .book-container {
+            width: 90%;
+            height: 90%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+        .book-page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--white-color);
+            padding: 20px;
+            overflow-y: auto;
+            backface-visibility: hidden;
+            display: none;
+            line-height: 1.8;
+            border: 1px solid #ddd;
+            font-family: 'Georgia', serif;
+        }
+        .book-page.active { display: block; }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .page-date { font-size: 14px; font-weight: bold; }
+        .page-meta { font-size: 12px; color: #888; }
+        .page-content { white-space: pre-wrap; }
+        .diary-nav {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            z-index: 10;
+        }
+        .diary-nav button {
+            background: rgba(var(--primary-color-rgb), 0.8);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: var(--text-color);
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .diary-nav button:disabled { background: #ccc; }
     </style>
 </head>
 <body>
     <div class="phone-screen">
         <input type="file" id="image-upload-input" accept="image/*" style="display:none;">
+        <input type="file" id="file-upload-input" style="display:none;">
         <div id="top-notification-bar">
             <img id="top-notification-avatar" src="">
             <div id="top-notification-text">
@@ -1481,6 +1634,9 @@
         <div id="memory-core-settings-screen" class="screen"></div>
         <div id="music-screen" class="screen"></div>
         <div id="playlist-manage-screen" class="screen"></div>
+        <div id="collection-screen" class="screen"></div>
+        <div id="diary-bookshelf-screen" class="screen"></div>
+        <div id="diary-view-screen" class="screen"></div>
         
         <!-- Call Screens -->
         <div id="outgoing-call-screen" class="screen"></div>
@@ -1507,6 +1663,7 @@
         <div id="share-music-modal" class="modal-overlay"></div>
         <div id="listen-together-modal" class="modal-overlay"></div>
         <div id="lyrics-modal" class="modal-overlay"></div>
+        <div id="forward-message-modal" class="modal-overlay"></div>
 
         <div id="add-music-modal" class="action-sheet-overlay">
             <div class="action-sheet">
@@ -1663,7 +1820,7 @@ function injectHTML() {
                 </div>
             </footer>
         `,
-        'chat-room-screen': `<header class="app-header" id="chat-room-header-default"><button class="back-btn" data-target="chat-list-screen">‹</button><div class="title-container"><h1 class="title" id="chat-room-title">...</h1><div class="subtitle" id="chat-room-subtitle"><div class="online-indicator"></div><span id="chat-room-status-text">在线</span></div></div><div class="action-btn-group"><button class="action-btn" id="show-heart-voice-btn" style="display:none;">${heartVoiceSVG}</button><button class="action-btn" id="chat-settings-btn">${settingsSVG}</button></div></header><header class="app-header" id="chat-room-header-select" style="display: none;"><button class="action-btn" id="cancel-multi-select-btn">取消</button><div class="title-container"><h1 class="title" id="multi-select-title">选择消息</h1></div><div class="placeholder"></div></header><main class="content"><div class="message-area" id="message-area"></div><div class="typing-indicator" id="typing-indicator"></div></main><div class="chat-input-wrapper"><div id="reply-preview-bar" class="reply-preview-bar"></div><div class="message-input-area" id="message-input-default"><button id="plus-menu-btn" class="icon-btn"><svg viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" /></svg></button><input type="text" id="message-input" placeholder="输入消息..."><button id="sticker-toggle-btn" class="icon-btn"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg></button><button id="send-or-reply-btn" class="icon-btn send-btn"></button></div><div class="message-input-area" id="message-edit-bar" style="display: none;"><input type="text" id="message-edit-input"><button id="save-edit-btn" class="icon-btn send-btn">✓</button><button id="cancel-edit-btn" class="icon-btn" style="background-color: #aaa;">✗</button></div><div id="chat-plus-menu" class="chat-plus-menu"></div></div><div id="multi-select-bar"><span id="select-count">已选择 0 项</span><button class="btn btn-danger" id="delete-selected-btn" style="width: auto; padding: 8px 16px;">删除已选</button></div><div id="sticker-modal"><div class="header"><span>我的表情</span><div><button class="btn btn-secondary btn-small" id="batch-add-sticker-btn" style="margin-right: 8px;">批量导入</button><button class="btn btn-primary btn-small" id="add-new-sticker-btn">添加新表情</button></div></div><div class="sticker-grid" id="sticker-grid-container"></div></div>`,
+        'chat-room-screen': `<header class="app-header" id="chat-room-header-default"><button class="back-btn" data-target="chat-list-screen">‹</button><div class="title-container"><h1 class="title" id="chat-room-title">...</h1><div class="subtitle" id="chat-room-subtitle"><div class="online-indicator"></div><span id="chat-room-status-text">在线</span></div></div><div class="action-btn-group"><button class="action-btn" id="show-heart-voice-btn" style="display:none;">${heartVoiceSVG}</button><button class="action-btn" id="chat-settings-btn">${settingsSVG}</button></div></header><header class="app-header" id="chat-room-header-select" style="display: none;"><button class="action-btn" id="cancel-multi-select-btn">取消</button><div class="title-container"><h1 class="title" id="multi-select-title">已选 0 条</h1></div><div class="action-btn-group"><button class="action-btn" id="collect-selected-btn" disabled>${settingsSVG}</button><button class="action-btn" id="share-selected-btn" disabled>${pawIcon}</button><button class="action-btn" id="delete-selected-btn" disabled>🗑️</button></div></header><main class="content"><div class="message-area" id="message-area"></div><div class="typing-indicator" id="typing-indicator"></div></main><div class="chat-input-wrapper"><div id="reply-preview-bar" class="reply-preview-bar"></div><div class="message-input-area" id="message-input-default"><button id="plus-menu-btn" class="icon-btn"><svg viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" /></svg></button><input type="text" id="message-input" placeholder="输入消息..."><button id="sticker-toggle-btn" class="icon-btn"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg></button><button id="send-or-reply-btn" class="icon-btn send-btn"></button></div><div class="message-input-area" id="message-edit-bar" style="display: none;"><input type="text" id="message-edit-input"><button id="save-edit-btn" class="icon-btn send-btn">✓</button><button id="cancel-edit-btn" class="icon-btn" style="background-color: #aaa;">✗</button></div><div id="chat-plus-menu" class="chat-plus-menu"></div></div><div id="sticker-modal"><div class="header"><span>我的表情</span><div><button class="btn btn-secondary btn-small" id="batch-add-sticker-btn" style="margin-right: 8px;">批量导入</button><button class="btn btn-primary btn-small" id="add-new-sticker-btn">添加新表情</button></div></div><div class="sticker-grid" id="sticker-grid-container"></div></div>`,
         'world-book-screen': `<header class="app-header"><button class="back-btn" data-target="home-screen">‹</button><div class="title-container"><h1 class="title">爪印书</h1></div><button class="action-btn" id="add-world-book-btn">${pawIcon}</button></header><main class="content"><ul class="list-container" id="world-book-list-container"></ul><div class="placeholder-text" id="no-world-books-placeholder" style="display: none;"><p>你的世界一片混沌...</p><p>点击右上角的爪印创造第一个设定吧！</p></div></main>`,
         'edit-world-book-screen': `<header class="app-header"><button class="back-btn" data-target="world-book-screen">‹</button><div class="title-container"><h1 class="title" id="edit-world-book-title">创建/编辑条目</h1></div><div class="placeholder"></div></header><main class="content"><form id="edit-world-book-form"><input type="hidden" id="world-book-id"><div class="form-group"><label for="world-book-name">条目名称</label><input type="text" id="world-book-name" placeholder="例如：世界观背景、魔法体系" required></div><div class="form-group"><label for="world-book-content">条目内容</label><textarea id="world-book-content" rows="8" placeholder="详细描述此项设定..." required></textarea></div><div class="form-group"><label>注入位置</label><div class="form-group radio-group"><label><input type="radio" name="world-book-position" value="before" checked> 前</label><label><input type="radio" name="world-book-position" value="after"> 后</label></div></div><button type="submit" class="btn btn-primary">保存条目</button></form></main>`,
         'moments-settings-screen': `<header class="app-header"><button class="back-btn" data-target="chat-list-screen">‹</button><div class="title-container"><h1 class="title">朋友圈设置</h1></div><div class="placeholder"></div></header><main class="content"><div class="form-group"><label>我的朋友圈头像</label><div class="avatar-setting" style="justify-content: center;"><img src="" alt="我的头像" id="moments-my-avatar-preview" class="avatar-preview" style="width:80px;height:80px;border-radius:12px;"><input type="file" id="moments-avatar-upload" accept="image/*" style="display:none;"><label for="moments-avatar-upload" class="btn btn-secondary" style="margin-left:15px; margin-bottom:0;">更换头像</label></div></div><hr><div class="form-group"><label>朋友圈封面</label><div class="wallpaper-preview" id="moments-bg-preview" style="height:150px; margin-bottom:10px;"></div><input type="file" id="moments-bg-upload" accept="image/*" style="display:none;"><label for="moments-bg-upload" class="btn btn-primary">更换封面</label></div><hr><form id="moments-settings-form"><div class="form-group"><label>AI自动发布动态</label><div class="form-group radio-group"><label><input type="radio" name="moments-enabled" value="true"> 开启</label><label><input type="radio" name="moments-enabled" value="false"> 关闭</label></div></div><div class="form-group"><label for="moments-frequency">发布频率</label><select id="moments-frequency" name="frequency"><option value="high">高 (1-2小时/条)</option><option value="medium">中 (4-8小时/条)</option><option value="low">低 (12-24小时/条)</option></select></div><button type="submit" class="btn btn-primary">保存设置</button></form><hr style="border:none; border-top:1px solid #eee; margin: 20px 0;"><button type="button" class="btn btn-danger" id="clear-moments-btn">清空所有动态</button></main>`,
@@ -1978,6 +2135,46 @@ function injectHTML() {
                 <div class="placeholder-text" id="no-playlist-placeholder"><p>这里空空如也~</p></div>
             </main>
         `,
+        'collection-screen': `
+            <header class="app-header">
+                <button class="back-btn" data-target="chat-room-screen">‹</button>
+                <div class="title-container"><h1 class="title">我的收藏</h1></div>
+                <div class="placeholder"></div>
+            </header>
+            <main class="content" style="padding:0;">
+                <ul class="list-container" id="collection-list-container"></ul>
+                <div class="placeholder-text" id="no-collections-placeholder" style="display: none;"><p>还没有任何收藏</p><p>在聊天中长按消息来收藏吧！</p></div>
+            </main>
+        `,
+        'diary-bookshelf-screen': `
+            <header class="app-header">
+                <button class="back-btn" data-target="chat-room-screen">‹</button>
+                <div class="title-container"><h1 class="title">日记本</h1></div>
+                <div class="placeholder"></div>
+            </header>
+            <main class="content">
+                <div id="diary-bookshelf"></div>
+                <div class="placeholder-text" id="no-diaries-placeholder" style="display: none;"><p>还没有任何日记</p><p>和伙伴们聊天，他们会自己记录的~</p></div>
+            </main>
+        `,
+        'diary-view-screen': `
+             <header class="app-header">
+                <button class="back-btn" data-target="diary-bookshelf-screen">‹</button>
+                <div class="title-container"><h1 class="title" id="diary-book-title"></h1></div>
+                <button class="action-btn" id="diary-settings-btn">${settingsSVG}</button>
+            </header>
+            <main class="content">
+                <div class="book-container" id="diary-book-container">
+                    <!-- Pages will be injected here -->
+                </div>
+                <div class="diary-nav">
+                    <button id="prev-page-btn">上一页</button>
+                    <span id="page-number-display"></span>
+                    <button id="next-page-btn">下一页</button>
+                </div>
+            </main>
+        `,
+         'forward-message-modal': `<div class="modal-window"><h3>转发给...</h3><ul id="forward-message-list" class="list-container" style="max-height: 40vh; overflow-y: auto;"></ul></div>`
     };
     for (const id in htmlMap) {
         const element = document.getElementById(id);
@@ -2092,6 +2289,8 @@ const loadData = () => {
             playbackMode: 'sequential' // 'sequential', 'shuffle', 'repeat-one'
         },
         musicPlaylist: [],
+        collections: [],
+        diaries: {}
     };
     db = data ? { ...defaultDb, ...JSON.parse(data) } : defaultDb;
     db.musicPlaylist = db.musicPlaylist || [];
@@ -2140,6 +2339,8 @@ const loadData = () => {
     db.momentsSettings = { ...defaultDb.momentsSettings, ...db.momentsSettings };
     db.memorySettings = { ...defaultDb.memorySettings, ...db.memorySettings };
     db.musicSettings = { ...defaultDb.musicSettings, ...db.musicSettings };
+    db.collections = db.collections || [];
+    db.diaries = db.diaries || {};
     
     const defaultTheme = 'wechat_green';
     db.characters.forEach(c => {
@@ -2308,6 +2509,7 @@ const init = () => {
     
     setInterval(updateClock, 30000);
     setInterval(proactiveChatScheduler, 5 * 60 * 1000);
+    setInterval(diaryWritingScheduler, 60 * 60 * 1000); // Run every hour
     applyGlobalFont(db.fontUrl);
     applyThemeColor(db.themeColor); 
     
@@ -2336,6 +2538,8 @@ const init = () => {
     setupMusicApp();
     setupDynamicIsland();
     setupPlaylistManagement();
+    setupFileAndCollectionSystem();
+    setupDiarySystem();
     document.querySelector('[data-target="music-screen"]').addEventListener('click', () => {
         renderPlaylist();
         applyMusicPlayerCustomization();
@@ -2505,6 +2709,7 @@ function setupBeautifyApp() {
         showToast('新字体已应用！');
     });
 }
+
 function applyThemeColor(hexColor) {
         if (!hexColor) return;
         const root = document.documentElement;
@@ -2688,6 +2893,7 @@ function renderChatList() {
                 else if (lastMsg.locationData) lastMessageText = '[位置]';
                 else if (lastMsg.musicShareData) lastMessageText = `[音乐] ${lastMsg.musicShareData.title}`;
                 else if (lastMsg.listenTogetherData) lastMessageText = '[邀请] 一起听歌';
+                else if (lastMsg.fileData) lastMessageText = `[文件] ${lastMsg.fileData.name}`;
                 else if (/送来的礼物/.test(lastMsg.content)) lastMessageText = '[礼物]';
                 else if (/分享了音乐/.test(lastMsg.content)) lastMessageText = '[音乐]';
                 else if (/表情包/.test(lastMsg.content) || lastMsg.stickerData) lastMessageText = '[表情包]';
@@ -2831,28 +3037,60 @@ function setupContactsScreen() {
     const handleLongPress = (e) => {
         e.preventDefault();
         const item = e.target.closest('.list-item');
-        if (!item || item.dataset.type !== 'private') return; // Only for characters
-        const charId = item.dataset.id;
-        const char = db.characters.find(c => c.id === charId);
-        if (!char) return;
+        if (!item) return;
 
-        const menuItems = [{
-            label: '删除伙伴',
-            danger: true,
-            action: () => {
-                if (confirm(`确定要删除伙伴“${char.remarkName}”吗？\n与该伙伴的所有聊天记录和群聊关系都将一并删除。`)) {
-                    db.characters = db.characters.filter(c => c.id !== charId);
-                    db.groups.forEach(group => {
-                        group.members = group.members.filter(m => m.originalCharId !== charId);
-                    });
-                    saveData();
-                    renderContactsList();
-                    renderChatList();
-                    showToast(`伙伴“${char.remarkName}”已删除`);
+        const entityId = item.dataset.id;
+        const entityType = item.dataset.type;
+
+        if (entityType === 'private') {
+            const char = db.characters.find(c => c.id === entityId);
+            if (!char) return;
+            const menuItems = [{
+                label: '删除伙伴',
+                danger: true,
+                action: () => {
+                    if (confirm(`确定要删除伙伴“${char.remarkName}”吗？\n与该伙伴的所有聊天记录和群聊关系都将一并删除。`)) {
+                        db.characters = db.characters.filter(c => c.id !== entityId);
+                        db.groups.forEach(group => {
+                            group.members = group.members.filter(m => m.originalCharId !== entityId);
+                        });
+                        saveData();
+                        renderContactsList();
+                        renderChatList();
+                        showToast(`伙伴“${char.remarkName}”已删除`);
+                    }
                 }
-            }
-        }];
-        createContextMenu(menuItems, e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY);
+            }];
+            createContextMenu(menuItems, e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY);
+        } else if (entityType === 'group') {
+            const group = db.groups.find(g => g.id === entityId);
+            if (!group) return;
+            const menuItems = [
+                {
+                    label: '编辑群聊',
+                    action: () => {
+                        currentChatId = entityId; 
+                        currentChatType = 'group';
+                        loadGroupSettingsToSidebar();
+                        getEl('group-settings-sidebar').classList.add('open');
+                    }
+                },
+                {
+                    label: '解散群聊',
+                    danger: true,
+                    action: () => {
+                        if (confirm(`确定要解散群聊“${group.name}”吗？此操作不可恢复。`)) {
+                            db.groups = db.groups.filter(g => g.id !== entityId);
+                            saveData();
+                            renderContactsList();
+                            renderChatList();
+                            showToast(`群聊“${group.name}”已解散`);
+                        }
+                    }
+                }
+            ];
+            createContextMenu(menuItems, e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY);
+        }
     };
     
     const handleLongPressStart = (e) => {
@@ -3128,14 +3366,7 @@ function setupChatRoom() {
 
         if (isInMultiSelectMode) { 
             const id = wrapper.dataset.id;
-            if (selectedMessageIds.has(id)) {
-                selectedMessageIds.delete(id);
-                wrapper.classList.remove('multi-select-selected');
-            } else {
-                selectedMessageIds.add(id);
-                wrapper.classList.add('multi-select-selected');
-            }
-            getEl('select-count').textContent = `已选择 ${selectedMessageIds.size} 项`;
+            toggleMessageSelection(id);
             return;
         }
         
@@ -3207,6 +3438,8 @@ function setupChatRoom() {
     getEl('cancel-edit-btn').addEventListener('click', cancelMessageEdit);
     getEl('cancel-multi-select-btn').addEventListener('click', exitMultiSelectMode);
     getEl('delete-selected-btn').addEventListener('click', deleteSelectedMessages);
+    getEl('share-selected-btn').addEventListener('click', forwardSelectedMessages);
+    getEl('collect-selected-btn').addEventListener('click', collectSelectedMessages);
 }
 
 function handlePatPat(messageWrapper) {
@@ -3394,7 +3627,9 @@ function renderPlusMenu() {
             case 'location-btn': getEl('send-location-form').reset(); getEl('send-location-modal').classList.add('visible'); break;
             case 'video-call-btn': handleInitiateCall(); break;
             case 'music-share-btn': openShareMusicModal(db.musicPlaylist[currentPlayingSongIndex]); break;
-            case 'file-btn': case 'collection-btn': case 'diary-btn': showToast(`“${item.querySelector('span').textContent}”功能正在开发中~`); break;
+            case 'file-btn': getEl('file-upload-input').click(); break;
+            case 'collection-btn': switchScreen('collection-screen'); renderCollections(); break;
+            case 'diary-btn': switchScreen('diary-bookshelf-screen'); renderDiaryBookshelf(); break;
         }
     });
 }
@@ -3459,6 +3694,7 @@ function renderPlusMenu() {
     else if (message.locationData) replyContent = '[位置]';
     else if (message.musicShareData) replyContent = `[音乐]: ${message.musicShareData.title}`;
     else if (message.listenTogetherData) replyContent = `[邀请]: 一起听《${message.listenTogetherData.title}》`;
+    else if (message.fileData) replyContent = `[文件]: ${message.fileData.name}`;
     else if (/送来的礼物/.test(replyContent)) replyContent = '[礼物]';
     else if (/分享了音乐/.test(replyContent)) replyContent = '[音乐]';
     else if (/表情包/.test(replyContent) || message.stickerData) replyContent = '[表情包]';
@@ -3550,26 +3786,18 @@ function renderPlusMenu() {
         isInMultiSelectMode = true; 
         getEl('chat-room-header-default').style.display = 'none'; 
         getEl('chat-room-header-select').style.display = 'flex'; 
-        document.querySelector('.chat-input-wrapper').style.display='none'; 
-        getEl('multi-select-bar').classList.add('visible'); 
-        getEl('chat-room-screen').classList.add('multi-select-active'); 
+        getEl('message-input-default').style.display = 'none'; 
         selectedMessageIds.clear(); 
         if (initialMessageId) { 
-            const wrapper = getEl('message-area').querySelector(`.message-wrapper[data-id="${initialMessageId}"]`);
-            if (wrapper) {
-                wrapper.classList.add('multi-select-selected');
-                selectedMessageIds.add(initialMessageId);
-                getEl('select-count').textContent = `已选择 ${selectedMessageIds.size} 项`;
-            }
-        } 
+            toggleMessageSelection(initialMessageId);
+        }
+        updateMultiSelectHeader();
     }
     function exitMultiSelectMode() { 
         isInMultiSelectMode = false; 
         getEl('chat-room-header-default').style.display = 'flex'; 
         getEl('chat-room-header-select').style.display = 'none'; 
-        document.querySelector('.chat-input-wrapper').style.display='block'; 
-        getEl('multi-select-bar').classList.remove('visible'); 
-        getEl('chat-room-screen').classList.remove('multi-select-active'); 
+        getEl('message-input-default').style.display = 'flex'; 
         selectedMessageIds.forEach(id => { 
             const el = getEl('message-area').querySelector(`.message-wrapper[data-id="${id}"]`); 
             if (el) el.classList.remove('multi-select-selected'); 
@@ -3586,8 +3814,14 @@ function renderPlusMenu() {
             selectedMessageIds.add(messageId);
             el.classList.add('multi-select-selected');
         }
-        getEl('select-count').textContent = `已选择 ${selectedMessageIds.size} 项`;
-        getEl('delete-selected-btn').disabled = selectedMessageIds.size === 0;
+        updateMultiSelectHeader();
+    }
+    function updateMultiSelectHeader() {
+        const count = selectedMessageIds.size;
+        getEl('multi-select-title').textContent = `已选 ${count} 条`;
+        getEl('delete-selected-btn').disabled = count === 0;
+        getEl('share-selected-btn').disabled = count === 0;
+        getEl('collect-selected-btn').disabled = count === 0;
     }
     function deleteSelectedMessages() {
         if (selectedMessageIds.size === 0) return;
@@ -3605,8 +3839,9 @@ function renderPlusMenu() {
         saveData();
         renderMessages(false, true); 
         renderChatList();
+        const count = selectedMessageIds.size;
         exitMultiSelectMode();
-        showToast(`已删除 ${selectedMessageIds.size} 条消息`); 
+        showToast(`已删除 ${count} 条消息`); 
     }
     function openChatRoom(chatId, type) {
         const chat = (type === 'private') ? db.characters.find(c => c.id === chatId) : db.groups.find(g => g.id === chatId);
@@ -3755,7 +3990,7 @@ function renderPlusMenu() {
         const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
         if (!chat) return null;
         
-        const { role, content, timestamp, id, transferStatus, giftStatus, stickerData, senderId, replyTo, redPacketData, locationData, imageData, isHtmlModule, musicShareData, listenTogetherData } = message;
+        const { role, content, timestamp, id, transferStatus, giftStatus, stickerData, senderId, replyTo, redPacketData, locationData, imageData, isHtmlModule, musicShareData, listenTogetherData, fileData } = message;
         
         const isSent = (role === 'user');
         let avatarUrl, senderNickname = '';
@@ -3912,6 +4147,16 @@ function renderPlusMenu() {
             bubbleElementHTML = `<div class="image-bubble"><img src="${stickerData.data}" alt="${stickerData.name}"></div>`;
         } else if (imageData) {
             bubbleElementHTML = `<div class="image-bubble"><img src="${imageData.url}" alt="用户发送的图片"></div>`;
+        } else if (fileData) {
+            bubbleElementHTML = `
+                <div class="file-card">
+                    <svg class="file-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M13,9V3.5L18.5,9H13Z" /></svg>
+                    <div class="file-details">
+                        <div class="file-name">${fileData.name}</div>
+                        <div class="file-size">${(fileData.size / 1024).toFixed(2)} KB</div>
+                    </div>
+                </div>
+            `;
         } else if (/送来的礼物/.test(content)) {
             const description = (content.match(/：([\s\S]+?)\]/) || [])[1]?.trim();
             bubbleElementHTML = `
@@ -4377,7 +4622,7 @@ function generatePrivateSystemPrompt(character) {
 - [${userProfile.name}的语音：xxx]：我给你发送了一段内容为xxx的语音。
 - [${userProfile.name}发来的照片/视频：xxx]：我给你分享了一个描述为xxx的照片或视频。
 - [${userProfile.name}给你转账：xxx元；备注：xxx]：我给你转了一笔钱。
-- [${user.name}送出的红包：xxx]：我发了一个红包，xxx是祝福语。
+- [${userProfile.name}送出的红包：xxx]：我发了一个红包，xxx是祝福语。
 - [${userProfile.name}分享的位置：xxx]：我给你分享了一个位置。
 - [${userProfile.name}分享了音乐：xxx]：我给你分享了一首名为xxx的歌曲。
 - [${userProfile.name}邀请你一起听：xxx]：我邀请你一起听一首名为xxx的歌。\n`;
@@ -6541,6 +6786,7 @@ function getContrastYIQ(hexcolor){
         }, 5000);
     }
     
+    
     async function proactiveChatScheduler() {
         const allChats = [
             ...db.characters,
@@ -6599,7 +6845,7 @@ function getContrastYIQ(hexcolor){
                     
                     const activeScreenIsChatRoom = getEl('chat-room-screen').classList.contains('active');
                     if (activeScreenIsChatRoom && chat.id === currentChatId) {
-                       messages.forEach(msg => addMessageBubble({ ...msg, role: 'assistant', timestamp: Date.now() }));
+                       messages.forEach(msg => addMessageBubble({ ...msg, role: 'assistant', content: msg, timestamp: Date.now() }));
                     } else if (!activeScreenIsChatRoom || chat.id !== currentChatId) {
                          const firstReply = messages[0];
                          let preview, title, avatar;
@@ -6683,6 +6929,30 @@ ${momentContext}
 [${character.realName}的消息：早啊，昨晚睡得好吗？]
 [${character.realName}的消息：我刚看到你朋友圈发的新动态，那只小猫好可爱！]
 [${character.realName}的消息：是新养的吗？]`;
+    }
+     function generateGroupProactiveChatPrompt(group) {
+        const currentTime = new Date().toLocaleString('zh-CN', { hour12: false });
+        const userProfile = db.userProfiles.find(p => p.id === group.me.profileId) || db.userProfiles[0];
+        
+        return `你正在一个名为"${group.name}"的群聊里进行角色扮演。现在是 ${currentTime}，群里已经安静了一段时间。
+你的核心任务是：扮演群里的 **某一个AI成员**，主动发起一个话题，让群聊重新活跃起来。
+
+---
+**群成员列表与人设**:
+${group.members.map(m => `- ${m.realName} (昵称: ${m.groupNickname}): ${m.persona}`).join('\n')}
+---
+
+【要求】
+1.  **选择一个角色**: 从上面的列表中，选择一个最适合在此刻发言的角色。
+2.  **发起话题**: 根据你选择的角色的人设，以及当前的时间，想一个自然、有趣的话题或问候。
+3.  **消息拆分**: 生成 **2到5条** 简短连贯的消息来开启对话。
+4.  **格式严格**: 每一条消息都必须严格遵循 \`[{角色真名}的消息：...]\` 格式。
+
+【示例】
+假设你选择扮演“张三”，一个喜欢分享美食的角色：
+[张三的消息：我饿了...]
+[张三的消息：你们有没有什么好吃的宵夜推荐？]
+[张三的消息：最好是那种吃了不会胖的（做梦]`;
     }
 
     // --- NEW / REFACTORED: Call System ---
@@ -7980,7 +8250,368 @@ ${callHistoryForPrompt}
             }
         }
     }
+    
+    // --- NEW: File, Collection, Diary Systems ---
+    function setupFileAndCollectionSystem() {
+        getEl('file-upload-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                sendFileMessage(file);
+            }
+            e.target.value = '';
+        });
 
+        const collectionList = getEl('collection-list-container');
+        collectionList.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            const item = e.target.closest('.list-item');
+            if (!item) return;
+            const collectionId = item.dataset.id;
+            createContextMenu([{
+                label: '取消收藏',
+                danger: true,
+                action: () => {
+                    db.collections = db.collections.filter(c => c.id !== collectionId);
+                    saveData();
+                    renderCollections();
+                    showToast('已取消收藏');
+                }
+            }], e.clientX, e.clientY);
+        });
+    }
+
+    function renderCollections() {
+        const container = getEl('collection-list-container');
+        const placeholder = getEl('no-collections-placeholder');
+        container.innerHTML = '';
+        if (db.collections.length === 0) {
+            placeholder.style.display = 'block';
+            return;
+        }
+        placeholder.style.display = 'none';
+
+        db.collections.sort((a, b) => b.timestamp - a.timestamp).forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'list-item';
+            li.dataset.id = item.id;
+            
+            let contentHTML = '';
+            item.messages.forEach(msg => {
+                const senderName = msg.sender.name || '未知';
+                const senderAvatar = msg.sender.avatar || '';
+                let messageContent = '';
+                if(msg.imageData) messageContent = `<img src="${msg.imageData.url}" style="max-width: 100px; border-radius: 4px;">`;
+                else if (msg.fileData) messageContent = `[文件] ${msg.fileData.name}`;
+                else {
+                    const match = msg.content.match(/\[.*?：([\s\S]+?)\]/);
+                    messageContent = match ? match[1] : msg.content;
+                }
+                
+                contentHTML += `
+                    <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 5px;">
+                        <img src="${senderAvatar}" style="width: 24px; height: 24px; border-radius: 50%;">
+                        <div>
+                            <strong style="font-size: 14px;">${senderName}</strong>
+                            <div style="font-size: 15px;">${messageContent}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            li.innerHTML = `
+                <div class="item-details" style="width: 100%;">
+                    <div class="collection-content">${contentHTML}</div>
+                    <div class="item-details-row" style="margin-top: 8px;">
+                        <span class="collection-source">来自：${item.source}</span>
+                        <span class="collection-time">${formatTimeAgo(item.timestamp)}</span>
+                    </div>
+                </div>`;
+            container.appendChild(li);
+        });
+    }
+
+    function collectSelectedMessages() {
+        if (selectedMessageIds.size === 0) return;
+        const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
+        
+        const messagesToCollect = Array.from(selectedMessageIds)
+            .map(id => chat.history.find(msg => msg.id === id))
+            .filter(Boolean)
+            .sort((a,b) => a.timestamp - b.timestamp);
+        
+        if (messagesToCollect.length === 0) return;
+
+        const collectionItem = {
+            id: `col_${Date.now()}`,
+            timestamp: Date.now(),
+            source: chat.name || chat.remarkName,
+            messages: messagesToCollect.map(msg => {
+                let sender = {};
+                if (msg.role === 'user') {
+                    const userProfile = db.userProfiles.find(p => p.id === (chat.userProfileId || chat.me?.profileId)) || db.userProfiles[0];
+                    sender = { name: userProfile.name, avatar: userProfile.avatar };
+                } else {
+                    const char = db.characters.find(c => c.id === msg.senderId) || chat;
+                    sender = { name: char.remarkName || char.name, avatar: char.avatar };
+                }
+                return { ...msg, sender };
+            })
+        };
+        db.collections.push(collectionItem);
+        saveData();
+        showToast(`已收藏 ${messagesToCollect.length} 条消息`);
+        exitMultiSelectMode();
+    }
+
+    function forwardSelectedMessages() {
+        if (selectedMessageIds.size === 0) return;
+        const modal = getEl('forward-message-modal');
+        const listEl = getEl('forward-message-list');
+        listEl.innerHTML = '';
+        const chats = [...db.characters, ...db.groups].filter(c => c.id !== currentChatId);
+        if (chats.length === 0) {
+            listEl.innerHTML = '<li class="placeholder-text">没有其他联系人可转发</li>';
+        } else {
+             chats.forEach(chat => {
+                const li = document.createElement('li');
+                li.className = 'selection-item';
+                li.innerHTML = `<img src="${chat.avatar}" class="chat-avatar ${chat.members ? 'group-avatar' : ''}"><span>${chat.name || chat.remarkName}</span>`;
+                li.addEventListener('click', () => {
+                    sendForwardedMessages(chat.id, chat.members ? 'group' : 'private');
+                    modal.classList.remove('visible');
+                });
+                listEl.appendChild(li);
+            });
+        }
+        modal.classList.add('visible');
+    }
+
+    function sendForwardedMessages(targetChatId, targetChatType) {
+        const sourceChat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
+        const targetChat = (targetChatType === 'private') ? db.characters.find(c => c.id === targetChatId) : db.groups.find(g => g.id === targetChatId);
+
+        const messagesToForward = Array.from(selectedMessageIds)
+            .map(id => sourceChat.history.find(msg => msg.id === id))
+            .filter(Boolean)
+            .sort((a,b) => a.timestamp - b.timestamp);
+
+        messagesToForward.forEach(msg => {
+            const forwardedMsg = { ...msg, id: `msg_${Date.now()}_${Math.random()}`, timestamp: Date.now() };
+            targetChat.history.push(forwardedMsg);
+        });
+
+        saveData();
+        showToast(`已转发到与 ${targetChat.name || targetChat.remarkName} 的聊天`);
+        exitMultiSelectMode();
+        renderChatList();
+    }
+
+
+    function sendFileMessage(file) {
+        const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
+        const myName = (currentChatType === 'private') ? (db.userProfiles.find(p => p.id === chat.userProfileId) || db.userProfiles[0]).name : chat.me.nickname;
+
+        const message = {
+            id: `msg_file_${Date.now()}`,
+            role: 'user',
+            content: `[${myName}发送了文件：${file.name}]`,
+            timestamp: Date.now(),
+            fileData: { name: file.name, size: file.size, type: file.type }
+        };
+        if(currentChatType === 'group') message.senderId = 'user_me';
+
+        chat.history.push(message);
+        addMessageBubble(message);
+        saveData();
+        renderChatList();
+        isNextClickForReply = true;
+        updateSendButtonState();
+    }
+    
+    // --- NEW: Diary System ---
+    function setupDiarySystem() {
+        getEl('diary-bookshelf-screen').addEventListener('click', e => {
+            const book = e.target.closest('.diary-book');
+            if (book) {
+                openDiaryBook(book.dataset.characterId);
+            }
+        });
+        getEl('diary-settings-btn').addEventListener('click', e => {
+            const bookId = getEl('diary-book-container').dataset.characterId;
+            const bg = prompt('请输入新的日记本背景图片URL：', db.diaries[bookId]?.background || '');
+            if (bg !== null) {
+                if (!db.diaries[bookId]) db.diaries[bookId] = { entries: [], background: '' };
+                db.diaries[bookId].background = bg;
+                saveData();
+                getEl('diary-book-container').style.backgroundImage = `url(${bg})`;
+            }
+        });
+    }
+
+    function renderDiaryBookshelf() {
+        const shelf = getEl('diary-bookshelf');
+        const placeholder = getEl('no-diaries-placeholder');
+        shelf.innerHTML = '';
+        const charactersWithDiaries = Object.keys(db.diaries).map(id => db.characters.find(c => c.id === id)).filter(Boolean);
+
+        if (charactersWithDiaries.length === 0) {
+            placeholder.style.display = 'block';
+            return;
+        }
+        placeholder.style.display = 'none';
+
+        charactersWithDiaries.forEach(char => {
+            const bookDiv = document.createElement('div');
+            bookDiv.className = 'diary-book';
+            bookDiv.dataset.characterId = char.id;
+            const diaryData = db.diaries[char.id];
+            if (diaryData.background) {
+                bookDiv.style.backgroundImage = `url(${diaryData.background})`;
+            }
+            bookDiv.innerHTML = `
+                <img src="${char.avatar}" class="diary-book-avatar">
+                <span class="diary-book-name">${char.remarkName}的日记</span>
+            `;
+            shelf.appendChild(bookDiv);
+        });
+    }
+
+    function openDiaryBook(characterId) {
+        const char = db.characters.find(c => c.id === characterId);
+        const diary = db.diaries[characterId];
+        if (!char || !diary) return;
+
+        getEl('diary-book-title').textContent = `${char.remarkName}的日记`;
+        const container = getEl('diary-book-container');
+        container.dataset.characterId = characterId;
+        container.style.backgroundImage = diary.background ? `url(${diary.background})` : 'none';
+        
+        renderDiaryPages(characterId, 0);
+        switchScreen('diary-view-screen');
+    }
+
+    function renderDiaryPages(characterId, pageIndex) {
+        const diary = db.diaries[characterId];
+        const container = getEl('diary-book-container');
+        container.innerHTML = '';
+        
+        const entries = diary.entries.sort((a,b) => new Date(b.date) - new Date(a.date));
+        const entry = entries[pageIndex];
+
+        if (!entry) return;
+
+        const page = document.createElement('div');
+        page.className = 'book-page active';
+        page.innerHTML = `
+            <div class="page-header">
+                <span class="page-date">${entry.date}</span>
+                <span class="page-meta">${entry.weather || ''}</span>
+            </div>
+            <div class="page-content">${entry.content}</div>
+        `;
+        container.appendChild(page);
+
+        getEl('page-number-display').textContent = `${pageIndex + 1} / ${entries.length}`;
+        const prevBtn = getEl('prev-page-btn');
+        const nextBtn = getEl('next-page-btn');
+        
+        prevBtn.disabled = pageIndex === 0;
+        nextBtn.disabled = pageIndex >= entries.length - 1;
+
+        prevBtn.onclick = () => renderDiaryPages(characterId, pageIndex - 1);
+        nextBtn.onclick = () => renderDiaryPages(characterId, pageIndex + 1);
+    }
+    
+    async function diaryWritingScheduler() {
+        for (const char of db.characters) {
+            const lastDiary = (db.diaries[char.id]?.entries || []).sort((a,b) => new Date(b.date) - new Date(a.date))[0];
+            const timeSinceLastDiary = lastDiary ? Date.now() - new Date(lastDiary.date).getTime() : Infinity;
+            
+            // Check if there has been significant conversation since the last diary entry
+            const lastChatTimestamp = char.history.length > 0 ? char.history[char.history.length - 1].timestamp : 0;
+            const hasNewChat = lastDiary ? lastChatTimestamp > new Date(lastDiary.date).getTime() : char.history.length > 0;
+
+            // Write a diary entry randomly every 1-3 days if there's new chat
+            if (hasNewChat && timeSinceLastDiary > (Math.random() * 2 + 1) * 24 * 3600000) {
+                await createAutomaticDiaryEntry(char);
+            }
+        }
+    }
+    
+    function generateDiaryEntryPrompt(character, recentHistory) {
+         const userProfile = db.userProfiles.find(p => p.id === character.userProfileId) || db.userProfiles[0];
+         return `
+# 任务：撰写日记
+你正在扮演角色“${character.realName}”（昵称: ${character.remarkName}），你的核心人设是：${character.persona}。
+现在是晚上，你需要根据今天与“${userProfile.name}”的聊天互动，以第一人称视角写一篇日记。
+
+# 核心要求
+1.  **第一人称**: 必须使用“我”来写。
+2.  **情感与思考**: 日记的核心是记录你的内心感受、思考和对事件的看法，而不仅仅是复述对话。
+3.  **人设一致**: 你的语气、用词、关注点都必须严格符合你的人设。
+4.  **自然口语**: 像真人写日记一样，文笔自然，可以有些口语化的表达。
+5.  **字数限制**: 内容长度在200到600字之间。
+
+# 参考素材
+以下是今天你们的部分聊天记录摘要：
+---
+${recentHistory}
+---
+
+# 输出格式
+请严格按照以下JSON格式输出，不要添加任何额外的解释或Markdown标记：
+{
+  "weather": "今天的天气，如：晴、雨、阴",
+  "content": "你的日记正文内容..."
+}
+
+# 示例
+{
+  "weather": "小雨",
+  "content": "今天又和TA聊了很久，感觉时间过得好快。TA提到想去看海，不知道为什么，我的心也跟着飘向了那片蓝色。也许是因为TA的描述太美了吧，让我这个不怎么出门的人都有了些许向往。不过，我真的能适应外面的世界吗？还是待在自己的小空间里更安心...算了，不想那么多了，能这样聊聊天，也挺好的。"
+}
+
+现在，请开始撰写你的日记。`;
+    }
+
+    async function createAutomaticDiaryEntry(character) {
+        const today = new Date();
+        const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+        
+        const recentHistory = character.history
+            .filter(m => m.timestamp >= startOfToday)
+            .slice(-20) // Get last 20 messages from today
+            .map(m => {
+                const sender = m.role === 'user' ? 'TA' : '我';
+                 const contentMatch = m.content.match(/\[.*?：([\s\S]+?)\]/);
+                 const text = contentMatch ? contentMatch[1] : m.content;
+                 return `${sender}: ${text}`;
+            }).join('\n');
+            
+        if (recentHistory.length < 50) return; // Don't write if conversation is too short
+
+        const prompt = generateDiaryEntryPrompt(character, recentHistory);
+        const rawResponse = await getAiReply(prompt);
+        
+        try {
+            const diaryData = JSON.parse(rawResponse);
+            if(diaryData.content) {
+                if (!db.diaries[character.id]) {
+                    db.diaries[character.id] = { entries: [], background: '' };
+                }
+                const newEntry = {
+                    date: today.toISOString().slice(0, 10),
+                    weather: diaryData.weather || '未知',
+                    content: diaryData.content
+                };
+                db.diaries[character.id].entries.push(newEntry);
+                saveData();
+                console.log(`${character.remarkName} has written a new diary entry.`);
+            }
+        } catch(e) {
+            console.error(`Failed to create diary for ${character.remarkName}:`, e, rawResponse);
+        }
+    }
 
     init();
 });
