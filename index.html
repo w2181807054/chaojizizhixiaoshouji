@@ -755,8 +755,8 @@
         .wallpaper-preview { width: 100%; aspect-ratio: 9 / 16; max-height: 400px; border-radius: var(--border-radius); margin-bottom: 15px; background-size: cover; background-position: center; border: 3px dashed var(--primary-color); display: flex; align-items: center; justify-content: center; color: var(--secondary-color); font-style: italic; background-color: var(--bg-color); }
         .toast { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.7); color: white; padding: 10px 20px; border-radius: 15px; font-size: 14px; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s; z-index: 1000; }
         .toast.show { opacity: 1; visibility: visible; }
-        #world-book-selection-modal, #invite-member-modal, #character-select-modal, #profile-select-modal, #theme-select-modal, #heart-voice-modal, #listen-together-modal, #lyrics-modal { z-index: 102; }
-        #batch-sticker-modal, #diary-settings-modal { z-index: 103; }
+        #world-book-selection-modal, #invite-member-modal, #character-select-modal, #profile-select-modal, #theme-select-modal, #heart-voice-modal, #listen-together-modal, #lyrics-modal, #diary-settings-modal { z-index: 102; }
+        #batch-sticker-modal { z-index: 103; }
         .modal-window { width: 90%; max-width: 380px; }
         #world-book-selection-list, #invite-member-selection-list, #character-selection-list, #profile-selection-list, #listen-together-char-list { list-style: none; padding: 0; margin: 0; max-height: 40vh; overflow-y: auto; }
         .selection-item { display: flex; align-items: center; padding: 12px 5px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background-color 0.2s; }
@@ -1550,14 +1550,12 @@
         .diary-book-edit-btn {
             position: absolute;
             bottom: 5px;
-            right: 5px;
             font-size: 10px;
             background: rgba(0,0,0,0.4);
             color: white;
             border: none;
-            padding: 4px 8px;
-            border-radius: 6px;
-            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
         }
 
         #diary-view-screen .content {
@@ -1574,8 +1572,6 @@
             height: 90%;
             position: relative;
             transform-style: preserve-3d;
-            background-size: cover;
-            background-position: center;
         }
         .book-page {
             position: absolute;
@@ -1669,41 +1665,6 @@
          #forwarded-content-modal .message-bubble {
              max-width: 100%;
          }
-        /* NEW Diary Settings Modal Styles */
-        .diary-settings-section {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        .diary-settings-section:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-        .diary-settings-section h4 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            color: var(--secondary-color);
-        }
-        .diary-settings-list {
-            max-height: 20vh;
-            overflow-y: auto;
-        }
-        .diary-settings-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-        }
-        .diary-settings-item label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .diary-settings-item img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-        }
     </style>
 </head>
 <body>
@@ -1711,7 +1672,6 @@
         <input type="file" id="image-upload-input" accept="image/*" style="display:none;">
         <input type="file" id="file-upload-input" style="display:none;">
         <input type="file" id="diary-cover-upload-input" accept="image/*" style="display:none;">
-        
         <div id="top-notification-bar">
             <img id="top-notification-avatar" src="">
             <div id="top-notification-text">
@@ -1791,8 +1751,8 @@
         <div id="share-music-modal" class="modal-overlay"></div>
         <div id="listen-together-modal" class="modal-overlay"></div>
         <div id="lyrics-modal" class="modal-overlay"></div>
-        <div id="diary-settings-modal" class="modal-overlay"></div>
         <div id="forward-message-modal" class="modal-overlay"></div>
+        <div id="diary-settings-modal" class="modal-overlay"></div>
         <div id="forwarded-content-modal" class="modal-overlay">
              <div class="modal-window">
                 <h3 id="forwarded-content-title">聊天记录</h3>
@@ -2158,6 +2118,25 @@ function injectHTML() {
         'add-member-actionsheet': `<div class="action-sheet"><button class="action-sheet-button" id="invite-existing-member-btn">邀请现有伙伴</button><button class="action-sheet-button" id="create-new-member-btn">创建新伙伴入群</button></div>`,
         'invite-member-modal': `<div class="modal-window"><h3>邀请成员加入群聊</h3><ul id="invite-member-selection-list"></ul><button class="btn btn-primary" id="confirm-invite-btn" style="margin-top: 20px;">确认邀请</button></div>`,
         'create-member-for-group-modal': `<div class="modal-window"><h3>创建新伙伴并加入群聊</h3><form id="create-member-for-group-form"><div class="avatar-setting" style="justify-content: center;"><img src="https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/k10U/1440X1440/Camera_XHS_17539526492361000g0082nu3tbm2k800g5nt289hgbmblr8ib1t8.jpg" alt="新成员头像" id="create-group-member-avatar-preview" class="avatar-preview" style="cursor: pointer;"><input type="file" id="create-group-member-avatar-upload" accept="image/*" style="display:none;"></div><div class="form-group"><label for="create-group-member-nickname">群昵称</label><input type="text" id="create-group-member-nickname" required></div><div class="form-group"><label for="create-group-member-realname">真名</label><input type="text" id="create-group-member-realname" required></div><div class="form-group"><label for="create-group-member-persona">人设</label><textarea id="create-group-member-persona" placeholder="详细描述角色的性格、背景等。"></textarea></div><button type="submit" class="btn btn-primary">创建并加入</button></form></div>`,
+        'diary-settings-modal': `
+            <div class="modal-window">
+                <h3>日记本设置</h3>
+                <div class="form-group">
+                    <label>添加新的日记本</label>
+                    <ul id="add-diary-character-list" class="list-container" style="max-height: 20vh; overflow-y: auto;"></ul>
+                </div>
+                <div class="form-group">
+                    <label for="diary-auto-frequency">自动生成频率</label>
+                    <select id="diary-auto-frequency">
+                        <option value="daily">每天</option>
+                        <option value="3days">每3天</option>
+                        <option value="weekly">每周</option>
+                        <option value="off">关闭</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" id="save-diary-settings-btn">保存设置</button>
+            </div>
+        `,
         'incoming-call-modal': `
             <div class="modal-window">
                 <div class="caller-info">
@@ -2285,10 +2264,10 @@ function injectHTML() {
             <header class="app-header">
                 <button class="back-btn" data-target="chat-room-screen">‹</button>
                 <div class="title-container"><h1 class="title">日记本</h1></div>
-                <div class="action-btn-group">
-                    <button class="action-btn" id="add-diary-btn" title="手动生成今日日记">${pawIcon}</button>
-                    <button class="action-btn" id="diary-bookshelf-settings-btn" title="日记本管理">${settingsSVG}</button>
-                </div>
+                 <div class="action-btn-group">
+                    <button class="action-btn" id="add-diary-btn">${pawIcon}</button>
+                    <button class="action-btn" id="open-diary-settings-btn">${settingsSVG}</button>
+                 </div>
             </header>
             <main class="content">
                 <div id="diary-bookshelf"></div>
@@ -2299,7 +2278,7 @@ function injectHTML() {
              <header class="app-header">
                 <button class="back-btn" data-target="diary-bookshelf-screen">‹</button>
                 <div class="title-container"><h1 class="title" id="diary-book-title"></h1></div>
-                <div class="placeholder"></div>
+                <button class="action-btn" id="diary-settings-btn">${settingsSVG}</button>
             </header>
             <main class="content">
                 <div class="book-container" id="diary-book-container">
@@ -2312,21 +2291,7 @@ function injectHTML() {
                 </div>
             </main>
         `,
-         'forward-message-modal': `<div class="modal-window"><h3>转发给...</h3><ul id="forward-message-list" class="list-container" style="max-height: 40vh; overflow-y: auto;"></ul></div>`,
-         'diary-settings-modal': `
-            <div class="modal-window">
-                <h3>日记本管理</h3>
-                <div class="diary-settings-section">
-                    <h4>书架显示</h4>
-                    <div id="diary-visibility-list" class="diary-settings-list"></div>
-                </div>
-                <div class="diary-settings-section">
-                    <h4>自动撰写频率</h4>
-                    <div id="diary-frequency-list" class="diary-settings-list"></div>
-                </div>
-                <button class="btn btn-primary" id="save-diary-settings-btn">保存设置</button>
-            </div>
-         `
+         'forward-message-modal': `<div class="modal-window"><h3>转发给...</h3><ul id="forward-message-list" class="list-container" style="max-height: 40vh; overflow-y: auto;"></ul></div>`
     };
     for (const id in htmlMap) {
         const element = document.getElementById(id);
@@ -2375,8 +2340,10 @@ let callTimerInterval = null;
 let longPressJustFired = false;
 let currentPlayingSongIndex = -1;
 let islandHideTimeout = null;
-let currentDiaryCoverTarget = null;
-
+let currentLyrics = null;
+let lyricsInterval = null;
+let currentDiaryPageIndex = 0;
+let currentDiaryCharacterId = null;
 
 let videoCallState = {
     isActive: false,
@@ -2402,11 +2369,12 @@ const getEl = (id) => {
 
 const saveData = () => {
     const dbToSave = { ...db };
-    dbToSave.musicPlaylist = (db.musicPlaylist || []).filter(song => !song.isLocal);
+    const playlistToSave = (db.musicPlaylist || []).filter(song => !song.isLocal);
+    dbToSave.musicPlaylist = playlistToSave;
     localStorage.setItem('gemini-chat-app-db', JSON.stringify(dbToSave));
 };
 
-        const loadData = () => {
+                const loadData = () => {
     const data = localStorage.getItem('gemini-chat-app-db');
     const defaultDb = {
         characters: [],
@@ -2442,53 +2410,46 @@ const saveData = () => {
         },
         musicPlaylist: [],
         collections: [],
-        diaries: {},
+        diaries: {}, // diary key is characterId
         diarySettings: {
-            visibleBooks: [], // NEW
-            frequencies: {} // NEW: { 'charId': 'medium' }
+            autoFrequency: 'daily' // 'daily', '3days', 'weekly', 'off'
         }
     };
     db = data ? { ...defaultDb, ...JSON.parse(data) } : defaultDb;
+    
+    // --- Data Integrity Checks & Migrations ---
     db.musicPlaylist = db.musicPlaylist || [];
-     (db.musicPlaylist || []).forEach(song => {
-        if (song.isLiked === undefined) {
-            song.isLiked = false;
-        }
+    db.musicPlaylist.forEach(song => {
+        if (song.isLiked === undefined) song.isLiked = false;
     });
 
     if (db.apiSettings && Object.keys(db.apiSettings).length > 0) {
-        const defaultProfile = {
-            id: `profile_${Date.now()}`,
-            name: '默认配置',
-            ...db.apiSettings
-        };
+        const defaultProfile = { id: `profile_${Date.now()}`, name: '默认配置', ...db.apiSettings };
         db.apiProfiles = [defaultProfile];
         db.activeApiProfileId = defaultProfile.id;
         delete db.apiSettings;
         saveData();
     }
 
-    if ((db.userProfiles || []).length === 0) {
-        db.userProfiles.push({
+    if (!db.userProfiles || db.userProfiles.length === 0) {
+        db.userProfiles = [{
             id: 'profile_default_user',
             name: '我',
             avatar: 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/jgQe/1440X1440/Camera_XHS_17539526514131000g0082nu3tbm2k80105nt289hgbmbld5nkhi8.jpg',
             persona: '',
             walletBalance: 520,
             region: '地球'
-        });
+        }];
         saveData();
     }
     
-    // Data Migration for existing user profiles
-    (db.userProfiles || []).forEach(p => {
+    db.userProfiles.forEach(p => {
         if (p.walletBalance === undefined) p.walletBalance = 520;
         if (p.region === undefined) p.region = '地球';
     });
 
     if (!db.myStickers || db.myStickers.length === 0) {
-        const defaultStickersRaw = `眼睛亮晶晶/期待 https://files.catbox.moe/i0ov5h.png,不要和我说话 https://files.catbox.moe/wnr64t.png,不对劲 https://files.catbox.moe/itw2h1.png,啧 https://files.catbox.moe/w206rr.png,哭哭 https://files.catbox.moe/rw1cfk.png,讨好 https://files.catbox.moe/7fwfte.png,问号 https://files.catbox.moe/to45ts.png,盯—— https://files.catbox.moe/9za97q.png,“草” https://files.catbox.moe/9b800k.png,震惊 https://files.catbox.moe/q7683x.png,
-        眼睛亮晶晶/期待 https://files.catbox.moe/i0ov5h.png,不要和我说话 https://files.catbox.moe/wnr64t.png,不对劲 https://files.catbox.moe/itw2h1.png,啧 https://files.catbox.moe/w206rr.png,哭哭 https://files.catbox.moe/rw1cfk.png,讨好 https://files.catbox.moe/7fwfte.png,问号 https://files.catbox.moe/to45ts.png,盯—— https://files.catbox.moe/9za97q.png,“草” https://files.catbox.moe/9b800k.png,震惊 https://files.catbox.moe/q7683x.png,委屈哭哭 https://files.catbox.moe/u94gd8.png,爱心 https://files.catbox.moe/ne6dii.png,偷看你 https://files.catbox.moe/72wkme.png,老实 https://files.catbox.moe/hgfgj3.png,泪流成河 https://files.catbox.moe/nh9r23.png,炸毛生气 https://files.catbox.moe/si6f0k.png,我恨 https://files.catbox.moe/r6g32h.png,大脑短路 https://files.catbox.moe/d41e2q.png,打电话哭哭 https://files.catbox.moe/8ejal5.png,揉脸 https://files.catbox.moe/9lmwuz.png,这是屎吗 https://files.catbox.moe/r26gox.png,哀怨/不满 https://files.catbox.moe/3xu8xr.png,生气/不满 https://files.catbox.moe/2fskww.png,满脸疑惑 https://files.catbox.moe/skv9p6.png,哈特软软/好喜欢 https://files.catbox.moe/0bmbi0.png,OK https://files.catbox.moe/71kn5e.png,被训 https://files.catbox.moe/sgkcwv.png,哀怨/生闷气 https://files.catbox.moe/1n905b.png,蹭蹭/撒娇 https://files.catbox.moe/9p0x2t.png,喜欢 https://files.catbox.moe/opqz7o.png,嫌弃 https://files.catbox.moe/t2e0nt.png,被吓一跳 https://files.catbox.moe/26xc9h.png,心虚 https://files.catbox.moe/zt4t1s.png,淋雨哭泣 https://files.catbox.moe/l68nws.png,睡了 https://files.catbox.moe/7wbc1d.png,无语 https://files.catbox.moe/wgkwjh.png,升天了 https://files.catbox.moe/o8td90.png,非常认可 https://files.catbox.moe/3s5ipf.png,竖中指 https://files.catbox.moe/z25fao.png,尴尬 https://files.catbox.moe/8eaawd.png,害羞 https://files.catbox.moe/bsomey.png,投降 https://files.catbox.moe/f4ogyw.png,生气 https://files.catbox.moe/b5egx6.png,晚安 https://files.catbox.moe/duzx7n.png,爱你 https://files.catbox.moe/p67llx.png,生气 https://files.catbox.moe/xsmgb0.png,睡会儿/困 https://files.catbox.moe/6u5ch8.png,精神涣散 https://files.catbox.moe/4oeevo.png,多喝热水 https://files.catbox.moe/gs9ppe.png,吐魂 https://files.catbox.moe/7yejey.png,打哈欠/好困 https://files.catbox.moe/fuyq6d.png,大脑过载 https://files.catbox.moe/kq9i8f.png,已老实 https://files.catbox.moe/6eyzlg.png,我想想 https://files.catbox.moe/324d33.png,按头 https://files.catbox.moe/pfnrya.png,无语 https://files.catbox.moe/00lj4d.png,爆哭 https://files.catbox.moe/dbyrdf.png,期待 https://files.catbox.moe/81c7qy.png,捏爆地球 https://files.catbox.moe/h1kt1u.png,来啦来啦 https://files.catbox.moe/afuns1.png,那咋了 https://files.catbox.moe/dhp2gr.png,想咋地 https://files.catbox.moe/3ruhin.png,哈？ https://files.catbox.moe/k0uru3.png,心虚 https://files.catbox.moe/6uqxds.png,怎么样打死我 https://files.catbox.moe/doag9c.png,围观 https://files.catbox.moe/428w1c.png,好厉害（不走心） https://files.catbox.moe/tt548x.png,坏笑 https://files.catbox.moe/vnpmxr.png,装酷 https://files.catbox.moe/p9v3sq.png,红温 https://files.catbox.moe/gmvx6d.png,可怜兮兮 https://files.catbox.moe/u77bks.png,大惊失色 https://files.catbox.moe/w7olag.png,难过 https://files.catbox.moe/ydyx59.png,爆哭 https://files.catbox.moe/69kl2l.png,自闭 https://files.catbox.moe/nhtazq.png,摆烂 https://files.catbox.moe/cq6ipd.png,那又如何 https://files.catbox.moe/do83tr.png,思考 https://files.catbox.moe/32ql1h.png,爱你 https://files.catbox.moe/x5u5sm.png`;
+        const defaultStickersRaw = `眼睛亮晶晶/期待 https://files.catbox.moe/i0ov5h.png,不要和我说话 https://files.catbox.moe/wnr64t.png,不对劲 https://files.catbox.moe/itw2h1.png,啧 https://files.catbox.moe/w206rr.png,哭哭 https://files.catbox.moe/rw1cfk.png,讨好 https://files.catbox.moe/7fwfte.png,问号 https://files.catbox.moe/to45ts.png,盯—— https://files.catbox.moe/9za97q.png,“草” https://files.catbox.moe/9b800k.png,震惊 https://files.catbox.moe/q7683x.png,委屈哭哭 https://files.catbox.moe/u94gd8.png,爱心 https://files.catbox.moe/ne6dii.png,偷看你 https://files.catbox.moe/72wkme.png,老实 https://files.catbox.moe/hgfgj3.png,泪流成河 https://files.catbox.moe/nh9r23.png,炸毛生气 https://files.catbox.moe/si6f0k.png,我恨 https://files.catbox.moe/r6g32h.png,大脑短路 https://files.catbox.moe/d41e2q.png,打电话哭哭 https://files.catbox.moe/8ejal5.png,揉脸 https://files.catbox.moe/9lmwuz.png,这是屎吗 https://files.catbox.moe/r26gox.png,哀怨/不满 https://files.catbox.moe/3xu8xr.png,生气/不满 https://files.catbox.moe/2fskww.png,满脸疑惑 https://files.catbox.moe/skv9p6.png,哈特软软/好喜欢 https://files.catbox.moe/0bmbi0.png,OK https://files.catbox.moe/71kn5e.png,被训 https://files.catbox.moe/sgkcwv.png,哀怨/生闷气 https://files.catbox.moe/1n905b.png,蹭蹭/撒娇 https://files.catbox.moe/9p0x2t.png,喜欢 https://files.catbox.moe/opqz7o.png,嫌弃 https://files.catbox.moe/t2e0nt.png,被吓一跳 https://files.catbox.moe/26xc9h.png,心虚 https://files.catbox.moe/zt4t1s.png,淋雨哭泣 https://files.catbox.moe/l68nws.png,睡了 https://files.catbox.moe/7wbc1d.png,无语 https://files.catbox.moe/wgkwjh.png,升天了 https://files.catbox.moe/o8td90.png,非常认可 https://files.catbox.moe/3s5ipf.png,竖中指 https://files.catbox.moe/z25fao.png,尴尬 https://files.catbox.moe/8eaawd.png,害羞 https://files.catbox.moe/bsomey.png,投降 https://files.catbox.moe/f4ogyw.png,生气 https://files.catbox.moe/b5egx6.png,晚安 https://files.catbox.moe/duzx7n.png,爱你 https://files.catbox.moe/p67llx.png,生气 https://files.catbox.moe/xsmgb0.png,睡会儿/困 https://files.catbox.moe/6u5ch8.png,精神涣散 https://files.catbox.moe/4oeevo.png,多喝热水 https://files.catbox.moe/gs9ppe.png,吐魂 https://files.catbox.moe/7yejey.png,打哈欠/好困 https://files.catbox.moe/fuyq6d.png,大脑过载 https://files.catbox.moe/kq9i8f.png,已老实 https://files.catbox.moe/6eyzlg.png,我想想 https://files.catbox.moe/324d33.png,按头 https://files.catbox.moe/pfnrya.png,无语 https://files.catbox.moe/00lj4d.png,爆哭 https://files.catbox.moe/dbyrdf.png,期待 https://files.catbox.moe/81c7qy.png,捏爆地球 https://files.catbox.moe/h1kt1u.png,来啦来啦 https://files.catbox.moe/afuns1.png,那咋了 https://files.catbox.moe/dhp2gr.png,想咋地 https://files.catbox.moe/3ruhin.png,哈？ https://files.catbox.moe/k0uru3.png,心虚 https://files.catbox.moe/6uqxds.png,怎么样打死我 https://files.catbox.moe/doag9c.png,围观 https://files.catbox.moe/428w1c.png,好厉害（不走心） https://files.catbox.moe/tt548x.png,坏笑 https://files.catbox.moe/vnpmxr.png,装酷 https://files.catbox.moe/p9v3sq.png,红温 https://files.catbox.moe/gmvx6d.png,可怜兮兮 https://files.catbox.moe/u77bks.png,大惊失色 https://files.catbox.moe/w7olag.png,难过 https://files.catbox.moe/ydyx59.png,爆哭 https://files.catbox.moe/69kl2l.png,自闭 https://files.catbox.moe/nhtazq.png,摆烂 https://files.catbox.moe/cq6ipd.png,那又如何 https://files.catbox.moe/do83tr.png,思考 https://files.catbox.moe/32ql1h.png,爱你 https://files.catbox.moe/x5u5sm.png`;
         db.myStickers = parseAndAddStickers(defaultStickersRaw, true);
         saveData();
     }
@@ -2496,22 +2457,9 @@ const saveData = () => {
     db.momentsSettings = { ...defaultDb.momentsSettings, ...(db.momentsSettings || {}) };
     db.memorySettings = { ...defaultDb.memorySettings, ...(db.memorySettings || {}) };
     db.musicSettings = { ...defaultDb.musicSettings, ...(db.musicSettings || {}) };
+    db.diarySettings = { ...defaultDb.diarySettings, ...(db.diarySettings || {}) };
     db.collections = db.collections || [];
     db.diaries = db.diaries || {};
-    db.diarySettings = { ...defaultDb.diarySettings, ...(db.diarySettings || {}) }; // NEW: Initialize diary settings
-
-    // NEW: Initialize diary data for existing characters if it doesn't exist
-    (db.characters || []).forEach(char => {
-        if (!db.diaries[char.id]) {
-            db.diaries[char.id] = { entries: [], background: '', frequency: 'medium', isVisible: true };
-        }
-        if (db.diarySettings.visibleBooks.indexOf(char.id) === -1) {
-            db.diarySettings.visibleBooks.push(char.id);
-        }
-        if (!db.diarySettings.frequencies[char.id]) {
-            db.diarySettings.frequencies[char.id] = 'medium';
-        }
-    });
     
     const defaultTheme = 'wechat_green';
     (db.characters || []).forEach(c => {
@@ -2538,7 +2486,7 @@ const saveData = () => {
             customTheme: c.customTheme || null,
             customBubbleCss: c.customBubbleCss || '',
             userProfileId: c.userProfileId || 'profile_default_user',
-            heartVoice: c.heartVoice || '...' // Add heartVoice property
+            heartVoice: c.heartVoice || '...'
         });
         if(c.hasOwnProperty('isCustomCssEnabled')) delete c.isCustomCssEnabled;
         if(c.theme) delete c.theme;
@@ -2580,7 +2528,7 @@ const saveData = () => {
         if(g.theme) delete g.theme;
     });
 };
-const showToast = (message) => { const el = getEl('toast-notification'); el.textContent = message; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 3000); };
+const showToast = (message) => { const el = getEl('toast-notification'); if(!el) return; el.textContent = message; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 3000); };
 const switchScreen = (targetId) => {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     getEl(targetId)?.classList.add('active');
@@ -2676,7 +2624,12 @@ const init = () => {
             e.preventDefault(); 
             const targetScreen = backBtn.getAttribute('data-target');
             if(targetScreen) { // Add a check to ensure target exists
-                switchScreen(targetScreen);
+                // FIX for multi-select cancel causing white screen
+                if(isInMultiSelectMode && targetScreen !== 'chat-list-screen') {
+                    exitMultiSelectMode();
+                } else {
+                    switchScreen(targetScreen);
+                }
             }
         }
         const plusMenu = getEl('chat-plus-menu');
@@ -2785,8 +2738,16 @@ function setupHomeScreen() {
     }
 }
     
-function applyWallpaper(url) { getEl('home-screen').style.backgroundImage = `url(${url})`; }
-function applyHomeScreenMode(mode) { getEl('home-screen').classList.toggle('day-mode', mode === 'day'); db.homeScreenMode = mode; saveData(); }
+function applyWallpaper(url) { 
+    const homeScreen = getEl('home-screen');
+    if(homeScreen) homeScreen.style.backgroundImage = `url(${url})`; 
+}
+function applyHomeScreenMode(mode) { 
+    const homeScreen = getEl('home-screen');
+    if(homeScreen) homeScreen.classList.toggle('day-mode', mode === 'day'); 
+    db.homeScreenMode = mode; 
+    saveData(); 
+}
 
 function setupBeautifyApp() {
     const screen = getEl('beautify-screen');
@@ -2982,6 +2943,7 @@ function setupQQApp() {
     const chatListContainer = getEl('chat-list-container');
     if (!chatListContainer) return;
     
+    // 修复: 将单击和长按事件分开处理以避免冲突
     chatListContainer.addEventListener('click', (e) => {
         if (longPressJustFired) {
             longPressJustFired = false;
@@ -2996,7 +2958,7 @@ function setupQQApp() {
     });
 
     const handleChatListLongPress = (e, chatItem) => {
-        longPressJustFired = true; 
+        longPressJustFired = true; // 标记长按已触发
         const chatId = chatItem.dataset.id;
         const chatType = chatItem.dataset.type;
         const clientX = e.clientX || e.touches[0].clientX;
@@ -3100,8 +3062,8 @@ function renderChatList() {
     const sortedChats = allChats.sort((a, b) => (b.isPinned - a.isPinned) || (((b.history || []).slice(-1)[0]?.timestamp || 0) - ((a.history || []).slice(-1)[0]?.timestamp || 0)));
     sortedChats.forEach(chat => {
         let lastMessageText = '开始聊天吧...';
-        if ((chat.history || []).length > 0) {
-            const lastMsg = (chat.history || []).filter(msg => !/拉黑|解除拉黑|邀请.*?加入了群聊|修改群名为|接收|退回|更新状态为|已接收礼物|领取了.*的红包/.test(msg.content) && !/^\[(system|系统指令):/i.test(msg.content) && !msg.isHtmlModule).pop();
+        if (chat.history?.length > 0) {
+            const lastMsg = chat.history.filter(msg => !/拉黑|解除拉黑|邀请.*?加入了群聊|修改群名为|接收|退回|更新状态为|已接收礼物|领取了.*的红包/.test(msg.content) && !/^\[(system|系统指令):/i.test(msg.content) && !msg.isHtmlModule).pop();
             if (lastMsg) {
                 if(lastMsg.isRetracted) {
                     lastMessageText = lastMsg.role === 'user' ? '你撤回了一条消息' : `${lastMsg.senderName || '对方'}撤回了一条消息`;
@@ -3158,6 +3120,7 @@ function renderChatList() {
     if(addCharForm) {
         addCharForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            // REFACTOR: Create character with a full, default structure
             const newChar = { 
                 id: `char_${Date.now()}`, 
                 realName: getEl('char-real-name').value, 
@@ -3165,14 +3128,15 @@ function renderChatList() {
                 persona: getEl('add-char-persona').value, 
                 avatar: getEl('add-char-avatar-preview').src, 
                 baseTheme: 'wechat_green',
+                customTheme: null,
                 customBubbleCss: '',
                 fontSize: 15, 
                 maxMemory: 10, 
                 chatBg: '', 
-                history: [], 
+                history: [], // Initialize as empty array
                 isPinned: false, 
                 status: '在线', 
-                worldBookIds: [], 
+                worldBookIds: [], // Initialize as empty array
                 isBlocked: false, 
                 proactiveChat: { enabled: true, frequency: 'medium' }, 
                 autoMemory: { enabled: true, frequency: 15, lastExtractionCount: 0 }, 
@@ -3181,11 +3145,18 @@ function renderChatList() {
                 heartVoice: '...'
             };
             db.characters.push(newChar);
-            if (!db.diaries[newChar.id]) {
-                db.diaries[newChar.id] = { entries: [], background: '', frequency: 'medium', isVisible: true };
-                db.diarySettings.visibleBooks.push(newChar.id);
-                db.diarySettings.frequencies[newChar.id] = 'medium';
+
+            // Handle diary assignment
+            const defaultDiary = db.diaries['default_diary'];
+            if(defaultDiary) {
+                if (confirm(`是否将现有的 "默认日记本" 分配给新伙伴 "${newChar.remarkName}"？`)) {
+                    db.diaries[newChar.id] = defaultDiary;
+                    delete db.diaries['default_diary'];
+                }
+            } else if (!db.diaries[newChar.id]) {
+                db.diaries[newChar.id] = { entries: [], background: '', cover: '' };
             }
+            
             saveData();
             renderChatList();
             renderContactsList();
@@ -3294,7 +3265,7 @@ function setupContactsScreen() {
                 action: () => {
                     if (confirm(`确定要删除伙伴“${char.remarkName}”吗？\n与该伙伴的所有聊天记录和群聊关系都将一并删除。`)) {
                         db.characters = db.characters.filter(c => c.id !== entityId);
-                        (db.groups || []).forEach(group => {
+                        db.groups.forEach(group => {
                             group.members = (group.members || []).filter(m => m.originalCharId !== entityId);
                         });
                         delete db.diaries[entityId];
@@ -3359,8 +3330,8 @@ function renderContactsList() {
     const container = getEl('contacts-list-container');
     if (!container) return;
     container.innerHTML = '';
-    const hasCharacters = (db.characters || []).length > 0;
-    const hasGroups = (db.groups || []).length > 0;
+    const hasCharacters = db.characters.length > 0;
+    const hasGroups = db.groups.length > 0;
 
     const noContactsPlaceholder = getEl('no-contacts-placeholder');
     if(noContactsPlaceholder) noContactsPlaceholder.style.display = (!hasCharacters && !hasGroups) ? 'block' : 'none';
@@ -3511,8 +3482,8 @@ function setupMeScreen() {
             action: () => {
                 if (confirm(`确定要删除身份卡“${profile.name}”吗？`)) {
                     db.userProfiles = db.userProfiles.filter(p => p.id !== profileId);
-                    (db.characters || []).forEach(c => { if(c.userProfileId === profileId) c.userProfileId = 'profile_default_user'; });
-                    (db.groups || []).forEach(g => { if(g.me.profileId === profileId) g.me.profileId = 'profile_default_user'; });
+                    db.characters.forEach(c => { if(c.userProfileId === profileId) c.userProfileId = 'profile_default_user'; });
+                    db.groups.forEach(g => { if(g.me.profileId === profileId) g.me.profileId = 'profile_default_user'; });
                     saveData();
                     renderUserProfilesList();
                     
@@ -3542,8 +3513,8 @@ function renderUserProfilesList() {
     if (!container) return;
     container.innerHTML = '';
     const noProfilesPlaceholder = getEl('no-profiles-placeholder');
-    if (noProfilesPlaceholder) noProfilesPlaceholder.style.display = (db.userProfiles || []).length === 0 ? 'block' : 'none';
-    (db.userProfiles || []).forEach(profile => {
+    if (noProfilesPlaceholder) noProfilesPlaceholder.style.display = db.userProfiles.length === 0 ? 'block' : 'none';
+    db.userProfiles.forEach(profile => {
         const li = document.createElement('li');
         li.className = 'list-item';
         li.innerHTML = `
@@ -3706,7 +3677,7 @@ function setupChatRoom() {
         if (transferCard) {
             const messageId = transferCard.closest('.message-wrapper').dataset.id;
             const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
-            const message = (chat?.history || []).find(m => m.id === messageId);
+            const message = chat?.history.find(m => m.id === messageId);
             if (message?.transferStatus === 'pending') handleReceivedTransferClick(messageId);
         }
     });
@@ -3740,7 +3711,15 @@ function setupChatRoom() {
 
     getEl('save-edit-btn')?.addEventListener('click', saveMessageEdit);
     getEl('cancel-edit-btn')?.addEventListener('click', cancelMessageEdit);
-    getEl('cancel-multi-select-btn')?.addEventListener('click', exitMultiSelectMode);
+    getEl('cancel-multi-select-btn')?.addEventListener('click', () => {
+        exitMultiSelectMode();
+        // FIX: Ensure it returns to a valid screen, not a white screen
+        if (currentChatId && currentChatType) {
+            openChatRoom(currentChatId, currentChatType);
+        } else {
+            switchScreen('chat-list-screen');
+        }
+    });
     getEl('delete-selected-btn')?.addEventListener('click', deleteSelectedMessages);
     getEl('share-selected-btn')?.addEventListener('click', forwardSelectedMessages);
     getEl('collect-selected-btn')?.addEventListener('click', collectSelectedMessages);
@@ -3762,7 +3741,7 @@ function handlePatPat(messageWrapper) {
             targetName = chat.remarkName;
         } else {
             const messageId = messageWrapper.dataset.id;
-            const message = (chat.history || []).find(m => m.id === messageId);
+            const message = chat.history.find(m => m.id === messageId);
             if(message && message.senderId) {
                 const member = (chat.members || []).find(m => m.id === message.senderId);
                 targetName = member ? member.groupNickname : '一个群友';
@@ -3787,7 +3766,7 @@ function handlePatPat(messageWrapper) {
             content: `[pat-notification:${patContent}]`,
             timestamp: Date.now()
         };
-        (chat.history || []).push(message);
+        chat.history.push(message);
         saveData();
         addMessageBubble(message);
         modal.classList.remove('visible');
@@ -3960,8 +3939,8 @@ function renderPlusMenu() {
         clearTimeout(longPressTimer);
         const messageId = messageWrapper.dataset.id;
         const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
-        if (!chat) return;
-        const message = (chat.history || []).find(m => m.id === messageId);
+        if (!chat) return; // FIX: Ensure chat exists
+        const message = chat.history.find(m => m.id === messageId);
         if (!message || message.isRetracted) return;
 
         const isInvisibleMessage = /\[.*?(?:接收|退回|更新状态为|已接收礼物|邀请.*?加入了群聊|修改群名为|拉黑|解除拉黑|领取了.*的红包)\]/.test(message.content);
@@ -3985,7 +3964,7 @@ function renderPlusMenu() {
 
         menuItems.push({ label: '删除', danger: true, action: () => {
             if (confirm('确定要删除这条消息吗？')) {
-                chat.history = (chat.history || []).filter(m => m.id !== messageId);
+                chat.history = chat.history.filter(m => m.id !== messageId);
                 saveData();
                 renderMessages(false, true);
                 renderChatList();
@@ -4002,7 +3981,7 @@ function renderPlusMenu() {
     function startReply(messageId) {
     const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
     if (!chat) return;
-    const message = (chat.history || []).find(m => m.id === messageId);
+    const message = chat.history.find(m => m.id === messageId);
     if (!message) return;
 
     let replyContent = message.content;
@@ -4050,7 +4029,7 @@ function renderPlusMenu() {
     function retractMessage(messageId) {
         const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
         if (!chat) return;
-        const messageIndex = (chat.history || []).findIndex(m => m.id === messageId);
+        const messageIndex = chat.history.findIndex(m => m.id === messageId);
         if (messageIndex > -1) {
             const messageToRetract = chat.history[messageIndex];
             const userProfileId = currentChatType === 'private' ? chat.userProfileId : chat.me?.profileId;
@@ -4073,7 +4052,7 @@ function renderPlusMenu() {
         editingMessageId = messageId; 
         const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId); 
         if (!chat) return;
-        const message = (chat.history || []).find(m => m.id === messageId); 
+        const message = chat.history.find(m => m.id === messageId); 
         if (!message) return; 
         const match = message.content.match(/\[.*?的消息：([\s\S]+)\]/); 
         const contentToEdit = match ? match[1].trim() : message.content; 
@@ -4085,7 +4064,7 @@ function renderPlusMenu() {
     function saveMessageEdit() { 
         const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId); 
         if (!chat) return;
-        const messageIndex = (chat.history || []).findIndex(m => m.id === editingMessageId); 
+        const messageIndex = chat.history.findIndex(m => m.id === editingMessageId); 
         if (messageIndex === -1) return; 
         const newText = getEl('message-edit-input').value.trim(); 
         if (newText) { 
@@ -4172,7 +4151,7 @@ function renderPlusMenu() {
             return;
         }
 
-        chat.history = (chat.history || []).filter(m => !selectedMessageIds.has(m.id));
+        chat.history = chat.history.filter(m => !selectedMessageIds.has(m.id));
         saveData();
         renderMessages(false, true); 
         renderChatList();
@@ -4182,7 +4161,11 @@ function renderPlusMenu() {
     }
     function openChatRoom(chatId, type) {
         const chat = (type === 'private') ? db.characters.find(c => c.id === chatId) : db.groups.find(g => g.id === chatId);
-        if (!chat) return;
+        if (!chat) {
+            console.error("Chat not found:", chatId, type);
+            showToast("错误：无法打开聊天。");
+            return;
+        }
 
         if (chat.unreadCount > 0) {
             chat.unreadCount = 0;
@@ -4190,7 +4173,8 @@ function renderPlusMenu() {
             renderChatList();
         }
 
-        (chat.history || []).sort((a, b) => a.timestamp - b.timestamp);
+        // FIX: Ensure history is always an array before sorting
+        (chat.history || []).sort((a, b) => a.timestamp - b.timestamp); 
         exitMultiSelectMode();
         cancelReply();
         togglePlusMenu(false);
@@ -4224,8 +4208,9 @@ function renderPlusMenu() {
         isGenerating = false;
         currentPage = 1;
 
-        const lastMessage = (chat.history || []).length > 0 ? chat.history[chat.history.length - 1] : null;
-        isNextClickForReply = lastMessage && lastMessage.role === 'user';
+        const lastMessage = (chat.history || []).slice(-1)[0];
+        const lastMessageIsUser = lastMessage && lastMessage.role === 'user';
+        isNextClickForReply = lastMessageIsUser;
         updateSendButtonState();
 
         applyChatTheme(chat);
@@ -4293,11 +4278,12 @@ function renderPlusMenu() {
         const messageArea = getEl('message-area');
         if (!chat || !messageArea) return;
         
+        const history = chat.history || []; // Ensure history is an array
         const oldScrollHeight = messageArea.scrollHeight;
-        const totalMessages = (chat.history || []).length;
+        const totalMessages = history.length;
         const end = totalMessages - (currentPage - 1) * MESSAGES_PER_PAGE;
         const start = Math.max(0, end - MESSAGES_PER_PAGE);
-        const messagesToRender = (chat.history || []).slice(start, end);
+        const messagesToRender = history.slice(start, end);
         if (!isLoadMore) messageArea.innerHTML = '';
         const fragment = document.createDocumentFragment();
         messagesToRender.forEach(msg => { const bubble = createMessageBubbleElement(msg); if(bubble) fragment.appendChild(bubble); });
@@ -4349,7 +4335,7 @@ function renderPlusMenu() {
             if (currentChatType === 'private') {
                 avatarUrl = chat.avatar;
             } else {
-                const sender = (chat.members || []).find(m => m.id === senderId);
+                const sender = (chat.members || []).find(m => m.id === senderId); // FIX: Ensure members is an array
                 avatarUrl = sender ? sender.avatar : 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/k10U/1440X1440/Camera_XHS_17539526492361000g0082nu3tbm2k800g5nt289hgbmblr8ib1t8.jpg';
                 senderNickname = sender ? sender.groupNickname : '';
             }
@@ -4431,7 +4417,7 @@ function renderPlusMenu() {
             if (textMatch) mainContent = textMatch[1];
         }
 
-        if (forwardedData && (forwardedData.messages || []).length > 0) {
+        if (forwardedData && forwardedData.messages) {
              const previewText = forwardedData.messages.slice(0, 2).map(msg => `${msg.sender.name}: ${msg.content.replace(/\[.*?：([\s\S]+?)\]/, '$1').substring(0, 20)}`).join('\n');
              bubbleElementHTML = `
                 <div class="forwarded-card">
@@ -4588,6 +4574,7 @@ function renderPlusMenu() {
         const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
         if (!chat) return;
         
+        // **BUG FIX**: Stricter filtering for ALL system-like messages before rendering
         if (!message || /^\[(系统指令|system):/i.test(message.content)) {
             return;
         }
@@ -4659,7 +4646,8 @@ function renderPlusMenu() {
                 const cardOnScreen = getEl('message-area')?.querySelector(`.message-wrapper[data-id="${transferMsg.id}"] .transfer-card`);
                 if (cardOnScreen) { 
                     cardOnScreen.className = `transfer-card sent-transfer ${action}`; 
-                    cardOnScreen.querySelector('.transfer-title').textContent = action === 'received' ? '已收款' : '已退回'; 
+                    const titleEl = cardOnScreen.querySelector('.transfer-title');
+                    if (titleEl) titleEl.textContent = action === 'received' ? '已收款' : '已退回'; 
                 }
                 saveData();
             }
@@ -4726,7 +4714,6 @@ function renderPlusMenu() {
             message.content = `[${myName}的消息：${text}]`;
         }
 
-        if(!chat.history) chat.history = [];
         chat.history.push(message);
         addMessageBubble(message);
         saveData();
@@ -4766,7 +4753,6 @@ function renderPlusMenu() {
         const message = { id: `msg_${Date.now()}`, role: 'user', content: `[${myName}的表情包：${sticker.name}]`, timestamp: Date.now(), stickerData: sticker };
         if(currentChatType === 'group') message.senderId = 'user_me';
         
-        if(!chat.history) chat.history = [];
         chat.history.push(message);
         addMessageBubble(message);
         saveData();
@@ -4785,7 +4771,6 @@ function renderPlusMenu() {
         const myName = (currentChatType === 'private') ? userProfile.name : chat.me?.nickname; 
         const message = { id: `msg_${Date.now()}`, role: 'user', content: `[${myName}的语音：${text}]`, timestamp: Date.now() }; 
         if(currentChatType === 'group') message.senderId = 'user_me'; 
-        if(!chat.history) chat.history = [];
         chat.history.push(message); 
         addMessageBubble(message); 
         saveData(); 
@@ -4804,7 +4789,6 @@ function renderPlusMenu() {
         const myName = (currentChatType === 'private') ? userProfile.name : chat.me?.nickname; 
         const message = { id: `msg_${Date.now()}`, role: 'user', content: `[${myName}发来的照片\/视频：${text}]`, timestamp: Date.now() }; 
         if(currentChatType === 'group') message.senderId = 'user_me'; 
-        if(!chat.history) chat.history = [];
         chat.history.push(message); 
         addMessageBubble(message); 
         saveData(); 
@@ -4828,7 +4812,6 @@ function renderPlusMenu() {
         const myName = (currentChatType === 'private') ? userProfile.name : chat.me?.nickname;
         const message = { id: `msg_${Date.now()}`, role: 'user', content: `[${myName}给你转账：${amount}元；备注：${remark}]`, timestamp: Date.now(), transferStatus: 'pending' }; 
         if(currentChatType === 'group') message.senderId = 'user_me';
-        if(!chat.history) chat.history = [];
         chat.history.push(message); 
         addMessageBubble(message); 
         saveData(); 
@@ -4846,7 +4829,6 @@ function renderPlusMenu() {
         const myName = (currentChatType === 'private') ? userProfile.name : chat.me?.nickname;
         const message = { id: `msg_${Date.now()}`, role: 'user', content: `[${myName}送来的礼物：${description}]`, timestamp: Date.now(), giftStatus: 'sent' }; 
         if(currentChatType === 'group') message.senderId = 'user_me';
-        if(!chat.history) chat.history = [];
         chat.history.push(message); 
         addMessageBubble(message); 
         saveData(); 
@@ -4931,6 +4913,7 @@ async function extractAndStoreMemory(characterId) {
 
 
 function generatePrivateSystemPrompt(character) {
+    // FIX: Ensure worldBookIds is an array before mapping
     const worldBooksBefore = (character.worldBookIds || []).map(id => db.worldBooks.find(wb => wb.id === id && wb.position === 'before')).filter(Boolean).map(wb => wb.content).join('\n');
     const worldBooksAfter = (character.worldBookIds || []).map(id => db.worldBooks.find(wb => wb.id === id && wb.position === 'after')).filter(Boolean).map(wb => wb.content).join('\n');
     const currentTime = new Date().toLocaleString('zh-CN');
@@ -4938,12 +4921,12 @@ function generatePrivateSystemPrompt(character) {
 
     let memoryPrompt = "";
     
-    const globalMemories = (db.memoryEntries || []).filter(m => m.type === 'global').map(m => `- ${m.topic}: ${m.content}`).join('\n');
+    const globalMemories = db.memoryEntries.filter(m => m.type === 'global').map(m => `- ${m.topic}: ${m.content}`).join('\n');
     if (globalMemories) {
         memoryPrompt += "--- 记忆核心 (所有角色都应记住的共享信息) ---\n" + globalMemories + "\n\n";
     }
 
-    const characterMemory = (db.memoryEntries || []).find(m => m.type === 'character' && m.characterId === character.id);
+    const characterMemory = db.memoryEntries.find(m => m.type === 'character' && m.characterId === character.id);
     if (characterMemory && characterMemory.content) {
         let injectionTemplate = db.memorySettings.injectionPrompt || "--- 关于我们的记忆 ---\n{{memories}}";
         memoryPrompt += injectionTemplate
@@ -4962,7 +4945,7 @@ function generatePrivateSystemPrompt(character) {
 
     let momentsContext = "\n--- 朋友圈动态摘要 (请注意区分发布者是你还是我) ---\n";
     if (db.moments && db.moments.length > 0) {
-        (db.moments || []).slice(0, 5).forEach(moment => {
+        db.moments.slice(0, 5).forEach(moment => {
             const author = db.characters.find(c => c.id === moment.characterId);
             const authorIsMe = moment.characterId === 'user_me';
 
@@ -5043,8 +5026,9 @@ function generatePrivateSystemPrompt(character) {
 }
 
 function generateGroupSystemPrompt(group) {
+    // FIX: Ensure worldBookIds is an array before mapping
     const worldBooksContent = (group.worldBookIds || []).map(id => db.worldBooks.find(wb => wb.id === id)).filter(Boolean).map(wb => wb.content).join('\n\n');
-    const globalMemories = (db.memoryEntries || []).filter(m => m.type === 'global').map(m => `- ${m.topic}: ${m.content}`).join('\n');
+    const globalMemories = db.memoryEntries.filter(m => m.type === 'global').map(m => `- ${m.topic}: ${m.content}`).join('\n');
     let memoryPrompt = "";
     if (globalMemories) {
         memoryPrompt += "--- 共享记忆 (所有人都应记住的信息) ---\n" + globalMemories + "\n\n";
@@ -5056,12 +5040,12 @@ function generateGroupSystemPrompt(group) {
     prompt += `1. **核心任务**: 你需要同时扮演这个群聊中的 **所有** AI 成员。我会作为唯一的人类用户（"${userProfile.name}"）与你们互动。\n`;
     prompt += `2. **群聊成员列表与专属记忆**: 以下是你要扮演的所有角色，以及他们与“我”(${userProfile.name})的个人专属记忆。这些记忆只有对应的角色自己知道，请在对话中自然地体现出来。\n`;
     
-    (group.members || []).forEach(member => {
+    (group.members || []).forEach(member => { // FIX: Ensure members is an array
         prompt += `\n--- 成员: ${member.groupNickname} (真名: ${member.realName}) ---\n`;
         prompt += `   - 人设: ${member.persona || '无特定人设'}\n`;
         const charData = db.characters.find(c => c.id === member.originalCharId);
         if (charData) {
-            const characterMemory = (db.memoryEntries || []).find(m => m.type === 'character' && m.characterId === charData.id);
+            const characterMemory = db.memoryEntries.find(m => m.type === 'character' && m.characterId === charData.id);
             if (characterMemory && characterMemory.content) {
                 prompt += `   - 与“我”(${userProfile.name})的专属记忆:\n${characterMemory.content}\n`;
             } else {
@@ -5074,7 +5058,7 @@ function generateGroupSystemPrompt(group) {
 
     let momentsContext = "\n--- 朋友圈动态摘要 (请注意区分发布者是你还是我) ---\n";
     if (db.moments && db.moments.length > 0) {
-        (db.moments || []).slice(0, 5).forEach(moment => {
+        db.moments.slice(0, 5).forEach(moment => {
             const author = db.characters.find(c => c.id === moment.characterId);
             const authorIsMe = moment.characterId === 'user_me';
             
@@ -5114,7 +5098,7 @@ async function getAiReply(customPrompt = null, messages = null, isTest = false, 
     const isInternalCall = !!customPrompt;
     if (isGenerating && !isInternalCall) return;
 
-    const activeProfile = isTest ? testConfig : (db.apiProfiles || []).find(p => p.id === db.activeApiProfileId);
+    const activeProfile = isTest ? testConfig : db.apiProfiles.find(p => p.id === db.activeApiProfileId);
 
     if (!activeProfile) {
         if (!isInternalCall) {
@@ -5164,12 +5148,13 @@ async function getAiReply(customPrompt = null, messages = null, isTest = false, 
         } else if (isInternalCall) {
             systemPrompt = customPrompt;
             messagesToSend = messages || [];
-            if ((messagesToSend || []).length === 0) {
+            if (messagesToSend.length === 0) {
                 messagesToSend.push({ role: 'user', content: '请开始。' });
             }
         } else if (chat) {
              systemPrompt = (currentChatType === 'private') ? generatePrivateSystemPrompt(chat) : generateGroupSystemPrompt(chat);
              const userProfile = db.userProfiles.find(p => p.id === (currentChatType === 'private' ? chat.userProfileId : chat.me?.profileId)) || db.userProfiles[0];
+             // FIX: Ensure history is an array before slicing
              messagesToSend = (chat.history || []).filter(m => !/^\[(系统指令|system):/i.test(m.content)).slice(-(chat.maxMemory || 10)).map(m => {
                 const messagePayload = { role: m.role, content: m.content };
                  if(m.role === 'user' && !m.content.startsWith(`[${userProfile.name}`)){
@@ -5235,6 +5220,7 @@ async function getAiReply(customPrompt = null, messages = null, isTest = false, 
         if (isInternalCall) {
             const data = await response.json();
             let content = (provider === 'gemini') ? data.candidates[0].content.parts[0].text : data.choices[0].message.content;
+            // DIARY FIX: Extract pure JSON from markdown code blocks
             const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/);
             if (jsonMatch && jsonMatch[1]) {
                 return jsonMatch[1];
@@ -5356,7 +5342,6 @@ async function processStream(response, chat, apiType) {
                 senderId: senderId
             };
 
-            if(!currentChat.history) currentChat.history = [];
             currentChat.history.push(htmlMessage);
             addMessageBubble(htmlMessage);
         });
@@ -5366,7 +5351,7 @@ async function processStream(response, chat, apiType) {
         for (const msgContent of allMessages) {
             
             if (/^\[(系统指令|system):/i.test(msgContent)) {
-                continue;
+                continue; // **BUG FIX**: Explicitly skip rendering system directives found in response
             }
 
             let senderNameMatch, stickerMatch;
@@ -5399,7 +5384,7 @@ async function processStream(response, chat, apiType) {
                 const retractingCharacterName = retractionMatch[1].trim();
                 let lastMessageIndex = -1;
 
-                for (let i = (currentChat.history || []).length - 1; i >= 0; i--) {
+                for (let i = currentChat.history.length - 1; i >= 0; i--) {
                     const msg = currentChat.history[i];
                     if (msg.isRetracted) continue; 
                     let senderName = '';
@@ -5429,7 +5414,7 @@ async function processStream(response, chat, apiType) {
                 const senderName = redPacketClaimMatch[2].trim();
                 const userProfile = db.userProfiles.find(p => p.id === (currentChatType === 'private' ? currentChat.userProfileId : currentChat.me?.profileId)) || db.userProfiles[0];
 
-                const redPacketMsg = [...(currentChat.history || [])].reverse().find(m => 
+                const redPacketMsg = [...currentChat.history].reverse().find(m => 
                     m.redPacketData && 
                     m.redPacketData.status !== 'claimed' &&
                     (
@@ -5457,7 +5442,6 @@ async function processStream(response, chat, apiType) {
                         }
                         
                         const notification = { id: `msg_${Date.now()}`, role: 'system', content: `[${claimerName}领取了${senderName}的红包]`, timestamp: Date.now() };
-                        if(!currentChat.history) currentChat.history = [];
                         currentChat.history.push(notification);
                         addMessageBubble(notification);
                     }
@@ -5476,7 +5460,6 @@ async function processStream(response, chat, apiType) {
                     const sender = (currentChat.members || []).find(m => m.realName === senderName);
                     if (sender) message.senderId = sender.id;
                 }
-                if(!currentChat.history) currentChat.history = [];
                 currentChat.history.push(message);
                 addMessageBubble(message);
 
@@ -5499,7 +5482,6 @@ async function processStream(response, chat, apiType) {
                     } catch (e) { console.error('Failed to parse location JSON:', e); }
                 }
 
-                if(!currentChat.history) currentChat.history = [];
                 if (currentChatType === 'private') {
                     if(/\[.*?的转账：.*?\]/.test(message.content)) message.transferStatus = 'pending';
                     else if (/\[.*?送来的礼物：.*?\]/.test(message.content)) message.giftStatus = 'sent';
@@ -5668,7 +5650,7 @@ async function processStream(response, chat, apiType) {
     function parseAndAddStickers(rawText, isDefault = false) {
         const stickers = [];
         const entries = rawText.trim().split(',');
-        const existingUrls = new Set((db.myStickers || []).map(s => s.data));
+        const existingUrls = new Set(db.myStickers.map(s => s.data));
 
         entries.forEach(entry => {
             if (entry.trim()) {
@@ -5692,11 +5674,11 @@ async function processStream(response, chat, apiType) {
         const container = getEl('sticker-grid-container'); 
         if (!container) return;
         container.innerHTML = ''; 
-        if ((db.myStickers || []).length === 0) { 
+        if (db.myStickers.length === 0) { 
             container.innerHTML = '<p style="color:#aaa; text-align:center;">还没有表情包，快去添加吧！</p>'; 
             return; 
         } 
-        (db.myStickers || []).forEach(sticker => { 
+        db.myStickers.forEach(sticker => { 
             const item = document.createElement('div'); 
             item.className = 'sticker-item'; 
             item.innerHTML = `<img src="${sticker.data}" alt="${sticker.name}"><span>${sticker.name}</span>`; 
@@ -5777,7 +5759,7 @@ async function processStream(response, chat, apiType) {
         };
 
         if(currentChatType === 'group') message.senderId = 'user_me';
-        if(!chat.history) chat.history = [];
+
         chat.history.push(message);
         addMessageBubble(message);
         saveData();
@@ -5857,7 +5839,6 @@ async function processStream(response, chat, apiType) {
             }
         };
 
-        if(!chat.history) chat.history = [];
         chat.history.push(message);
         addMessageBubble(message);
         saveData();
@@ -5871,7 +5852,7 @@ async function processStream(response, chat, apiType) {
         const messageId = redPacketElement.closest('.message-wrapper').dataset.id;
         const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
         if (!chat) return;
-        const message = (chat.history || []).find(m => m.id === messageId);
+        const message = chat.history.find(m => m.id === messageId);
         
         if (!message || !message.redPacketData || message.redPacketData.status === 'claimed') {
             showToast('红包已被领完啦~');
@@ -5917,14 +5898,13 @@ async function processStream(response, chat, apiType) {
         }
         
         const notification = { id: `msg_${Date.now()}`, role: 'system', content: `[${myName}领取了${senderName}的红包]`, timestamp: Date.now() };
-        if(!chat.history) chat.history = [];
         chat.history.push(notification);
         addMessageBubble(notification);
         saveData();
     }
 
     function handleReceivedTransferClick(messageId) { currentTransferMessageId = messageId; getEl('receive-transfer-actionsheet')?.classList.add('visible'); }
-    function respondToTransfer(action) { if(!currentTransferMessageId) return; const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId); if(!chat) return; const message = (chat.history || []).find(m => m.id === currentTransferMessageId); if(message) { message.transferStatus = action; const cardOnScreen = getEl('message-area')?.querySelector(`.message-wrapper[data-id="${currentTransferMessageId}"] .transfer-card`); if(cardOnScreen) { cardOnScreen.className = `transfer-card ${message.role === 'user' ? 'sent' : 'received'}-transfer ${action}`; cardOnScreen.querySelector('.transfer-title').textContent = action === 'received' ? '已收款' : '已退回'; cardOnScreen.style.cursor = 'default'; } let content = `[${(db.userProfiles.find(p => p.id === chat.userProfileId) || db.userProfiles[0]).name}${action === 'received' ? '接收' : '退回'}${chat.realName}的转账]`; if(!chat.history) chat.history = []; chat.history.push({ id: `msg_${Date.now()}`, role: 'user', content, timestamp: Date.now() }); saveData(); renderChatList(); } getEl('receive-transfer-actionsheet')?.classList.remove('visible'); currentTransferMessageId = null; }
+    function respondToTransfer(action) { if(!currentTransferMessageId) return; const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId); if(!chat) return; const message = chat.history.find(m => m.id === currentTransferMessageId); if(message) { message.transferStatus = action; const cardOnScreen = getEl('message-area')?.querySelector(`.message-wrapper[data-id="${currentTransferMessageId}"] .transfer-card`); if(cardOnScreen) { cardOnScreen.className = `transfer-card ${message.role === 'user' ? 'sent' : 'received'}-transfer ${action}`; const titleEl = cardOnScreen.querySelector('.transfer-title'); if(titleEl) titleEl.textContent = action === 'received' ? '已收款' : '已退回'; cardOnScreen.style.cursor = 'default'; } let content = `[${(db.userProfiles.find(p => p.id === chat.userProfileId) || db.userProfiles[0]).name}${action === 'received' ? '接收' : '退回'}${chat.realName}的转账]`; chat.history.push({ id: `msg_${Date.now()}`, role: 'user', content, timestamp: Date.now() }); saveData(); renderChatList(); } getEl('receive-transfer-actionsheet')?.classList.remove('visible'); currentTransferMessageId = null; }
     function setupGiftSystem() { 
         const sendGiftModal = getEl('send-gift-modal');
         if(sendGiftModal) sendGiftModal.addEventListener('click', (e) => { if (e.target === sendGiftModal) sendGiftModal.classList.remove('visible'); }); 
@@ -5962,7 +5942,7 @@ async function processStream(response, chat, apiType) {
             locationData: locationData
         };
         if(currentChatType === 'group') message.senderId = 'user_me';
-        if(!chat.history) chat.history = [];
+        
         chat.history.push(message);
         addMessageBubble(message);
         saveData();
@@ -6003,6 +5983,7 @@ async function processStream(response, chat, apiType) {
         if(editWorldBookForm) {
             editWorldBookForm.addEventListener('submit', (e) => { 
                 e.preventDefault(); 
+                
                 const name = getEl('world-book-name').value.trim(); 
                 const content = getEl('world-book-content').value.trim(); 
                 if (!name || !content) return showToast('名称和内容不能为空'); 
@@ -6032,8 +6013,8 @@ async function processStream(response, chat, apiType) {
                         label: '删除', danger: true, action: () => { 
                             if (confirm('确定要删除这个爪印书条目吗？')) { 
                                 db.worldBooks = db.worldBooks.filter(wb => wb.id !== bookId); 
-                                (db.characters || []).forEach(char => { char.worldBookIds = (char.worldBookIds || []).filter(id => id !== bookId); }); 
-                                (db.groups || []).forEach(group => { group.worldBookIds = (group.worldBookIds || []).filter(id => id !== bookId); }); 
+                                db.characters.forEach(char => { char.worldBookIds = (char.worldBookIds || []).filter(id => id !== bookId); }); 
+                                db.groups.forEach(group => { group.worldBookIds = (group.worldBookIds || []).filter(id => id !== bookId); }); 
                                 saveData(); 
                                 renderWorldBookList(); 
                                 showToast('条目已删除'); 
@@ -6129,8 +6110,7 @@ async function processStream(response, chat, apiType) {
                 char.isBlocked = !char.isBlocked; 
                 const userProfile = db.userProfiles.find(p => p.id === char.userProfileId) || db.userProfiles[0]; 
                 const content = `[${userProfile.name}已将${char.realName}${char.isBlocked ? '拉黑' : '解除拉黑'}]`; 
-                if(!char.history) char.history = [];
-                char.history.push({ id: `msg_${Date.now()}`, role: 'system', content, timestamp: Date.now() }); 
+                (char.history || []).push({ id: `msg_${Date.now()}`, role: 'system', content, timestamp: Date.now() }); 
                 saveData(); 
                 addMessageBubble(char.history.slice(-1)[0]); 
                 renderChatList(); 
@@ -6202,15 +6182,15 @@ async function processStream(response, chat, apiType) {
                  if(char) {
                     getEl('edit-contact-id').value = char.id;
                     getEl('edit-contact-real-name').value = char.realName;
-                    getEl('edit-contact-remark-name').value =char.remarkName;
-                                        getEl('edit-contact-avatar-preview').src = char.avatar;
+                    getEl('edit-contact-remark-name').value = char.remarkName;
+                    getEl('edit-contact-avatar-preview').src = char.avatar;
                     getEl('edit-contact-persona').value = char.persona;
                     getEl('edit-contact-modal').classList.add('visible');
                  }
             } else if (e.target.closest('.change-btn')) {
                 const list = getEl('character-selection-list');
                 if(!list) return;
-                list.innerHTML = (db.characters || []).map(char => `<li class="selection-item" data-id="${char.id}"><img src="${char.avatar}"><span>${char.remarkName}</span></li>`).join('');
+                list.innerHTML = db.characters.map(char => `<li class="selection-item" data-id="${char.id}"><img src="${char.avatar}"><span>${char.remarkName}</span></li>`).join('');
                 getEl('character-select-modal')?.classList.add('visible');
             }
         });
@@ -6235,7 +6215,7 @@ async function processStream(response, chat, apiType) {
             } else if (e.target.closest('.change-btn')) {
                 const list = getEl('profile-selection-list');
                 if(!list) return;
-                list.innerHTML = (db.userProfiles || []).map(p => `<li class="selection-item" data-id="${p.id}"><img src="${p.avatar}"><span>${p.name}</span></li>`).join('');
+                list.innerHTML = db.userProfiles.map(p => `<li class="selection-item" data-id="${p.id}"><img src="${p.avatar}"><span>${p.name}</span></li>`).join('');
                 getEl('profile-select-modal')?.classList.add('visible');
             }
         });
@@ -6490,8 +6470,7 @@ function getContrastYIQ(hexcolor){
     }
 
      
-     
-    function setupGroupChatSystem() { 
+     function setupGroupChatSystem() { 
     getEl('open-group-theme-modal-btn')?.addEventListener('click', () => {
         openThemeSelectionModal('group');
     });
@@ -6529,6 +6508,7 @@ function getContrastYIQ(hexcolor){
             if (selectedMemberIds.length < 1) return showToast('请至少选择一个群成员。'); 
             if (!groupName) return showToast('请输入群聊名称。'); 
             const firstProfile = db.userProfiles[0]; 
+            // REFACTOR: Create group with a full, default structure
             const newGroup = { 
                 id: `group_${Date.now()}`, 
                 name: groupName, 
@@ -6553,6 +6533,7 @@ function getContrastYIQ(hexcolor){
                     }; 
                 }), 
                 baseTheme: 'wechat_green', 
+                customTheme: null,
                 fontSize: 15, 
                 maxMemory: 10, 
                 chatBg: '', 
@@ -6620,7 +6601,7 @@ function getContrastYIQ(hexcolor){
                 danger: true,
                 action: () => {
                     if (confirm(`确定要将“${member.groupNickname}”移出群聊吗？`)) {
-                        group.members = (group.members || []).filter(m => m.id !== memberId);
+                        group.members = group.members.filter(m => m.id !== memberId);
                         saveData();
                         renderGroupMembersInSettings(group);
                         showToast(`${member.groupNickname} 已被移出`);
@@ -6661,8 +6642,7 @@ function getContrastYIQ(hexcolor){
             isAdmin: false,
             worldBookIds: [],
         }; 
-        if(!group.members) group.members = [];
-        group.members.push(newMember); 
+        (group.members || []).push(newMember); 
         sendInviteNotification(group, newMember.realName); 
         saveData(); 
         renderGroupMembersInSettings(group); 
@@ -6674,7 +6654,7 @@ function getContrastYIQ(hexcolor){
     getEl('setting-group-my-profile')?.addEventListener('click', () => {
         const list = getEl('profile-selection-list');
         if(!list) return;
-        list.innerHTML = (db.userProfiles || []).map(p => `<li class="selection-item" data-id="${p.id}"><img src="${p.avatar}"><span>${p.name}</span></li>`).join('');
+        list.innerHTML = db.userProfiles.map(p => `<li class="selection-item" data-id="${p.id}"><img src="${p.avatar}"><span>${p.name}</span></li>`).join('');
         getEl('profile-select-modal')?.classList.add('visible');
     });
     
@@ -6700,11 +6680,11 @@ function getContrastYIQ(hexcolor){
         const list = getEl('member-selection-list'); 
         if(!list) return;
         list.innerHTML = ''; 
-        if ((db.characters || []).length === 0) { 
+        if (db.characters.length === 0) { 
             list.innerHTML = '<li style="color:#aaa; text-align:center; padding: 10px 0;">没有可选择的伙伴。</li>'; 
             return; 
         } 
-        list.innerHTML = (db.characters || []).map(char => `<li class="member-selection-item"><input type="checkbox" id="select-${char.id}" value="${char.id}"><img src="${char.avatar}" alt="${char.remarkName}"><label for="select-${char.id}">${char.remarkName}</label></li>`).join(''); 
+        list.innerHTML = db.characters.map(char => `<li class="member-selection-item"><input type="checkbox" id="select-${char.id}" value="${char.id}"><img src="${char.avatar}" alt="${char.remarkName}"><label for="select-${char.id}">${char.remarkName}</label></li>`).join(''); 
     }
     function loadGroupSettingsToSidebar() { 
         const group = db.groups.find(g => g.id === currentChatId); 
@@ -6802,7 +6782,7 @@ function getContrastYIQ(hexcolor){
         const group = db.groups.find(g => g.id === currentChatId); 
         if (!group) return; 
         const currentMemberCharIds = new Set((group.members || []).map(m => m.originalCharId)); 
-        const availableChars = (db.characters || []).filter(c => !currentMemberCharIds.has(c.id)); 
+        const availableChars = db.characters.filter(c => !currentMemberCharIds.has(c.id)); 
         
         const confirmBtn = getEl('confirm-invite-btn');
         if (availableChars.length === 0) { 
@@ -6815,14 +6795,12 @@ function getContrastYIQ(hexcolor){
     }
     function sendInviteNotification(group, newMemberRealName) { 
         const message = { id: `msg_${Date.now()}`, role: 'user', content: `[${group.me?.nickname || '我'}邀请${newMemberRealName}加入了群聊]`, timestamp: Date.now(), senderId: 'user_me' }; 
-        if(!group.history) group.history = [];
-        group.history.push(message); 
+        (group.history || []).push(message); 
     }
     function sendRenameNotification(group, newName) { 
         const myName = (currentChatType === 'private') ? (db.userProfiles.find(p => p.id === chat.userProfileId) || db.userProfiles[0]).name : group.me?.nickname; 
         const message = { id: `msg_${Date.now()}`, role: 'user', content: `[${myName}修改群名为：${newName}]`, timestamp: Date.now() }; 
-        if(!group.history) group.history = [];
-        group.history.push(message); 
+        (group.history || []).push(message); 
     }
 
     function setupMomentsApp() {
@@ -6853,7 +6831,7 @@ function getContrastYIQ(hexcolor){
             if(!momentItem) return;
             const momentId = momentItem.dataset.momentId;
             const commentId = commentItem.dataset.commentId;
-            const moment = (db.moments || []).find(m => m.id === momentId);
+            const moment = db.moments.find(m => m.id === momentId);
             if (!moment) return;
 
             createContextMenu([{
@@ -6883,7 +6861,7 @@ function getContrastYIQ(hexcolor){
     
     async function automaticPostScheduler() {
         const { enabled, frequency, lastPostTime } = db.momentsSettings;
-        if (!enabled || (db.characters || []).length === 0) return;
+        if (!enabled || db.characters.length === 0) return;
         const now = Date.now();
         const oneHour = 3600000;
         
@@ -6925,8 +6903,8 @@ function getContrastYIQ(hexcolor){
     function generateMomentReactionPrompt(reactor, momentToReact, replyingToComment = null) {
         const postAuthor = db.characters.find(c => c.id === momentToReact.characterId) || { remarkName: '我', id: 'user_me' };
         
-        const reactorGroups = (db.groups || []).filter(g => (g.members || []).some(m => m.originalCharId === reactor.id));
-        const authorGroups = (db.groups || []).filter(g => (g.members || []).some(m => m.originalCharId === postAuthor.id));
+        const reactorGroups = db.groups.filter(g => (g.members || []).some(m => m.originalCharId === reactor.id));
+        const authorGroups = db.groups.filter(g => (g.members || []).some(m => m.originalCharId === postAuthor.id));
         const areFriends = reactorGroups.some(rg => authorGroups.some(ag => ag.id === rg.id));
 
         let prompt = `你正在扮演角色“${reactor.realName}”，你的设定是：${reactor.persona || '一个友好的人'}。\n你正在看“${postAuthor.remarkName}”的朋友圈动态。\n`;
@@ -6940,7 +6918,7 @@ function getContrastYIQ(hexcolor){
         prompt += `\n--- 动态内容 ---\n${postAuthor.remarkName}: ${momentToReact.content}\n`;
         if ((momentToReact.comments || []).length > 0) {
             prompt += `\n--- 已有评论 ---\n`;
-            (momentToReact.comments || []).forEach(comment => { 
+            momentToReact.comments.forEach(comment => { 
                 const commenter = db.characters.find(c => c.id === comment.characterId) || { remarkName: '我', id: 'user_me' }; 
                 if (comment.replyTo) {
                     prompt += `${commenter.remarkName} 回复 ${comment.replyTo.name}: ${comment.content}\n`;
@@ -6960,9 +6938,10 @@ function getContrastYIQ(hexcolor){
     }
 
     async function createAutomaticPost() {
-        if ((db.characters || []).length === 0) return;
+        if (db.characters.length === 0) return;
         const character = db.characters[Math.floor(Math.random() * db.characters.length)];
         const rawResponse = await getAiReply(generateMomentPostPrompt(character));
+        if(!rawResponse) return;
         
         try {
             const postData = JSON.parse(rawResponse);
@@ -6999,7 +6978,7 @@ function getContrastYIQ(hexcolor){
     }
     
     async function triggerAiReactions(momentId, replyingToComment = null) {
-        const moment = (db.moments || []).find(m => m.id === momentId);
+        const moment = db.moments.find(m => m.id === momentId);
         if (!moment) return;
     
         let reactors = [];
@@ -7013,13 +6992,13 @@ function getContrastYIQ(hexcolor){
             // If it's a new reaction to the post itself
             if (moment.characterId === 'user_me') { 
                 // If the user posted, all characters are potential reactors
-                reactors = (db.characters || []).filter(c => 
+                reactors = db.characters.filter(c => 
                     !(moment.likes || []).includes(c.id) && 
                     !(moment.comments || []).some(cmt => cmt.characterId === c.id)
                 );
             } else {
                 // If a character posted, other characters might react
-                const potentialReactors = (db.characters || []).filter(c => 
+                const potentialReactors = db.characters.filter(c => 
                     c.id !== moment.characterId && 
                     !(moment.likes || []).includes(c.id) && 
                     !(moment.comments || []).some(cmt => cmt.characterId === c.id)
@@ -7038,13 +7017,13 @@ function getContrastYIQ(hexcolor){
                 const prompt = generateMomentReactionPrompt(reactor, moment, replyingToComment);
                 if (!prompt) return;
                 const reactionResponse = await getAiReply(prompt);
-                const currentMoment = (db.moments || []).find(m => m.id === momentId);
+                const currentMoment = db.moments.find(m => m.id === momentId);
                 if (reactionResponse && currentMoment) {
                     let updated = false;
                     let notificationOptions = null;
 
                     if (reactionResponse.includes('[DELETE]') && reactor.id === moment.characterId) {
-                        db.moments = (db.moments || []).filter(m => m.id !== momentId);
+                        db.moments = db.moments.filter(m => m.id !== momentId);
                         updated = true;
                     } else if (replyingToComment) {
                         const commenterToReply = db.characters.find(c => c.id === replyingToComment.characterId) || { remarkName: '我' };
@@ -7128,10 +7107,10 @@ function getContrastYIQ(hexcolor){
 
         const feedContainer = document.createElement('ul');
         feedContainer.id = 'moments-feed-container';
-        if ((db.moments || []).length === 0) {
+        if (db.moments.length === 0) {
             feedContainer.innerHTML = `<div class="placeholder-text" style="padding: 50px 0;"><p>朋友圈空空如也~</p><p>点击右上角爪印发布第一条动态吧！</p></div>`;
         } else {
-            (db.moments || []).forEach(moment => { feedContainer.appendChild(createMomentElement(moment)); });
+            db.moments.forEach(moment => { feedContainer.appendChild(createMomentElement(moment)); });
         }
         wrapper.appendChild(feedContainer);
     }
@@ -7185,7 +7164,7 @@ function getContrastYIQ(hexcolor){
         likesContainer.innerHTML = '';
         if ((moment.likes || []).length > 0) {
             likesContainer.style.display = 'flex';
-            const likerNames = (moment.likes || []).map(id => (id === 'user_me') ? '我' : db.characters.find(c => c.id === id)?.remarkName || '').filter(Boolean).join(', ');
+            const likerNames = moment.likes.map(id => (id === 'user_me') ? '我' : db.characters.find(c => c.id === id)?.remarkName || '').filter(Boolean).join(', ');
             likesContainer.innerHTML = `<svg class="like-icon" viewBox="0 0 24 24"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"></path></svg><span>${likerNames}</span>`;
         } else {
             likesContainer.style.display = 'none';
@@ -7255,7 +7234,7 @@ function getContrastYIQ(hexcolor){
             actionBtn.closest('.moment-actions-popup')?.classList.remove('active');
         } else if (action === 'delete') {
             if (confirm('确定要删除这条动态吗？')) {
-                db.moments = (db.moments || []).filter(m => m.id !== momentId);
+                db.moments = db.moments.filter(m => m.id !== momentId);
                 saveData();
                 renderMomentsFeed();
                 showToast('动态已删除');
@@ -7314,7 +7293,7 @@ function getContrastYIQ(hexcolor){
     }
 
     function toggleUserLike(momentId) { 
-        const moment = (db.moments || []).find(m => m.id === momentId); 
+        const moment = db.moments.find(m => m.id === momentId); 
         if (!moment) return; 
         if (!moment.likes) moment.likes = [];
         const userIndex = moment.likes.indexOf('user_me'); 
@@ -7329,7 +7308,7 @@ function getContrastYIQ(hexcolor){
     }
     
     function openCommentModal(momentId, replyToCommentId = null) {
-        const moment = (db.moments || []).find(m => m.id === momentId);
+        const moment = db.moments.find(m => m.id === momentId);
         if (!moment) return;
         
         getEl('moment-comment-moment-id').value = momentId;
@@ -7364,7 +7343,7 @@ function getContrastYIQ(hexcolor){
         e.preventDefault(); 
         const momentId = getEl('moment-comment-moment-id').value; 
         const content = getEl('moment-comment-input').value.trim(); 
-        const moment = (db.moments || []).find(m => m.id === momentId); 
+        const moment = db.moments.find(m => m.id === momentId); 
         
         if (content && moment) {
             if(!moment.comments) moment.comments = [];
@@ -7378,7 +7357,7 @@ function getContrastYIQ(hexcolor){
             const replyToId = getEl('moment-comment-reply-id').value;
             if (replyToId) {
                 const replyToName = getEl('moment-comment-reply-name').value;
-                const originalComment = (moment.comments || []).find(c => c.id === replyToId);
+                const originalComment = moment.comments.find(c => c.id === replyToId);
                 if(originalComment) {
                     newComment.replyTo = { id: replyToId, name: replyToName, characterId: originalComment.characterId };
                 }
@@ -7445,7 +7424,7 @@ function getContrastYIQ(hexcolor){
             } else {
                 const item = e.target.closest('.list-item');
                 if (item) {
-                    const memory = (db.memoryEntries || []).find(m => m.id === item.dataset.id);
+                    const memory = db.memoryEntries.find(m => m.id === item.dataset.id);
                     if (memory) {
                         currentEditingMemoryId = memory.id;
                         getEl('memory-id').value = memory.id;
@@ -7478,7 +7457,7 @@ function getContrastYIQ(hexcolor){
                 if (!content) return showToast('记忆内容不能为空');
                 
                 if (currentEditingMemoryId) {
-                    const memory = (db.memoryEntries || []).find(m => m.id === currentEditingMemoryId);
+                    const memory = db.memoryEntries.find(m => m.id === currentEditingMemoryId);
                     if (memory) {
                         memory.content = content;
                         memory.timestamp = Date.now(); // Update timestamp on edit
@@ -7510,7 +7489,7 @@ function getContrastYIQ(hexcolor){
              e.preventDefault();
              longPressJustFired = true;
              const memoryId = item.dataset.id;
-             const memory = (db.memoryEntries || []).find(m => m.id === memoryId);
+             const memory = db.memoryEntries.find(m => m.id === memoryId);
              if (!memory) return;
              
              const menuItems = [{
@@ -7521,7 +7500,7 @@ function getContrastYIQ(hexcolor){
                          ? `确定要删除全局记忆“${memory.topic}”吗？`
                          : `确定要删除这条角色/群聊记忆吗？`;
                      if (confirm(confirmMessage)) {
-                         db.memoryEntries = (db.memoryEntries || []).filter(m => m.id !== memoryId);
+                         db.memoryEntries = db.memoryEntries.filter(m => m.id !== memoryId);
                          saveData();
                          renderMemoryCoreList();
                          showToast('记忆已删除');
@@ -7655,15 +7634,16 @@ function getContrastYIQ(hexcolor){
     
     async function proactiveChatScheduler() {
         const allChats = [
-            ...(db.characters || []),
-            ...(db.groups || [])
+            ...db.characters,
+            ...db.groups
         ];
 
         for (const chat of allChats) {
             const isGroup = !!chat.members;
             if (!chat.proactiveChat || !chat.proactiveChat.enabled) continue;
 
-            const lastMessage = (chat.history || []).length > 0 ? chat.history[chat.history.length - 1] : null;
+            const history = chat.history || [];
+            const lastMessage = history.length > 0 ? history[history.length - 1] : null;
             if (lastMessage && lastMessage.role !== 'user') continue;
             
             const now = Date.now();
@@ -7699,7 +7679,6 @@ function getContrastYIQ(hexcolor){
                                 if (sender) message.senderId = sender.id;
                             }
                         }
-                        if(!chat.history) chat.history = [];
                         chat.history.push(message);
                     });
                     
@@ -7746,12 +7725,13 @@ function getContrastYIQ(hexcolor){
     }
     
     function generateProactiveChatPrompt(character) {
-        const lastMessage = (character.history || []).length > 0 ? character.history[character.history.length - 1] : null;
+        const history = character.history || [];
+        const lastMessage = history.length > 0 ? history[history.length - 1] : null;
         const currentTime = new Date().toLocaleString('zh-CN', { hour12: false });
         const lastMessageTime = lastMessage ? new Date(lastMessage.timestamp).toLocaleString('zh-CN', { hour12: false }) : '从未';
         const userProfile = db.userProfiles.find(p => p.id === character.userProfileId) || db.userProfiles[0];
         
-        const lastMessages = (character.history || []).slice(-5).map(m => {
+        const lastMessages = history.slice(-5).map(m => {
             const sender = m.role === 'user' ? userProfile.name : character.realName;
             const contentMatch = m.content.match(/\[.*?：([\s\S]+?)\]/);
             const text = contentMatch ? contentMatch[1] : m.content;
@@ -7759,7 +7739,7 @@ function getContrastYIQ(hexcolor){
         }).join('\n');
 
         let momentContext = "最近朋友圈没有什么特别的互动。";
-        const recentMoments = (db.moments || []).slice(0, 5);
+        const recentMoments = db.moments.slice(0, 5);
         const relevantInteraction = recentMoments.find(m => 
             (m.characterId === character.id && (m.comments || []).some(c => c.characterId === 'user_me')) || 
             (m.characterId === 'user_me' && (m.comments || []).some(c => c.characterId === character.id))
@@ -7931,7 +7911,6 @@ ${(group.members || []).map(m => `- ${m.realName} (昵称: ${m.groupNickname}): 
         }, 2000);
         
         const requestMessage = { id: `msg_sys_${Date.now()}`, role: 'system', content: `[系统指令：用户发起了${videoCallState.isGroupCall ? '群组' : ''}视频通话请求。]`, timestamp: Date.now() };
-        if(!chat.history) chat.history = [];
         chat.history.push(requestMessage);
         saveData();
         getAiReply(); 
@@ -7966,13 +7945,12 @@ ${(group.members || []).map(m => `- ${m.realName} (昵称: ${m.groupNickname}): 
         if (chat && videoCallState.initiator === 'ai') {
             const userProfile = db.userProfiles.find(p => p.id === (videoCallState.isGroupCall ? chat.me?.profileId : chat.userProfileId)) || db.userProfiles[0];
             const declineMessage = { id: `msg_sys_${Date.now()}`, role: 'system', content: `[系统指令:${userProfile.name}拒绝了你的通话请求]`, timestamp: Date.now() };
-            if(!chat.history) chat.history = [];
             chat.history.push(declineMessage);
             saveData();
             getAiReply(); 
         }
         getEl('incoming-call-modal')?.classList.remove('visible');
-        videoCallState = { isActive: false, isAwaitingResponse: false, isGroupCall: false, activeChatId: null, initiator: null, callHistory: [] };
+        videoCallState = { isActive: false, isAwaitingResponse: false, isGroupCall: false, activeChatId: null, initiator: null, callHistory:[] };
     }
 
     function handleCallAccepted(chat, memberName) {
@@ -8076,12 +8054,11 @@ ${(group.members || []).map(m => `- ${m.realName} (昵称: ${m.groupNickname}): 
                 content: `[${endCallText}]`,
                 timestamp: Date.now(),
             };
-            if(!chat.history) chat.history = [];
-            chat.history.push(endMessage);
+            (chat.history || []).push(endMessage);
             
-            const callTranscriptForMemory = (videoCallState.callHistory || []).map(h => `${h.role === 'user' ? '我' : (h.senderName || '对方')}: ${h.content}`).join('\n');
+            const callTranscriptForMemory = videoCallState.callHistory.map(h => `${h.role === 'user' ? '我' : (h.senderName || '对方')}: ${h.content}`).join('\n');
             if (callTranscriptForMemory) {
-                let memoryEntry = (db.memoryEntries || []).find(m => (videoCallState.isGroupCall ? m.groupId : m.characterId) === chat.id);
+                let memoryEntry = db.memoryEntries.find(m => (videoCallState.isGroupCall ? m.groupId : m.characterId) === chat.id);
                 const memoryContent = `\n--- [${new Date().toLocaleString()}] 视频通话记录 ---\n${callTranscriptForMemory}\n--- 通话记录结束 ---`;
                 if(memoryEntry) {
                     memoryEntry.content += memoryContent;
@@ -8102,7 +8079,7 @@ ${(group.members || []).map(m => `- ${m.realName} (昵称: ${m.groupNickname}): 
                 content: `[系统指令：视频通话刚刚结束。请你以你的角色口吻，主动发消息总结通话或表达感受。]`,
                 timestamp: Date.now() + 1,
             };
-            chat.history.push(hiddenReportInstruction);
+            (chat.history || []).push(hiddenReportInstruction);
             saveData();
             openChatRoom(chat.id, videoCallState.isGroupCall ? 'group' : 'private');
             getAiReply(); 
@@ -8146,7 +8123,7 @@ ${(group.members || []).map(m => `- ${m.realName} (昵称: ${m.groupNickname}): 
             if(statusEl) statusEl.textContent = '正在思考...'; 
         }
         
-        const callHistoryForPrompt = (videoCallState.callHistory || []).map(h => `${h.role === 'user' ? userProfile.name : (h.senderName || '角色')}: ${h.content}`).join('\n');
+        const callHistoryForPrompt = videoCallState.callHistory.map(h => `${h.role === 'user' ? userProfile.name : (h.senderName || '角色')}: ${h.content}`).join('\n');
         
         let inCallPrompt;
         if(videoCallState.isGroupCall) {
@@ -8159,7 +8136,7 @@ ${(group.members || []).map(m => `- ${m.realName} (昵称: ${m.groupNickname}): 
 3. **角色扮演**: 严格遵守每个成员的人设。
 4. **内容限制**: 你的描述必须【直接回应】用户的最新发言，保持对话的互动性。描述应简洁，【总字数不超过200字】。严禁脱离用户输入进行独立的故事性描写。
 # 当前情景
-**参与者**: ${[userProfile.name, ...((videoCallState.participants || []).map(p => p.realName))].join('、 ')}。
+**参与者**: ${[userProfile.name, ...(videoCallState.participants || []).map(p => p.realName)].join('、 ')}。
 **群成员设定**: \n${(chat.members || []).map(m => `- ${m.realName} (昵称: ${m.groupNickname}): ${m.persona}`).join('\n')}
 **通话记录**:
 ${callHistoryForPrompt}
@@ -8326,8 +8303,7 @@ ${callHistoryForPrompt}
             } else {
                 // Creating new profile
                 newProfileData.id = `profile_${Date.now()}`;
-                if(!db.apiProfiles) db.apiProfiles = [];
-                db.apiProfiles.push(newProfileData);
+                (db.apiProfiles || []).push(newProfileData);
                 newActiveId = newProfileData.id;
             }
             
@@ -8359,12 +8335,12 @@ ${callHistoryForPrompt}
                 showToast('没有可删除的配置');
                 return;
             }
-            if ((db.apiProfiles || []).length <= 1) {
+            if (db.apiProfiles.length <= 1) {
                 showToast('无法删除最后一个API配置');
                 return;
             }
             if (confirm('确定要删除这个API配置吗？')) {
-                db.apiProfiles = (db.apiProfiles || []).filter(p => p.id !== selectedId);
+                db.apiProfiles = db.apiProfiles.filter(p => p.id !== selectedId);
                 if (db.activeApiProfileId === selectedId) {
                     db.activeApiProfileId = db.apiProfiles[0].id;
                 }
@@ -8584,7 +8560,7 @@ ${callHistoryForPrompt}
         const noMusicEl = getEl('no-music-placeholder');
         const playerUI = getEl('music-player-ui');
         if(!noMusicEl || !playerUI) return;
-        if ((db.musicPlaylist || []).length === 0) {
+        if (db.musicPlaylist.length === 0) {
             noMusicEl.style.display = 'block';
             playerUI.style.display = 'none';
         } else {
@@ -8594,7 +8570,7 @@ ${callHistoryForPrompt}
     }
 
     function playSongByIndex(index) {
-        if (index < 0 || index >= (db.musicPlaylist || []).length) {
+        if (index < 0 || index >= db.musicPlaylist.length) {
             const audioPlayer = getEl('audio-player');
             if(audioPlayer) {
                 audioPlayer.pause();
@@ -8622,7 +8598,7 @@ ${callHistoryForPrompt}
         if(!audioPlayer) return;
         if (audioPlayer.paused) {
             if (!audioPlayer.src) {
-                if ((db.musicPlaylist || []).length > 0) playSongByIndex(0);
+                if (db.musicPlaylist.length > 0) playSongByIndex(0);
             } else {
                 audioPlayer.play().catch(e => console.error("Audio play failed:", e));
             }
@@ -8662,7 +8638,7 @@ ${callHistoryForPrompt}
 
     function playNextSong() {
         let nextIndex;
-        if ((db.musicPlaylist || []).length === 0) return;
+        if (db.musicPlaylist.length === 0) return;
         if (db.musicSettings.playbackMode === 'shuffle') {
             nextIndex = Math.floor(Math.random() * db.musicPlaylist.length);
         } else {
@@ -8673,7 +8649,7 @@ ${callHistoryForPrompt}
     }
     
     function playPrevSong() {
-        if ((db.musicPlaylist || []).length === 0) return;
+        if (db.musicPlaylist.length === 0) return;
         let prevIndex = currentPlayingSongIndex - 1;
         if (prevIndex < 0) prevIndex = db.musicPlaylist.length - 1;
         playSongByIndex(prevIndex);
@@ -8767,7 +8743,7 @@ ${callHistoryForPrompt}
         const listEl = getEl('share-music-list');
         if(!listEl) return;
         listEl.innerHTML = '';
-        const chats = [...(db.characters || []), ...(db.groups || [])];
+        const chats = [...db.characters, ...db.groups];
         if (chats.length === 0) {
             listEl.innerHTML = '<li class="placeholder-text">没有可以分享的聊天</li>';
         } else {
@@ -8794,7 +8770,7 @@ ${callHistoryForPrompt}
         const listEl = getEl('listen-together-char-list');
         if(!listEl) return;
         listEl.innerHTML = '';
-        const onlineChars = (db.characters || []).filter(c => c.status !== '离线');
+        const onlineChars = db.characters.filter(c => c.status !== '离线');
         if (onlineChars.length === 0) {
             listEl.innerHTML = '<li class="placeholder-text">没有在线的小伙伴可以邀请</li>';
         } else {
@@ -8840,10 +8816,10 @@ ${callHistoryForPrompt}
             }
         };
 
-        if(!character.history) character.history = [];
-        character.history.push(listenTogetherMessage);
+        (character.history || []).push(listenTogetherMessage);
         saveData();
         
+        // Immediately add the invitation card to the UI
         if (currentChatId === characterId && getEl('chat-room-screen')?.classList.contains('active')) {
             addMessageBubble(listenTogetherMessage);
         }
@@ -8864,8 +8840,7 @@ ${callHistoryForPrompt}
                     content: msgContent.trim(),
                     timestamp: Date.now()
                 };
-                if(!character.history) character.history = [];
-                character.history.push(message);
+                (character.history || []).push(message);
             });
             saveData();
             
@@ -8938,7 +8913,7 @@ ${callHistoryForPrompt}
     
     function updateDynamicIsland() {
         const island = getEl('dynamic-island');
-        const song = (db.musicPlaylist || [])[currentPlayingSongIndex];
+        const song = db.musicPlaylist[currentPlayingSongIndex];
         const audioPlayer = getEl('audio-player');
         
         if (!island || !song || currentPlayingSongIndex < 0 || !audioPlayer?.src) {
@@ -9018,7 +8993,7 @@ ${callHistoryForPrompt}
         const placeholder = getEl('no-playlist-placeholder');
         if(!listEl || !placeholder) return;
         listEl.innerHTML = '';
-        if ((db.musicPlaylist || []).length === 0) {
+        if (db.musicPlaylist.length === 0) {
             placeholder.style.display = 'block';
         } else {
             placeholder.style.display = 'none';
@@ -9068,7 +9043,7 @@ ${callHistoryForPrompt}
     
     function handleMusicCardClick(card) {
         const songId = card.dataset.songId;
-        const song = (db.musicPlaylist || []).find(s => s.id === songId);
+        const song = db.musicPlaylist.find(s => s.id === songId);
         if (song) {
             const songIndex = db.musicPlaylist.indexOf(song);
             switchScreen('music-screen');
@@ -9080,7 +9055,7 @@ ${callHistoryForPrompt}
     
     // --- NEW LYRICS FUNCTIONS ---
     function openLyricsModal() {
-        const song = (db.musicPlaylist || [])[currentPlayingSongIndex];
+        const song = db.musicPlaylist[currentPlayingSongIndex];
         if (!song) {
             showToast("请先播放歌曲");
             return;
@@ -9217,7 +9192,7 @@ ${callHistoryForPrompt}
                     label: '取消收藏',
                     danger: true,
                     action: () => {
-                        db.collections = (db.collections || []).filter(c => c.id !== collectionId);
+                        db.collections = db.collections.filter(c => c.id !== collectionId);
                         saveData();
                         renderCollections();
                         showToast('已取消收藏');
@@ -9318,7 +9293,7 @@ ${callHistoryForPrompt}
         const listEl = getEl('forward-message-list');
         if(!modal || !listEl) return;
         listEl.innerHTML = '';
-        const chats = [...(db.characters || []), ...(db.groups || [])].filter(c => c.id !== currentChatId);
+        const chats = [...db.characters, ...db.groups].filter(c => c.id !== currentChatId);
         if (chats.length === 0) {
             listEl.innerHTML = '<li class="placeholder-text">没有其他联系人可转发</li>';
         } else {
@@ -9422,7 +9397,7 @@ ${callHistoryForPrompt}
             fileData: { name: file.name, size: file.size, type: file.type }
         };
         if(currentChatType === 'group') message.senderId = 'user_me';
-        if(!chat.history) chat.history = [];
+
         chat.history.push(message);
         addMessageBubble(message);
         saveData();
@@ -9437,40 +9412,35 @@ ${callHistoryForPrompt}
         if(diaryBookshelfScreen) {
             diaryBookshelfScreen.addEventListener('click', e => {
                 const book = e.target.closest('.diary-book');
-                const editBtn = e.target.closest('.diary-book-edit-btn');
-                if (editBtn) {
-                    e.stopPropagation();
-                    currentDiaryCoverTarget = editBtn.dataset.characterId;
-                    getEl('diary-cover-upload-input').click();
-                }
-                else if (book) {
+                const settingsBtn = e.target.closest('#open-diary-settings-btn');
+                const addBtn = e.target.closest('#add-diary-btn');
+                const coverBtn = e.target.closest('.diary-book-edit-btn');
+                
+                if (book && !coverBtn) {
                     openDiaryBook(book.dataset.characterId);
-                }
-                if (e.target.closest('#add-diary-btn')) {
+                } else if (addBtn) {
                     openManualDiaryModal();
-                }
-                if (e.target.closest('#diary-bookshelf-settings-btn')) {
+                } else if (settingsBtn) {
                     openDiarySettingsModal();
+                } else if (coverBtn) {
+                    e.stopPropagation();
+                    const input = getEl('diary-cover-upload-input');
+                    input.dataset.charId = coverBtn.dataset.characterId;
+                    input.click();
                 }
             });
         }
-        
+
         getEl('diary-cover-upload-input')?.addEventListener('change', async (e) => {
             const file = e.target.files[0];
-            if (file && currentDiaryCoverTarget) {
-                try {
-                    const url = await compressImage(file, { quality: 0.8, maxWidth: 400 });
-                    if (!db.diaries[currentDiaryCoverTarget]) db.diaries[currentDiaryCoverTarget] = { entries: [], background: '' };
-                    db.diaries[currentDiaryCoverTarget].background = url;
-                    saveData();
-                    renderDiaryBookshelf();
-                    showToast('日记本封面已更新');
-                } catch(err){
-                    showToast('封面上传失败');
-                } finally {
-                    currentDiaryCoverTarget = null;
-                    e.target.value = '';
-                }
+            const charId = e.target.dataset.charId;
+            if(file && charId) {
+                const url = await compressImage(file, {quality: 0.8, maxWidth: 400, maxHeight: 533});
+                if(!db.diaries[charId]) db.diaries[charId] = { entries: [], background: '' };
+                db.diaries[charId].background = url;
+                saveData();
+                renderDiaryBookshelf();
+                showToast("封面已更新");
             }
         });
     }
@@ -9481,24 +9451,21 @@ ${callHistoryForPrompt}
         if(!modal || !list) return;
         
         modal.querySelector('h3').textContent = "为谁生成今日日记？";
-        list.innerHTML = (db.characters || []).map(char => `<li class="selection-item" data-id="${char.id}"><img src="${char.avatar}"><span>${char.remarkName}</span></li>`).join('');
+        list.innerHTML = db.characters.map(char => `<li class="selection-item" data-id="${char.id}"><img src="${char.avatar}"><span>${char.remarkName}</span></li>`).join('');
         modal.classList.add('visible');
         
         const handler = async (e) => {
             const item = e.target.closest('.selection-item');
             if(item) {
                 const charId = item.dataset.id;
-                modal.classList.remove('visible'); // Close modal immediately
                 const char = db.characters.find(c => c.id === charId);
                 if (char) {
                     showToast(`正在为 ${char.remarkName} 生成今日日记...`);
-                    try {
-                        await createAutomaticDiaryEntry(char, true);
-                        showToast(`日记已生成！`);
-                    } catch (error) {
-                         showToast(`为 ${char.remarkName} 生成日记失败，请检查API响应。`);
-                    }
+                    // Pass the character object directly to avoid state confusion
+                    await createAutomaticDiaryEntry(char, true);
+                    showToast(`日记已生成！`);
                 }
+                modal.classList.remove('visible');
                 list.removeEventListener('click', handler);
                 modal.querySelector('h3').textContent = "选择一个伙伴身份";
             }
@@ -9512,10 +9479,11 @@ ${callHistoryForPrompt}
         if (!shelf || !placeholder) return;
         shelf.innerHTML = '';
         
-        const visibleBooks = (db.diarySettings?.visibleBooks || []);
-        const charactersWithDiaries = visibleBooks
-            .map(id => db.characters.find(c => c.id === id))
-            .filter(Boolean);
+        const charactersWithDiaries = Object.keys(db.diaries || {})
+            .map(id => {
+                if(id === 'default_diary') return { id: 'default_diary', remarkName: '默认日记本', avatar: 'https://i.postimg.cc/13LKVN6z/IMG-20250802-025234.jpg' };
+                return db.characters.find(c => c.id === id);
+            }).filter(Boolean);
 
         if (charactersWithDiaries.length === 0) {
             placeholder.style.display = 'block';
@@ -9534,16 +9502,19 @@ ${callHistoryForPrompt}
             bookDiv.innerHTML = `
                 <img src="${char.avatar}" class="diary-book-avatar">
                 <span class="diary-book-name">${char.remarkName}的日记</span>
-                <button class="diary-book-edit-btn" data-character-id="${char.id}">编辑</button>
+                <button class="diary-book-edit-btn" data-character-id="${char.id}">更换封面</button>
             `;
             shelf.appendChild(bookDiv);
         });
     }
 
     function openDiaryBook(characterId) {
-        const char = db.characters.find(c => c.id === characterId);
+        const char = db.characters.find(c => c.id === characterId) || {id: 'default_diary', remarkName: '默认日记本'};
         const diary = db.diaries[characterId];
         if (!char || !diary) return;
+
+        currentDiaryCharacterId = characterId;
+        currentDiaryPageIndex = 0;
 
         getEl('diary-book-title').textContent = `${char.remarkName}的日记`;
         const container = getEl('diary-book-container');
@@ -9582,7 +9553,7 @@ ${callHistoryForPrompt}
                 <span class="page-date">${entry.date}</span>
                 <span class="page-meta">${entry.weather || ''}</span>
             </div>
-            <div class="page-content">${entry.content}</div>
+            <div class="page-content">${entry.content.replace(/\n/g, '<br>')}</div>
         `;
         container.appendChild(page);
 
@@ -9602,12 +9573,12 @@ ${callHistoryForPrompt}
         const currentPageEl = container.querySelector('.book-page');
         if (!currentPageEl) return;
     
-        const newIndex = currentIndex + direction;
+        currentDiaryPageIndex = currentIndex + direction;
     
         currentPageEl.classList.add(direction > 0 ? 'turning-forward-out' : 'turning-backward-out');
     
         setTimeout(() => {
-            renderDiaryPage(characterId, newIndex);
+            renderDiaryPage(characterId, currentDiaryPageIndex);
             const newPageEl = container.querySelector('.book-page');
             if (newPageEl) {
                 newPageEl.classList.add(direction > 0 ? 'turning-forward-in' : 'turning-backward-in');
@@ -9616,22 +9587,19 @@ ${callHistoryForPrompt}
     }
     
     async function diaryWritingScheduler() {
-        for (const char of (db.characters || [])) {
-            const frequency = db.diarySettings?.frequencies[char.id] || 'medium';
-            if (frequency === 'off') continue;
+        const freqMap = { 'daily': 1, '3days': 3, 'weekly': 7, 'off': Infinity };
+        const daysToWait = freqMap[db.diarySettings?.autoFrequency] || 1;
+        const interval = daysToWait * 24 * 3600000;
 
-            if(!db.diaries[char.id]) db.diaries[char.id] = { entries: [], background: ''};
+        for (const char of db.characters) {
+            if(!db.diaries[char.id]) continue;
             const lastDiary = (db.diaries[char.id]?.entries || []).sort((a,b) => new Date(b.date) - new Date(a.date))[0];
             const timeSinceLastDiary = lastDiary ? Date.now() - new Date(lastDiary.date).getTime() : Infinity;
             
             const lastChatTimestamp = (char.history || []).length > 0 ? char.history[char.history.length - 1].timestamp : 0;
             const hasNewChat = lastDiary ? lastChatTimestamp > new Date(lastDiary.date).getTime() : ((char.history || []).length > 0);
 
-            const freqMap = { 'high': [0.5, 1], 'medium': [1, 2], 'low': [2, 4] };
-            const [minDays, maxDays] = freqMap[frequency] || freqMap['medium'];
-            const randomInterval = (Math.random() * (maxDays - minDays) + minDays) * 24 * 3600000;
-
-            if (hasNewChat && timeSinceLastDiary > randomInterval) {
+            if (hasNewChat && timeSinceLastDiary > interval) {
                 await createAutomaticDiaryEntry(char);
             }
         }
@@ -9679,7 +9647,7 @@ ${recentHistory}
         
         const recentHistory = (character.history || [])
             .filter(m => isManual || m.timestamp >= startOfToday)
-            .slice(-20) 
+            .slice(-20) // Get last 20 messages from today, or just last 20 if manual
             .map(m => {
                 const sender = m.role === 'user' ? 'TA' : '我';
                  const contentMatch = m.content.match(/\[.*?：([\s\S]+?)\]/);
@@ -9687,11 +9655,11 @@ ${recentHistory}
                  return `${sender}: ${text}`;
             }).join('\n');
             
-        if (recentHistory.length < 50 && !isManual) return; 
+        if (recentHistory.length < 50 && !isManual) return; // Don't write if conversation is too short for auto-diary
 
         const prompt = generateDiaryEntryPrompt(character, recentHistory);
         const rawResponse = await getAiReply(prompt);
-        if(!rawResponse) throw new Error("AI did not return a response for diary.");
+        if(!rawResponse) return;
         
         try {
             const jsonMatch = rawResponse.match(/```json\s*([\s\S]*?)\s*```/);
@@ -9707,6 +9675,7 @@ ${recentHistory}
                     weather: diaryData.weather || '未知',
                     content: diaryData.content
                 };
+                
                 db.diaries[character.id].entries = (db.diaries[character.id].entries || []).filter(e => e.date !== newEntry.date);
                 db.diaries[character.id].entries.push(newEntry);
                 saveData();
@@ -9715,68 +9684,51 @@ ${recentHistory}
             }
         } catch(e) {
             console.error(`Failed to create diary for ${character.remarkName}:`, e, rawResponse);
-            throw e; // Re-throw for manual mode to catch
+            if(isManual) showToast(`为 ${character.remarkName} 生成日记失败，请检查API响应。`);
         }
     }
 
-    // --- NEW: Diary Settings Modal Functions ---
     function openDiarySettingsModal() {
-        const visibilityList = getEl('diary-visibility-list');
-        const frequencyList = getEl('diary-frequency-list');
-        if(!visibilityList || !frequencyList) return;
+        renderDiarySettingsModalContent();
+        getEl('diary-settings-modal').classList.add('visible');
+    }
 
-        visibilityList.innerHTML = '';
-        frequencyList.innerHTML = '';
+    function renderDiarySettingsModalContent() {
+        const listEl = getEl('add-diary-character-list');
+        const freqSelect = getEl('diary-auto-frequency');
+        if(!listEl || !freqSelect) return;
+
+        freqSelect.value = db.diarySettings?.autoFrequency || 'daily';
         
-        const visibleBooks = db.diarySettings?.visibleBooks || [];
-        (db.characters || []).forEach(char => {
-            // Visibility setting
-            const visItem = document.createElement('div');
-            visItem.className = 'diary-settings-item';
-            visItem.innerHTML = `
-                <label>
-                    <input type="checkbox" data-char-id="${char.id}" ${visibleBooks.includes(char.id) ? 'checked' : ''}>
-                    <img src="${char.avatar}">
-                    <span>${char.remarkName}</span>
-                </label>`;
-            visibilityList.appendChild(visItem);
+        const charactersWithoutDiaries = db.characters.filter(c => !db.diaries[c.id]);
+        if(charactersWithoutDiaries.length > 0) {
+            listEl.innerHTML = charactersWithoutDiaries.map(char => 
+                `<li class="selection-item" data-id="${char.id}"><img src="${char.avatar}"><span>${char.remarkName}</span></li>`
+            ).join('');
+        } else {
+            listEl.innerHTML = `<li class="placeholder-text" style="margin: 0; padding: 10px;">所有伙伴都已拥有日记本</li>`;
+        }
 
-            // Frequency setting
-            const freqItem = document.createElement('div');
-            freqItem.className = 'diary-settings-item';
-            const currentFreq = db.diarySettings?.frequencies[char.id] || 'medium';
-            freqItem.innerHTML = `
-                <label>
-                    <img src="${char.avatar}">
-                    <span>${char.remarkName}</span>
-                </label>
-                <select data-char-id="${char.id}">
-                    <option value="high" ${currentFreq === 'high' ? 'selected' : ''}>高</option>
-                    <option value="medium" ${currentFreq === 'medium' ? 'selected' : ''}>中</option>
-                    <option value="low" ${currentFreq === 'low' ? 'selected' : ''}>低</option>
-                    <option value="off" ${currentFreq === 'off' ? 'selected' : ''}>关闭</option>
-                </select>`;
-            frequencyList.appendChild(freqItem);
+        const items = listEl.querySelectorAll('.selection-item');
+        items.forEach(item => {
+            item.addEventListener('click', () => {
+                const charId = item.dataset.id;
+                db.diaries[charId] = { entries: [], background: '' };
+                saveData();
+                renderDiaryBookshelf();
+                renderDiarySettingsModalContent();
+                showToast(`已为 ${item.querySelector('span').textContent} 创建了日记本`);
+            });
         });
-        
-        getEl('diary-settings-modal')?.classList.add('visible');
     }
 
     getEl('save-diary-settings-btn')?.addEventListener('click', () => {
-        const visible = [];
-        getEl('diary-visibility-list').querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
-            visible.push(input.dataset.charId);
-        });
-        db.diarySettings.visibleBooks = visible;
-
-        getEl('diary-frequency-list').querySelectorAll('select').forEach(select => {
-            db.diarySettings.frequencies[select.dataset.charId] = select.value;
-        });
-        
+        const freq = getEl('diary-auto-frequency').value;
+        if(!db.diarySettings) db.diarySettings = {};
+        db.diarySettings.autoFrequency = freq;
         saveData();
-        renderDiaryBookshelf();
-        getEl('diary-settings-modal')?.classList.remove('visible');
-        showToast('日记本设置已保存');
+        showToast('日记设置已保存');
+        getEl('diary-settings-modal').classList.remove('visible');
     });
 
     init();
