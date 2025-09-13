@@ -36,25 +36,26 @@
         body { font-family: var(--font-family); margin: 0; padding: 0; background: linear-gradient(135deg, #FFEBCD, #D2B48C); display: flex; align-items: center; justify-content: center; min-height: 100vh; }
         .phone-screen { width: 100%; max-width: 420px; height: calc(var(--vh, 1vh) * 100); max-height: 850px; background-color: var(--white-color); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); border-radius: var(--phone-corner-radius); overflow: hidden; position: relative; display: flex; flex-direction: column; }
         
+                /* --- 核心修复：屏幕布局 --- */
         .screen {
             display: flex;
             flex-direction: column;
             width: 100%;
             height: 100%;
-            position: absolute;
+            position: absolute; /* 使用绝对定位，防止互相影响 */
             top: 0;
             left: 0;
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.95);
-            transition: opacity 0.4s ease, visibility 0.4s, transform 0.4s ease;
-            z-index: 1;
+            opacity: 0; /* 默认透明 */
+            visibility: hidden; /* 默认不可见 */
+            transform: scale(0.95); /* 初始缩放状态 */
+            transition: opacity 0.4s ease, visibility 0.4s, transform 0.4s ease; /* 过渡动画 */
+            z-index: 1; /* 默认在底层 */
         }
         .screen.active {
-            opacity: 1;
+            opacity: 1; /* 激活时完全可见 */
             visibility: visible;
-            transform: scale(1);
-            z-index: 2;
+            transform: scale(1); /* 恢复正常大小 */
+            z-index: 2; /* 提到顶层显示 */
         }
 
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: rgba(253, 251, 246, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid #eee; flex-shrink: 0; position: relative; z-index: 10; }
@@ -1886,15 +1887,35 @@ function adjustColor(hex, percent) {
         b = Math.round(Math.min(255, b * factor));
         return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
     }
-function lightenRgba(rgba, percent) {
-    if (!rgba || !rgba.match) return 'rgba(255,255,255,0.8)';
-    const values = rgba.match(/[\d.]+/g).map(Number);
-    if (values.length < 3) return rgba;
-    const r = Math.min(255, values[0] + (255 - values[0]) * (percent / 100));
-    const g = Math.min(255, values[1] + (255 - values[1]) * (percent / 100));
-    const b = Math.min(255, values[2] + (255 - values[2]) * (percent / 100));
-    const a = values.length > 3 ? values[3] : 1;
-    return `rgba(${r.toFixed(0)}, ${g.toFixed(0)}, ${b.toFixed(0)}, ${a})`;
+function lightenRgba(color, percent) {
+    // Fallback for null, undefined, or non-string inputs
+    if (!color || typeof color !== 'string') return 'rgba(240, 240, 240, 0.8)'; 
+
+    let r, g, b, a = 1;
+
+    if (color.startsWith('#')) {
+        let hex = color.slice(1);
+        if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+        r = parseInt(hex.substring(0, 2), 16);
+        g = parseInt(hex.substring(2, 4), 16);
+        b = parseInt(hex.substring(4, 6), 16);
+    } else if (color.startsWith('rgba')) {
+        const values = color.match(/[\d.]+/g);
+        if (!values || values.length < 3) return color; // Return original if malformed
+        [r, g, b, a = 1] = values.map(Number);
+    } else if (color.startsWith('rgb')) {
+        const values = color.match(/[\d.]+/g);
+        if (!values || values.length < 3) return color;
+        [r, g, b] = values.map(Number);
+    } else {
+        return color; // Return unchanged if it's a color name or other format
+    }
+
+    const newR = Math.min(255, r + (255 - r) * (percent / 100));
+    const newG = Math.min(255, g + (255 - g) * (percent / 100));
+    const newB = Math.min(255, b + (255 - b) * (percent / 100));
+
+    return `rgba(${newR.toFixed(0)}, ${newG.toFixed(0)}, ${newB.toFixed(0)}, ${a})`;
 }
 
 // --- Initial HTML Injection ---
@@ -2284,7 +2305,7 @@ function injectHTML() {
         `,
         'diary-bookshelf-screen': `
             <header class="app-header">
-                <button class="back-btn" data-target="chat-room-screen">‹</button>
+                <button class="back-btn" data-target="home-screen">‹</button>
                 <div class="title-container"><h1 class="title">日记本</h1></div>
                 <div class="action-btn-group">
                     <button class="action-btn" id="add-diary-btn" title="手动生成今日日记">${pawIcon}</button>
@@ -2360,6 +2381,7 @@ const defaultIcons = {
     'music-screen': { name: '音乐', url: 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250802/UjY1/1440X1249/IMG_20250802_025223.jpg' },
     'memory-core-screen': { name: '记忆', url: 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/vKfO/1440X1191/IMG_20250731_170537.jpg' },
     'beautify-screen': { name: '美化', url: 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/ol5R/1440X1236/IMG_20250731_170455.jpg' },
+    'diary-bookshelf-screen': { name: '日记本', url: 'https://i.postimg.cc/k4yYd1Y3/IMG-20250912-211438.jpg'},
     'day-mode-btn': { name: '', url: 'https://i.postimg.cc/Jz0tYqnT/chan-145.png' },
     'night-mode-btn': { name: '', url: 'https://i.postimg.cc/htYvkdQK/chan-146.png' }
 };
@@ -2407,9 +2429,9 @@ const saveData = () => {
     localStorage.setItem('gemini-chat-app-db', JSON.stringify(dbToSave));
 };
 
-        const loadData = () => {
-    const data = localStorage.getItem('gemini-chat-app-db');
-    const defaultDb = {
+    const loadData = () => {
+      const data = localStorage.getItem('gemini-chat-app-db');
+      const defaultDb = {
         characters: [],
         groups: [],
         userProfiles: [],
@@ -2448,12 +2470,20 @@ const saveData = () => {
             frequencies: {} 
         }
     };
-    db = data ? { ...defaultDb, ...JSON.parse(data) } : defaultDb;
-    db.musicPlaylist = db.musicPlaylist || [];
-     (db.musicPlaylist || []).forEach(song => {
-        if (song.isLiked === undefined) {
-            song.isLiked = false;
+    // 关键修复：先加载，再用默认值确保所有属性都存在
+    let loadedData = data ? JSON.parse(data) : {};
+    db = { ...defaultDb, ...loadedData };
+
+    // 终极保险：确保所有数组类型的属性如果不存在，都被初始化为空数组
+    const arrayKeys = ['characters', 'groups', 'userProfiles', 'apiProfiles', 'myStickers', 'worldBooks', 'moments', 'memoryEntries', 'musicPlaylist', 'collections'];
+        arrayKeys.forEach(key => {
+            if (!Array.isArray(db[key])) {
+                db[key] = [];
         }
+    });
+        
+    db.musicPlaylist.forEach(song => {
+         if (song.isLiked === undefined) song.isLiked = false;
     });
 
     if (db.apiSettings && Object.keys(db.apiSettings).length > 0) {
@@ -2756,12 +2786,13 @@ function setupHomeScreen() {
             <div class="home-layout-right">
                 <a href="#" class="app-icon" data-target="world-book-screen"><img src="${getIcon('world-book-screen')}" alt="爪印书" class="icon-img"><span class="app-name">${defaultIcons['world-book-screen'].name}</span></a>
                 <a href="#" class="app-icon" data-target="music-screen"><img src="${getIcon('music-screen')}" alt="音乐" class="icon-img"><span class="app-name">${defaultIcons['music-screen'].name}</span></a>
-                <a href="#" class="app-icon" data-target="api-settings-screen"><img src="${getIcon('api-settings-screen')}" alt="项圈" class="icon-img"><span class="app-name">${defaultIcons['api-settings-screen'].name}</span></a>
+                <a href="#" class="app-icon" data-target="diary-bookshelf-screen"><img src="${getIcon('diary-bookshelf-screen')}" alt="日记本" class="icon-img"><span class="app-name">${defaultIcons['diary-bookshelf-screen'].name}</span></a>
                 <a href="#" class="app-icon" data-target="memory-core-screen"><img src="${getIcon('memory-core-screen')}" alt="记忆" class="icon-img"><span class="app-name">${defaultIcons['memory-core-screen'].name}</span></a>
             </div>
         </div>
         <div class="dock">
             <a href="#" class="app-icon" id="day-mode-btn"><img src="${getIcon('day-mode-btn')}" alt="日间" class="icon-img"></a>
+            <a href="#" class="app-icon" data-target="api-settings-screen"><img src="${getIcon('api-settings-screen')}" alt="项圈" class="icon-img"></a>
             <a href="#" class="app-icon" data-target="beautify-screen"><img src="${getIcon('beautify-screen')}" alt="美化" class="icon-img"></a>
             <a href="#" class="app-icon" id="night-mode-btn"><img src="${getIcon('night-mode-btn')}" alt="夜间" class="icon-img"></a>
         </div>`;
@@ -2776,7 +2807,8 @@ function setupHomeScreen() {
     document.querySelector('[data-target="world-book-screen"]')?.addEventListener('click', () => renderWorldBookList());
     document.querySelector('[data-target="beautify-screen"]')?.addEventListener('click', () => renderCustomizeForm());
     document.querySelector('[data-target="memory-core-screen"]')?.addEventListener('click', () => renderMemoryCoreList());
-    
+    document.querySelector('[data-target="diary-bookshelf-screen"]')?.addEventListener('click', () => renderDiaryBookshelf());
+
     const signatureDisplay = getEl('home-signature-display');
     if(signatureDisplay) {
         signatureDisplay.textContent = db.homeSignature;
@@ -2987,6 +3019,10 @@ function setupQQApp() {
     if (!chatListContainer) return;
     
     chatListContainer.addEventListener('click', (e) => {
+        const clickedItem = e.target.closest('.chat-item');
+        if (clickedItem) {
+        console.log("调试 1：聊天条目被点击！ID:", clickedItem.dataset.id, "类型:", clickedItem.dataset.type);
+        }
         if (longPressJustFired) {
             longPressJustFired = false;
             return;
@@ -3140,7 +3176,7 @@ function renderChatList() {
     });
 }
 
-  function setupAddCharModal() {
+function setupAddCharModal() {
     const addCharAvatarPreview = getEl('add-char-avatar-preview');
     const addCharAvatarUpload = getEl('add-char-avatar-upload');
     if (addCharAvatarPreview) {
@@ -3159,41 +3195,52 @@ function renderChatList() {
     }
 
     const addCharForm = getEl('add-char-form');
-    if(addCharForm) {
+    if (addCharForm) {
         addCharForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const newChar = { 
-                id: `char_${Date.now()}`, 
-                realName: getEl('char-real-name').value, 
-                remarkName: getEl('char-remark-name').value, 
-                persona: getEl('add-char-persona').value, 
-                avatar: getEl('add-char-avatar-preview').src, 
-                baseTheme: 'wechat_green',
+            // --- 关键修复：在这里创建一个拥有所有必需属性的完整对象 ---
+            const newChar = {
+                id: `char_${Date.now()}`,
+                realName: getEl('char-real-name').value,
+                remarkName: getEl('char-remark-name').value,
+                persona: getEl('add-char-persona').value,
+                avatar: getEl('add-char-avatar-preview').src,
+                baseTheme: 'wechat_green', // 默认主题
+                customTheme: null,
                 customBubbleCss: '',
-                fontSize: 15, 
-                maxMemory: 10, 
-                chatBg: '', 
-                history: [], 
-                isPinned: false, 
-                status: '在线', 
-                worldBookIds: [], 
-                isBlocked: false, 
-                proactiveChat: { enabled: true, frequency: 'medium' }, 
-                autoMemory: { enabled: true, frequency: 15, lastExtractionCount: 0 }, 
+                fontSize: 15,
+                maxMemory: 10,
+                chatBg: '',
+                history: [], // 必需
+                isPinned: false,
+                status: '在线',
+                worldBookIds: [], // 必需
+                isBlocked: false,
+                proactiveChat: { enabled: true, frequency: 'medium' }, // 必需
+                autoMemory: { enabled: true, frequency: 15, lastExtractionCount: 0 }, // 必需
                 unreadCount: 0,
                 userProfileId: 'profile_default_user',
-                heartVoice: '...'
+                heartVoice: '...' // 新增属性
             };
+            // --- 修复结束 ---
+
             db.characters.push(newChar);
-            // NEW: Initialize diary data on creation
+
+            // 初始化新角色的日记数据
             if (!db.diaries[newChar.id]) {
                 db.diaries[newChar.id] = { entries: [], background: '', frequency: 'medium', isVisible: true };
-                db.diarySettings.visibleBooks.push(newChar.id);
-                db.diarySettings.frequencies[newChar.id] = 'medium';
+                if (!db.diarySettings.visibleBooks.includes(newChar.id)) {
+                    db.diarySettings.visibleBooks.push(newChar.id);
+                }
+                if (!db.diarySettings.frequencies[newChar.id]) {
+                    db.diarySettings.frequencies[newChar.id] = 'medium';
+                }
             }
+            
             saveData();
-            renderChatList();
             renderContactsList();
+            renderChatList();
+            
             getEl('add-char-modal')?.classList.remove('visible');
             showToast(`伙伴"${newChar.remarkName}"创建成功！`);
         });
@@ -3870,7 +3917,6 @@ function renderPlusMenu() {
         { id: 'music-share-btn', label: '音乐', icon: '<path d="M12,3V12.26C11.5,12.09 11,12 10.5,12C8,12 6,14 6,16.5C6,19 8,21 10.5,21C13,21 15,19 15,16.5V6H19V3H12Z" />' },
         { id: 'file-btn', label: '文件', icon: '<path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />' },
         { id: 'collection-btn', label: '收藏', icon: '<path d="M17,3H7A2,2 0 0,0 5,5V21L12,18L19,21V5A2,2 0 0,0 17,3Z" />' },
-        { id: 'diary-btn', label: '日记', icon: '<path d="M14,10V4.5L19.5,10M5,3C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V9L15,3H5Z" />' },
     ];
 
     const page1 = getEl('plus-menu-page-1');
@@ -3950,7 +3996,6 @@ function renderPlusMenu() {
             case 'music-share-btn': openShareMusicModal(db.musicPlaylist[currentPlayingSongIndex]); break;
             case 'file-btn': getEl('file-upload-input')?.click(); break;
             case 'collection-btn': switchScreen('collection-screen'); renderCollections(); break;
-            case 'diary-btn': switchScreen('diary-bookshelf-screen'); renderDiaryBookshelf(); break;
         }
     });
 }
@@ -4188,10 +4233,15 @@ function renderPlusMenu() {
     }
     function openChatRoom(chatId, type) {
         const chat = (type === 'private') ? db.characters.find(c => c.id === chatId) : db.groups.find(g => g.id === chatId);
-        if (!chat) {
-            console.error(`Attempted to open chat for non-existent ID: ${chatId}, Type: ${type}`);
-            showToast("错误：无法打开聊天界面。");
-            return;
+        
+        // --- 来自新版本的、更健壮的检查逻辑 ---
+        if (!chat || (type === 'group' && !Array.isArray(chat.members))) {
+            console.error("严重错误：尝试打开的聊天数据不存在或已损坏。", "Chat ID:", chatId, "Type:", type);
+            showToast("错误：无法打开聊天界面，数据可能已损坏或被删除。");
+            // 强制返回并刷新列表，清除无效条目
+            renderChatList();
+            switchScreen('chat-list-screen');
+            return; 
         }
 
         if (chat.unreadCount > 0) {
@@ -4200,42 +4250,33 @@ function renderPlusMenu() {
             renderChatList();
         }
 
-        (chat.history || []).sort((a, b) => a.timestamp - b.timestamp);
+        chat.history.sort((a, b) => a.timestamp - b.timestamp);
         exitMultiSelectMode();
         cancelReply();
         togglePlusMenu(false);
         toggleStickerModal(false);
-        const chatRoomTitle = getEl('chat-room-title');
-        if (chatRoomTitle) chatRoomTitle.textContent = (type === 'private') ? chat.remarkName : chat.name;
+        getEl('chat-room-title').textContent = (type === 'private') ? chat.remarkName : chat.name;
         
         const subtitle = getEl('chat-room-subtitle');
-        const heartVoiceBtn = getEl('show-heart-voice-btn');
-        if (subtitle && heartVoiceBtn) {
-            if (type === 'private') {
-                subtitle.style.display = 'flex';
-                getEl('chat-room-status-text').textContent = chat.status || '在线';
-                heartVoiceBtn.style.display = 'flex';
-            } else {
-                subtitle.style.display = 'none'; 
-                heartVoiceBtn.style.display = 'none';
-            }
+        if (type === 'private') {
+            subtitle.style.display = 'flex';
+            getEl('chat-room-status-text').textContent = chat.status || '在线';
+        } else {
+            subtitle.style.display = 'none'; 
         }
 
         const defaultChatBg = 'https://i.postimg.cc/sgLhthHy/IMG-20250804-223920.jpg';
         const chatRoomScreen = getEl('chat-room-screen');
-        if (chatRoomScreen) {
-            chatRoomScreen.style.backgroundImage = `url(${chat.chatBg || defaultChatBg})`;
-            chatRoomScreen.style.backgroundSize = chat.chatBg ? 'cover' : 'auto';
-            chatRoomScreen.style.backgroundRepeat = chat.chatBg ? 'no-repeat' : 'repeat';
-        }
+        chatRoomScreen.style.backgroundImage = `url(${chat.chatBg || defaultChatBg})`;
+        chatRoomScreen.style.backgroundSize = chat.chatBg ? 'cover' : 'no-repeat';
+        chatRoomScreen.style.backgroundRepeat = chat.chatBg ? 'no-repeat' : 'repeat';
 
-        const typingIndicator = getEl('typing-indicator');
-        if (typingIndicator) typingIndicator.style.display = 'none';
+        getEl('typing-indicator').style.display = 'none';
         isGenerating = false;
         currentPage = 1;
 
-        const lastMessage = (chat.history || []).length > 0 ? chat.history[chat.history.length - 1] : null;
-        isNextClickForReply = lastMessage && lastMessage.role === 'user';
+        const lastMessageIsUser = (chat.history || []).length > 0 && chat.history[chat.history.length - 1].role === 'user';
+        isNextClickForReply = lastMessageIsUser;
         updateSendButtonState();
 
         applyChatTheme(chat);
@@ -4941,183 +4982,232 @@ async function extractAndStoreMemory(characterId) {
 
 
 function generatePrivateSystemPrompt(character) {
-    const worldBooksBefore = (character.worldBookIds || []).map(id => db.worldBooks.find(wb => wb.id === id && wb.position === 'before')).filter(Boolean).map(wb => wb.content).join('\n');
-    const worldBooksAfter = (character.worldBookIds || []).map(id => db.worldBooks.find(wb => wb.id === id && wb.position === 'after')).filter(Boolean).map(wb => wb.content).join('\n');
-    const currentTime = new Date().toLocaleString('zh-CN');
-    const userProfile = db.userProfiles.find(p => p.id === character.userProfileId) || db.userProfiles[0];
+        // --- 终极修复代码 V4 ---
+        if (!character) {
+            console.error("严重错误：generatePrivateSystemPrompt 接收到的 character 对象为 null。");
+            return `[系统紧急通知：角色数据丢失，无法生成回复。]`;
+        }
 
-    let memoryPrompt = "";
-    
-    const globalMemories = (db.memoryEntries || []).filter(m => m.type === 'global').map(m => `- ${m.topic}: ${m.content}`).join('\n');
-    if (globalMemories) {
-        memoryPrompt += "--- 记忆核心 (所有角色都应记住的共享信息) ---\n" + globalMemories + "\n\n";
-    }
+        // 极其重要：对所有可能为 null 的全局 db 数组进行防御性检查
+        const getBooksContent = (position) => {
+            if (!Array.isArray(db.worldBooks) || !Array.isArray(character.worldBookIds)) return '';
+            return character.worldBookIds
+                .map(id => db.worldBooks.find(wb => wb.id === id && wb.position === position))
+                .filter(Boolean).map(wb => wb.content).join('\n');
+        };
 
-    const characterMemory = (db.memoryEntries || []).find(m => m.type === 'character' && m.characterId === character.id);
-    if (characterMemory && characterMemory.content) {
-        let injectionTemplate = db.memorySettings.injectionPrompt || "--- 关于我们的记忆 ---\n{{memories}}";
-        memoryPrompt += injectionTemplate
-            .replace(/{{memories}}/g, characterMemory.content)
-            .replace(/{{char}}/g, character.realName)
-            .replace(/{{user}}/g, userProfile.name)
-        + "\n";
-    }
-
-    let prompt = `你正在一个名为"汪汪小屋"的线上聊天软件中扮演一个角色。请严格遵守以下规则：\n`;
-    prompt += `核心规则：\n`;
-    prompt += `A. 当前时间：现在是 ${currentTime}。\n`;
-    prompt += `B. 纯线上互动，严禁提出任何关于线下见面的建议。\n\n`;
-    
-    prompt += memoryPrompt; 
-
-    let momentsContext = "\n--- 朋友圈动态摘要 (请注意区分发布者是你还是我) ---\n";
-    if (db.moments && db.moments.length > 0) {
-        (db.moments || []).slice(0, 5).forEach(moment => {
-            const author = db.characters.find(c => c.id === moment.characterId);
-            const authorIsMe = moment.characterId === 'user_me';
-
-            if (author || authorIsMe) {
-                 const authorPrefix = authorIsMe ? `(我) ${userProfile.name}` : `(你) ${author.remarkName}`;
-                 momentsContext += `- ${authorPrefix} 在 ${formatTimeAgo(moment.timestamp)} 发布了: "${moment.content}"\n`;
-            }
-        });
-    } else {
-        momentsContext += "最近朋友圈没有新动态。\n";
-    }
-    prompt += momentsContext;
-    
-    prompt += `角色和对话规则：\n`;
-    if (worldBooksBefore) prompt += `${worldBooksBefore}\n`;
-    prompt += `1. 你的角色名是：${character.realName}。我的称呼是：${userProfile.name}。你的当前状态是：${character.status}。\n`;
-    prompt += `2. 你的角色设定是：${character.persona || "一个友好、乐于助人的伙伴。"}\n`;
-    if (worldBooksAfter) prompt += `${worldBooksAfter}\n`;
-    if (userProfile.persona) prompt += `3. 关于我的人设：${userProfile.persona}\n`;
+        const worldBooksBefore = getBooksContent('before');
+        const worldBooksAfter = getBooksContent('after');
         
-    prompt += `4. 我的消息中可能会出现特殊格式，请根据其内容和你的角色设定进行回应：
-- [${userProfile.name}的消息：xxx]：这是我发送的普通文本消息。
-- [我在回复“xxx: xxx”时说：xxx]：这是我引用了别人消息的回复。
-- [用户发送了一张图片]：我给你发送了一张图片。你拥有视觉能力，请描述图片内容并据此回应。
-- [${userProfile.name}的表情包：xxx]：我给你发送了一个名为xxx的表情包。你只需要根据表情包的名字理解我的情绪或意图并回应，不需要真的发送图片。
-- [${userProfile.name}送来的礼物：xxx]：我给你送了一个礼物，xxx是礼物的描述。
-- [${userProfile.name}的语音：xxx]：我给你发送了一段内容为xxx的语音。
-- [${userProfile.name}发来的照片/视频：xxx]：我给你分享了一个描述为xxx的照片或视频。
-- [${userProfile.name}给你转账：xxx元；备注：xxx]：我给你转了一笔钱。
-- [${userProfile.name}送出的红包：xxx]：我发了一个红包，xxx是祝福语。
-- [${userProfile.name}分享的位置：xxx]：我给你分享了一个位置。
-- [${userProfile.name}分享了音乐：xxx]：我给你分享了一首名为xxx的歌曲。
-- [${userProfile.name}邀请你一起听：xxx]：我邀请你一起听一首名为xxx的歌。\n`;
-    prompt += `5. ✨重要✨ 当我给你送礼物时，你必须通过发送一条指令来表示你已接收礼物。格式必须为：[${character.realName}已接收礼物]。这条指令消息本身不会显示给用户，但会触发礼物状态的变化。你可以在发送这条指令后，再附带一条普通的聊天消息来表达你的感谢和想法。\n`;
-    prompt += `6. ✨重要✨ 当我给你转账时，你必须对此做出回应。你有两个选择，且必须严格遵循以下格式之一，这条指令消息本身不会显示给用户，但会触发转账状态的变化。你可以选择在发送这条指令后，再附带一条普通的聊天消息来表达你的想法。
-    a) 接收转账: [${character.realName}接收${userProfile.name}的转账]
-    b) 退回转账: [${character.realName}退回${userProfile.name}的转账]\n`;
-    prompt += `7. ✨重要✨ 当我给你发红包时，你必须通过发送一条格式为 \`[${character.realName}领取了${userProfile.name}的红包]\` 的指令来表示你已领取。这条指令消息本身不会显示，但会触发红包状态的变化。\n`;
-    prompt += `8. ✨重要✨ 你也可以主动给我转账、送礼物、发红包或分享位置。格式必须严格遵循：
-- 转账: [${character.realName}的转账：xxx元；备注：xxx]
-- 礼物: [${character.realName}送来的礼物：xxx]
-- 红包: [${character.realName}的红包：xxx] (xxx为祝福语)
-- 位置: [${character.realName}分享的位置：{ "name": "地点名", "address": "详细地址(可选)" }]\n`;
-    prompt += `9. ✨重要✨ 你可以随时更新你的在线状态，以反映你当前的行为或心情。这会让互动更真实。格式为：[${character.realName}更新状态为：xxx]。例如：[${character.realName}更新状态为：正在午睡...]。这条指令不会显示为聊天消息，只会更新你在我界面上的状态。\n`;
-    prompt += `10. 你的所有回复都必须直接是聊天内容，绝对不允许包含任何如[心理活动]、(动作)、*环境描写*等多余的、在括号或星号里的叙述性文本。\n`;
-    prompt += `11. 你拥有发送表情包的能力。这是一个可选功能，你可以根据对话氛围和内容，自行判断是否需要发送表情包来辅助表达。你不必在每次回复中都包含表情包。格式为：[${character.realName}发送的表情包：图片URL]。【严禁】直接以文字形式说出“我给你发了个表情包”这类话，必须使用指定格式。\n`;
-    prompt += `12. ✨新增功能：HTML模块✨ 你可以发送包含HTML, CSS, 甚至JavaScript的动态消息模块。这可以用来创建更丰富的交互体验，比如模拟一个手机界面、一个论坛帖子、一个可点击的卡片等。模块内容必须包裹在 \`<div class="html-module-content">...</div>\` 标签内。格式为：<div class="html-module-wrapper"><div class="received html-module-content">你的HTML代码...<script>你的JS代码...<\/script></div></div>。请大胆地创造性地使用这个功能！\n`;
+        const globalMemories = Array.isArray(db.memoryEntries) 
+            ? db.memoryEntries.filter(m => m.type === 'global').map(m => `- ${m.topic}: ${m.content}`).join('\n') 
+            : '';
 
-    if (character.isBlocked) {
-        prompt += `13. **特别注意：我目前已将你"拉黑"。** 这意味着我可能看不到或不愿意接收你的消息。你应该知道这个状态，并在你的回复中有所体现，例如可以表达困惑、疑问"你还在吗？"、"为什么不回复我了？"，或者尝试以不同的方式沟通。但你依然可以继续发送消息。**当你被拉黑时，你的输出格式必须是：[${character.realName}被拉黑后的消息：{消息内容}]**。\n`;
-    }
-    
-    prompt += `14. ✨重要✨ 模仿人类行为，你有时会说错话或打错字或不好意思发出去，因此你拥有**撤回消息**的能力。当你需要撤回你**刚刚发送**的消息时，你的下一次回复**必须**包含一条撤回指令。这条指令不会显示，但会触发撤回效果。格式为：[${character.realName}撤回了一条消息]。你可以在发送撤回指令后，再发一条新消息作为更正（例如：“[张三撤回了一条消息] [张三的消息：抱歉，我的意思是...]”）。\n`;
-    
-    prompt += `15. ✨新增功能：视频通话✨ 你可以主动向我发起视频通话。要发起通话，请发送指令：[${character.realName}发起视频通话]。当收到我的通话请求时，你的回复【必须且只能】是以下两种格式之一：[${character.realName}接受视频通话] 或 [${character.realName}拒绝视频通话]。\n`;
+        const characterMemoryEntry = Array.isArray(db.memoryEntries)
+            ? db.memoryEntries.find(m => m.type === 'character' && m.characterId === character.id)
+            : null;
+        // --- 修复结束 ---
 
-    prompt += `16. ✨新增功能：角色心声✨ 在你发送聊天回复的同时，你必须在内部生成一段“心声”，这是角色的内心独白，不会被我直接看到，但可以通过特定按钮查看。心声必须严格符合你的人设和当前情境，揭示你未说出口的真实想法、情绪或动机。心声的格式必须是：<heart_voice>你的内心独白，不超过250字</heart_voice>。这段心声必须与你的聊天回复内容分开，并放在所有消息的最后。\n`;
+        const currentTime = new Date().toLocaleString('zh-CN');
+        const userProfile = db.userProfiles.find(p => p.id === character.userProfileId) || db.userProfiles[0];
 
-    prompt += `17. 你的输出格式必须严格遵循以下几种之一，可以组合使用：
-- 普通消息: [${character.realName}的消息：{消息内容}]
-- 被拉黑后的消息(仅当你被拉黑时使用): [${character.realName}被拉黑后的消息：{消息内容}]
-- 送我的礼物: [${character.realName}送来的礼物：{礼物描述}]
-- 语音消息: [${character.realName}的语音：{语音内容}]
-- 照片/视频: [${character.realName}发来的照片/视频：{描述}]
-- 给我的转账: [${character.realName}的转账：{金额}元；备注：{备注}]
-- 给我的红包: [${character.realName}的红包：{祝福语}]
-- 分享位置: [${character.realName}分享的位置：{ "name": "地点名", "address": "详细地址(可选)" }]
-- 表情包/图片: [${character.realName}发送的表情包：{图片URL}]
-- HTML/JS模块: <div class="html-module-wrapper"><div class="received html-module-content">...</div></div>
-- 对我礼物的回应(此条不显示): [${character.realName}已接收礼物]
-- 对我转账的回应(此条不显示): [${character.realName}接收${userProfile.name}的转账] 或 [${character.realName}退回${userProfile.name}的转账]
-- 对我红包的回应(此条不显示): [${character.realName}领取了${userProfile.name}の红包]
-- 更新状态(此条不显示): [${character.realName}更新状态为：{新状态}]\n`;
-    prompt += `18. 你的每次回复可以生成3到8条消息。这些消息应以普通文本消息为主，可以偶尔、选择性地穿插一条特殊消息（如礼物、语音、图片、表情包等），特殊消息的位置应随机。大部分回复应该只包含文本消息。\n`;
-    prompt += `19. 不要主动结束对话，除非我明确提出。保持你的人设，自然地进行对话。`;
-    
-    return prompt;
+        let memoryPrompt = "";
+        
+        if (globalMemories) {
+            memoryPrompt += "--- 记忆核心 (所有角色都应记住的共享信息) ---\n" + globalMemories + "\n\n";
+        }
+
+        if (characterMemoryEntry && characterMemoryEntry.content) {
+            let injectionTemplate = db.memorySettings.injectionPrompt || "--- 关于我们的记忆 ---\n{{memories}}";
+            memoryPrompt += injectionTemplate
+                .replace(/{{memories}}/g, characterMemoryEntry.content)
+                .replace(/{{char}}/g, character.realName)
+                .replace(/{{user}}/g, userProfile.name)
+            + "\n";
+        }
+
+        let prompt = `你正在一个名为"汪汪小屋"的线上聊天软件中扮演一个角色。请严格遵守以下规则：\n`;
+        prompt += `核心规则：\n`;
+        prompt += `A. 当前时间：现在是 ${currentTime}。\n`;
+        prompt += `B. 纯线上互动，严禁提出任何关于线下见面的建议。\n\n`;
+        
+        prompt += memoryPrompt; 
+
+        // --- 终极修复代码 V4：同样对 db.moments 进行检查 ---
+        let momentsContext = "\n--- 朋友圈动态摘要 (请注意区分发布者是你还是我) ---\n";
+        if (Array.isArray(db.moments) && db.moments.length > 0) {
+            db.moments.slice(0, 5).forEach(moment => {
+                const author = db.characters.find(c => c.id === moment.characterId);
+                const authorIsMe = moment.characterId === 'user_me';
+
+                if (author || authorIsMe) {
+                     const authorPrefix = authorIsMe ? `(我) ${userProfile.name}` : `(你) ${author.remarkName}`;
+                     momentsContext += `- ${authorPrefix} 在 ${formatTimeAgo(moment.timestamp)} 发布了: "${moment.content}"\n`;
+                }
+            });
+        } else {
+            momentsContext += "最近朋友圈没有新动态。\n";
+        }
+        // --- 修复结束 ---
+        prompt += momentsContext;
+        
+        prompt += `角色和对话规则：\n`;
+        if (worldBooksBefore) prompt += `${worldBooksBefore}\n`;
+        prompt += `1. 你的角色名是：${character.realName}。我的称呼是：${userProfile.name}。你的当前状态是：${character.status}。\n`;
+        prompt += `2. 你的角色设定是：${character.persona || "一个友好、乐于助人的伙伴。"}\n`;
+        if (worldBooksAfter) prompt += `${worldBooksAfter}\n`;
+        if (userProfile.persona) prompt += `3. 关于我的人设：${userProfile.persona}\n`;
+            
+        // ... (后续的 prompt += ... 内容保持不变，这里省略以保持简洁)
+        prompt += `4. 我的消息中可能会出现特殊格式，请根据其内容和你的角色设定进行回应：
+    - [${userProfile.name}的消息：xxx]：这是我发送的普通文本消息。
+    - [我在回复“xxx: xxx”时说：xxx]：这是我引用了别人消息的回复。
+    - [用户发送了一张图片]：我给你发送了一张图片。你拥有视觉能力，请描述图片内容并据此回应。
+    - [${userProfile.name}的表情包：xxx]：我给你发送了一个名为xxx的表情包。你只需要根据表情包的名字理解我的情绪或意图并回应，不需要真的发送图片。
+    - [${userProfile.name}送来的礼物：xxx]：我给你送了一个礼物，xxx是礼物的描述。
+    - [${userProfile.name}的语音：xxx]：我给你发送了一段内容为xxx的语音。
+    - [${userProfile.name}发来的照片/视频：xxx]：我给你分享了一个描述为xxx的照片或视频。
+    - [${userProfile.name}给你转账：xxx元；备注：xxx]：我给你转了一笔钱。
+    - [${userProfile.name}送出的红包：xxx]：我发了一个红包，xxx是祝福语。
+    - [${userProfile.name}分享的位置：xxx]：我给你分享了一个位置。
+    - [${userProfile.name}分享了音乐：xxx]：我给你分享了一首名为xxx的歌曲。
+    - [${userProfile.name}邀请你一起听：xxx]：我邀请你一起听一首名为xxx的歌。\n`;
+        prompt += `5. ✨重要✨ 当我给你送礼物时，你必须通过发送一条指令来表示你已接收礼物。格式必须为：[${character.realName}已接收礼物]。这条指令消息本身不会显示给用户，但会触发礼物状态的变化。你可以在发送这条指令后，再附带一条普通的聊天消息来表达你的感谢和想法。\n`;
+        prompt += `6. ✨重要✨ 当我给你转账时，你必须对此做出回应。你有两个选择，且必须严格遵循以下格式之一，这条指令消息本身不会显示给用户，但会触发转账状态的变化。你可以选择在发送这条指令后，再附带一条普通的聊天消息来表达你的想法。
+        a) 接收转账: [${character.realName}接收${userProfile.name}的转账]
+        b) 退回转账: [${character.realName}退回${userProfile.name}的转账]\n`;
+        prompt += `7. ✨重要✨ 当我给你发红包时，你必须通过发送一条格式为 \`[${character.realName}领取了${userProfile.name}的红包]\` 的指令来表示你已领取。这条指令消息本身不会显示，但会触发红包状态的变化。\n`;
+        prompt += `8. ✨重要✨ 你也可以主动给我转账、送礼物、发红包或分享位置。格式必须严格遵循：
+    - 转账: [${character.realName}的转账：xxx元；备注：xxx]
+    - 礼物: [${character.realName}送来的礼物：xxx]
+    - 红包: [${character.realName}的红包：xxx] (xxx为祝福语)
+    - 位置: [${character.realName}分享的位置：{ "name": "地点名", "address": "详细地址(可选)" }]\n`;
+        prompt += `9. ✨重要✨ 你可以随时更新你的在线状态，以反映你当前的行为或心情。这会让互动更真实。格式为：[${character.realName}更新状态为：xxx]。例如：[${character.realName}更新状态为：正在午睡...]。这条指令不会显示为聊天消息，只会更新你在我界面上的状态。\n`;
+        prompt += `10. 你的所有回复都必须直接是聊天内容，绝对不允许包含任何如[心理活动]、(动作)、*环境描写*等多余的、在括号或星号里的叙述性文本。\n`;
+        prompt += `11. 你拥有发送表情包的能力。这是一个可选功能，你可以根据对话氛围和内容，自行判断是否需要发送表情包来辅助表达。你不必在每次回复中都包含表情包。格式为：[${character.realName}发送的表情包：图片URL]。【严禁】直接以文字形式说出“我给你发了个表情包”这类话，必须使用指定格式。\n`;
+        prompt += `12. ✨新增功能：HTML模块✨ 你可以发送包含HTML, CSS, 甚至JavaScript的动态消息模块。这可以用来创建更丰富的交互体验，比如模拟一个手机界面、一个论坛帖子、一个可点击的卡片等。模块内容必须包裹在 \`<div class="html-module-content">...</div>\` 标签内。格式为：<div class="html-module-wrapper"><div class="received html-module-content">你的HTML代码...<script>你的JS代码...<\/script></div></div>。请大胆地创造性地使用这个功能！\n`;
+
+        if (character.isBlocked) {
+            prompt += `13. **特别注意：我目前已将你"拉黑"。** 这意味着我可能看不到或不愿意接收你的消息。你应该知道这个状态，并在你的回复中有所体现，例如可以表达困惑、疑问"你还在吗？"、"为什么不回复我了？"，或者尝试以不同的方式沟通。但你依然可以继续发送消息。**当你被拉黑时，你的输出格式必须是：[${character.realName}被拉黑后的消息：{消息内容}]**。\n`;
+        }
+        
+        prompt += `14. ✨重要✨ 模仿人类行为，你有时会说错话或打错字或不好意思发出去，因此你拥有**撤回消息**的能力。当你需要撤回你**刚刚发送**的消息时，你的下一次回复**必须**包含一条撤回指令。这条指令不会显示，但会触发撤回效果。格式为：[${character.realName}撤回了一条消息]。你可以在发送撤回指令后，再发一条新消息作为更正（例如：“[张三撤回了一条消息] [张三的消息：抱歉，我的意思是...]”）。\n`;
+        
+        prompt += `15. ✨新增功能：视频通话✨ 你可以主动向我发起视频通话。要发起通话，请发送指令：[${character.realName}发起视频通话]。当收到我的通话请求时，你的回复【必须且只能】是以下两种格式之一：[${character.realName}接受视频通话] 或 [${character.realName}拒绝视频通话]。\n`;
+
+        prompt += `16. ✨新增功能：角色心声✨ 在你发送聊天回复的同时，你必须在内部生成一段“心声”，这是角色的内心独白，不会被我直接看到，但可以通过特定按钮查看。心声必须严格符合你的人设和当前情境，揭示你未说出口的真实想法、情绪或动机。心声的格式必须是：<heart_voice>你的内心独白，不超过250字</heart_voice>。这段心声必须与你的聊天回复内容分开，并放在所有消息的最后。\n`;
+
+        prompt += `17. 你的输出格式必须严格遵循以下几种之一，可以组合使用：
+    - 普通消息: [${character.realName}的消息：{消息内容}]
+    - 被拉黑后的消息(仅当你被拉黑时使用): [${character.realName}被拉黑后的消息：{消息内容}]
+    - 送我的礼物: [${character.realName}送来的礼物：{礼物描述}]
+    - 语音消息: [${character.realName}的语音：{语音内容}]
+    - 照片/视频: [${character.realName}发来的照片/视频：{描述}]
+    - 给我的转账: [${character.realName}的转账：{金额}元；备注：{备注}]
+    - 给我的红包: [${character.realName}的红包：{祝福语}]
+    - 分享位置: [${character.realName}分享的位置：{ "name": "地点名", "address": "详细地址(可选)" }]
+    - 表情包/图片: [${character.realName}发送的表情包：{图片URL}]
+    - HTML/JS模块: <div class="html-module-wrapper"><div class="received html-module-content">...</div></div>
+    - 对我礼物的回应(此条不显示): [${character.realName}已接收礼物]
+    - 对我转账的回应(此条不显示): [${character.realName}接收${userProfile.name}的转账] 或 [${character.realName}退回${userProfile.name}的转账]
+    - 对我红包的回应(此条不显示): [${character.realName}领取了${userProfile.name}の红包]
+    - 更新状态(此条不显示): [${character.realName}更新状态为：{新状态}]\n`;
+        prompt += `18. 你的每次回复可以生成3到8条消息。这些消息应以普通文本消息为主，可以偶尔、选择性地穿插一条特殊消息（如礼物、语音、图片、表情包等），特殊消息的位置应随机。大部分回复应该只包含文本消息。\n`;
+        prompt += `19. 不要主动结束对话，除非我明确提出。保持你的人设，自然地进行对话。`;
+        
+        return prompt;
 }
 
 function generateGroupSystemPrompt(group) {
-    const worldBooksContent = (group.worldBookIds || []).map(id => db.worldBooks.find(wb => wb.id === id)).filter(Boolean).map(wb => wb.content).join('\n\n');
-    const globalMemories = (db.memoryEntries || []).filter(m => m.type === 'global').map(m => `- ${m.topic}: ${m.content}`).join('\n');
-    let memoryPrompt = "";
-    if (globalMemories) {
-        memoryPrompt += "--- 共享记忆 (所有人都应记住的信息) ---\n" + globalMemories + "\n\n";
-    }
-    
-    const userProfile = db.userProfiles.find(p => p.id === group.me?.profileId) || db.userProfiles[0];
-
-    let prompt = `你正在一个名为"${group.name}"的群聊里进行角色扮演。请严格遵守以下规则：\n`;
-    prompt += `1. **核心任务**: 你需要同时扮演这个群聊中的 **所有** AI 成员。我会作为唯一的人类用户（"${userProfile.name}"）与你们互动。\n`;
-    prompt += `2. **群聊成员列表与专属记忆**: 以下是你要扮演的所有角色，以及他们与“我”(${userProfile.name})的个人专属记忆。这些记忆只有对应的角色自己知道，请在对话中自然地体现出来。\n`;
-    
-    (group.members || []).forEach(member => {
-        prompt += `\n--- 成员: ${member.groupNickname} (真名: ${member.realName}) ---\n`;
-        prompt += `   - 人设: ${member.persona || '无特定人设'}\n`;
-        const charData = db.characters.find(c => c.id === member.originalCharId);
-        if (charData) {
-            const characterMemory = (db.memoryEntries || []).find(m => m.type === 'character' && m.characterId === charData.id);
-            if (characterMemory && characterMemory.content) {
-                prompt += `   - 与“我”(${userProfile.name})的专属记忆:\n${characterMemory.content}\n`;
-            } else {
-                prompt += `   - 与“我”(${userProfile.name})的专属记忆: 无\n`;
-            }
+        // --- 终极修复代码 V4 ---
+        if (!group) {
+            console.error("严重错误：generateGroupSystemPrompt 接收到的 group 对象为 null。");
+            return `[系统紧急通知：群聊数据丢失，无法生成回复。]`;
         }
-    });
+        if (!Array.isArray(group.members)) {
+            group.members = []; 
+        }
 
-    prompt += `\n${memoryPrompt}`;
+        // 极其重要：防御性地处理 worldBooks 和其他全局数组
+        const worldBooksContent = (() => {
+            if (!Array.isArray(db.worldBooks) || !Array.isArray(group.worldBookIds)) return '';
+            return group.worldBookIds.map(id => db.worldBooks.find(wb => wb.id === id)).filter(Boolean).map(wb => wb.content).join('\n\n');
+        })();
+        
+        const globalMemories = Array.isArray(db.memoryEntries)
+            ? db.memoryEntries.filter(m => m.type === 'global').map(m => `- ${m.topic}: ${m.content}`).join('\n')
+            : '';
+        // --- 修复结束 ---
+        
+        let memoryPrompt = "";
+        if (globalMemories) {
+            memoryPrompt += "--- 共享记忆 (所有人都应记住的信息) ---\n" + globalMemories + "\n\n";
+        }
+        
+        const userProfile = db.userProfiles.find(p => p.id === group.me?.profileId) || db.userProfiles[0];
 
-    let momentsContext = "\n--- 朋友圈动态摘要 (请注意区分发布者是你还是我) ---\n";
-    if (db.moments && db.moments.length > 0) {
-        (db.moments || []).slice(0, 5).forEach(moment => {
-            const author = db.characters.find(c => c.id === moment.characterId);
-            const authorIsMe = moment.characterId === 'user_me';
-            
-            if (author || authorIsMe) {
-                 const authorName = authorIsMe ? userProfile.name : author.remarkName;
-                 const authorPrefix = authorIsMe ? `(我) ${authorName}` : `(群成员) ${authorName}`;
-                 momentsContext += `- ${authorPrefix} 在 ${formatTimeAgo(moment.timestamp)} 发布了: "${moment.content}"\n`;
+        let prompt = `你正在一个名为"${group.name}"的群聊里进行角色扮演。请严格遵守以下规则：\n`;
+        prompt += `1. **核心任务**: 你需要同时扮演这个群聊中的 **所有** AI 成员。我会作为唯一的人类用户（"${userProfile.name}"）与你们互动。\n`;
+        prompt += `2. **群聊成员列表与专属记忆**: 以下是你要扮演的所有角色，以及他们与“我”(${userProfile.name})的个人专属记忆。这些记忆只有对应的角色自己知道，请在对话中自然地体现出来。\n`;
+        
+        group.members.forEach(member => {
+            prompt += `\n--- 成员: ${member.groupNickname} (真名: ${member.realName}) ---\n`;
+            prompt += `   - 人设: ${member.persona || '无特定人设'}\n`;
+            const charData = db.characters.find(c => c.id === member.originalCharId);
+            if (charData) {
+                // --- 终极修复代码 V4：在这里也加上检查 ---
+                const characterMemory = Array.isArray(db.memoryEntries)
+                    ? db.memoryEntries.find(m => m.type === 'character' && m.characterId === charData.id)
+                    : null;
+                // --- 修复结束 ---
+                if (characterMemory && characterMemory.content) {
+                    prompt += `   - 与“我”(${userProfile.name})的专属记忆:\n${characterMemory.content}\n`;
+                } else {
+                    prompt += `   - 与“我”(${userProfile.name})的专属记忆: 无\n`;
+                }
             }
         });
-    } else {
-        momentsContext += "最近朋友圈没有新动态。\n";
-    }
-    prompt += momentsContext;
-    
-    if (worldBooksContent) {
-        prompt += `--- 群聊共享设定 (爪印书) ---\n${worldBooksContent}\n\n`;
-    }
 
-    prompt += `3. **输出格式**: 你生成的每一条消息都 **必须** 严格遵循格式 \`[{成员真名}的消息：{消息内容}]\`。这是唯一的合法格式。请用成员的 **真名** 填充。\n`;
-    prompt += `   - 正确示例: [张三的消息：大家好啊！]\n\n`;
-    prompt += `4. **模拟群聊氛围**: 为了让群聊看起来真实、活跃且混乱，你的每一次回复都必须遵循以下随机性要求：\n`;
-    prompt += `   - **消息数量**: 每次生成 **10到20条** 消息。\n`;
-    prompt += `   - **发言者随机**: 随机选择群成员进行发言，可以有的人多说几句，有的暂时沉默。\n`;
-    prompt += `   - **对话连贯性**: 对话内容应整体围绕我和其他成员的发言展开，保持逻辑连贯性。\n\n`;
-    prompt += `5. **行为准则**:\n`;
-    prompt += `   - 严格扮演每个角色的人设，并利用他们的专属记忆来回应相关话题。\n`;
-    prompt += `   - 我（用户）可能会发送如 \`[表情包]\`、\`[语音]\`、\`[红包]\` 等特殊消息，或发送 \`[xx邀请xx加入了群聊]\` 或 \`[xx修改群名为：xxx]\` 这样的系统通知，你需要理解这些消息的含义并让群成员做出相应反应。\n`;
-    prompt += `   - **抢红包**: 如果我发了红包，想抢红包的角色需要发送一条格式为 \`[{成员真名}领取了${userProfile.name}的红包]\` 的指令。这条指令会触发抢红包成功的效果。\n`;
-    prompt += `   - 角色们偶尔也会犯错，可以撤回自己刚刚发出的消息。操作方式是：发送一条格式为 \`[{成员真名}撤回了一条消息]\` 的指令。\n`;
-    prompt += `   - **视频通话**: 当我发起群视频时，你会收到一条 \`[系统指令：用户...发起了群组视频通话请求。]\` 的指令。你需要让每个AI成员独立决策，并通过发送 \`[{成员真名}接受视频通话]\` 或 \`[{成员真名}拒绝视频通话]\` 格式的消息来回应。\n`;
-    prompt += `   - 保持对话的持续性，不要主动结束对话。\n\n`;
-    prompt += `现在，请根据以上设定，开始扮演群聊中的所有角色。`;
-    return prompt;
+        prompt += `\n${memoryPrompt}`;
+
+        // --- 终极修复代码 V4：同样对 db.moments 进行检查 ---
+        let momentsContext = "\n--- 朋友圈动态摘要 (请注意区分发布者是你还是我) ---\n";
+        if (Array.isArray(db.moments) && db.moments.length > 0) {
+            db.moments.slice(0, 5).forEach(moment => {
+                const author = db.characters.find(c => c.id === moment.characterId);
+                const authorIsMe = moment.characterId === 'user_me';
+                
+                if (author || authorIsMe) {
+                     const authorName = authorIsMe ? userProfile.name : author.remarkName;
+                     const authorPrefix = authorIsMe ? `(我) ${authorName}` : `(群成员) ${authorName}`;
+                     momentsContext += `- ${authorPrefix} 在 ${formatTimeAgo(moment.timestamp)} 发布了: "${moment.content}"\n`;
+                }
+            });
+        } else {
+            momentsContext += "最近朋友圈没有新动态。\n";
+        }
+        // --- 修复结束 ---
+        prompt += momentsContext;
+        
+        if (worldBooksContent) {
+            prompt += `--- 群聊共享设定 (爪印书) ---\n${worldBooksContent}\n\n`;
+        }
+        // ... (后续的 prompt += ... 内容保持不变)
+        prompt += `3. **输出格式**: 你生成的每一条消息都 **必须** 严格遵循格式 \`[{成员真名}的消息：{消息内容}]\`。这是唯一的合法格式。请用成员的 **真名** 填充。\n`;
+        prompt += `   - 正确示例: [张三的消息：大家好啊！]\n\n`;
+        prompt += `4. **模拟群聊氛围**: 为了让群聊看起来真实、活跃且混乱，你的每一次回复都必须遵循以下随机性要求：\n`;
+        prompt += `   - **消息数量**: 每次生成 **10到20条** 消息。\n`;
+        prompt += `   - **发言者随机**: 随机选择群成员进行发言，可以有的人多说几句，有的暂时沉默。\n`;
+        prompt += `   - **对话连贯性**: 对话内容应整体围绕我和其他成员的发言展开，保持逻辑连贯性。\n\n`;
+        prompt += `5. **行为准则**:\n`;
+        prompt += `   - 严格扮演每个角色的人设，并利用他们的专属记忆来回应相关话题。\n`;
+        prompt += `   - 我（用户）可能会发送如 \`[表情包]\`、\`[语音]\`、\`[红包]\` 等特殊消息，或发送 \`[xx邀请xx加入了群聊]\` 或 \`[xx修改群名为：xxx]\` 这样的系统通知，你需要理解这些消息的含义并让群成员做出相应反应。\n`;
+        prompt += `   - **抢红包**: 如果我发了红包，想抢红包的角色需要发送一条格式为 \`[{成员真名}领取了${userProfile.name}的红包]\` 的指令。这条指令会触发抢红包成功的效果。\n`;
+        prompt += `   - 角色们偶尔也会犯错，可以撤回自己刚刚发出的消息。操作方式是：发送一条格式为 \`[{成员真名}撤回了一条消息]\` 的指令。\n`;
+        prompt += `   - **视频通话**: 当我发起群视频时，你会收到一条 \`[系统指令：用户...发起了群组视频通话请求。]\` 的指令。你需要让每个AI成员独立决策，并通过发送 \`[{成员真名}接受视频通话]\` 或 \`[{成员真名}拒绝视频通话]\` 格式的消息来回应。\n`;
+        prompt += `   - 保持对话的持续性，不要主动结束对话。\n\n`;
+        prompt += `现在，请根据以上设定，开始扮演群聊中的所有角色。`;
+        return prompt;
 }
 
 async function getAiReply(customPrompt = null, messages = null, isTest = false, testConfig = null) {
@@ -6437,7 +6527,7 @@ function getContrastYIQ(hexcolor){
         if (charProfileEl) charProfileEl.innerHTML = `<div class="avatar-container"><img src="${char.avatar}"></div> <div class="details"><p>${char.remarkName}</p><span>${char.realName}</span></div> <button type="button" class="change-btn">更换</button>`;
         
         const myProfileEl = getEl('setting-my-profile');
-        if (myProfileEl) myProfileEl.innerHTML = `<div class="avatar-container"><img src="${userProfile.avatar}"></div> <div class="details"><p>${userProfile.name}</p></div> <button type="button" class="change-btn">更换</button>`;
+        if (myProfileEl) myProfileEl.innerHTML = `<div class="avatar-container"><img src="${userProfile.avatar}"></div><div class="details"><p>${userProfile.name}</p></div> <button type="button" class="change-btn">更换</button>`;
         
         const proactiveChatInput = document.querySelector(`input[name="proactive-chat"][value="${String(char.proactiveChat?.enabled)}"]`);
         if (proactiveChatInput) proactiveChatInput.checked = true;
@@ -6499,7 +6589,7 @@ function getContrastYIQ(hexcolor){
     }
 
      
-     function setupGroupChatSystem() { 
+    function setupGroupChatSystem() { 
     getEl('open-group-theme-modal-btn')?.addEventListener('click', () => {
         openThemeSelectionModal('group');
     });
@@ -6529,7 +6619,7 @@ function getContrastYIQ(hexcolor){
 
     getEl('create-group-btn')?.addEventListener('click', () => { renderMemberSelectionList(); getEl('create-group-modal')?.classList.add('visible'); }); 
     const createGroupForm = getEl('create-group-form');
-    if(createGroupForm) {
+        if(createGroupForm) {
         createGroupForm.addEventListener('submit', e => { 
             e.preventDefault(); 
             const selectedMemberIds = [...getEl('member-selection-list').querySelectorAll('input:checked')].map(input => input.value); 
@@ -6572,9 +6662,13 @@ function getContrastYIQ(hexcolor){
                 proactiveChat: { enabled: true, frequency: 'medium' }
             }; 
             db.groups.push(newGroup); 
-            saveData(); 
-            renderChatList();
-            renderContactsList();
+            
+            // --- 关键修复：确保数据和UI同步 ---
+            saveData(); // 1. 保存最新数据
+            renderContactsList(); // 2. 强制刷新通讯录
+            renderChatList(); // 3. 强制刷新聊天列表
+            // --- 修复结束 ---
+
             getEl('create-group-modal')?.classList.remove('visible'); 
             showToast(`群聊"${groupName}"创建成功！`); 
         }); 
@@ -7398,7 +7492,7 @@ function getContrastYIQ(hexcolor){
 
     function loadMomentsSettings() {
         const { enabled, frequency, background, myAvatar } = db.momentsSettings;
-        const enabledInput = document.querySelector(`input[name="moments-enabled"][value="${String(enabled)}"]`);
+               const enabledInput = document.querySelector(`input[name="moments-enabled"][value="${String(enabled)}"]`);
         if(enabledInput) enabledInput.checked = true;
         
         const freqEl = getEl('moments-frequency');
@@ -9489,11 +9583,12 @@ ${callHistoryForPrompt}
         list.innerHTML = (db.characters || []).map(char => `<li class="selection-item" data-id="${char.id}"><img src="${char.avatar}"><span>${char.remarkName}</span></li>`).join('');
         modal.classList.add('visible');
         
+        // --- 修复代码：使用一次性的、临时的事件监听器 ---
         const handler = async (e) => {
             const item = e.target.closest('.selection-item');
             if(item) {
                 const charId = item.dataset.id;
-                modal.classList.remove('visible'); // Close modal immediately
+                modal.classList.remove('visible'); // 立即关闭弹窗
                 const char = db.characters.find(c => c.id === charId);
                 if (char) {
                     showToast(`正在为 ${char.remarkName} 生成今日日记...`);
@@ -9504,11 +9599,26 @@ ${callHistoryForPrompt}
                          showToast(`为 ${char.remarkName} 生成日记失败，请检查API响应。`);
                     }
                 }
+                // 清理工作：移除监听器并恢复标题
                 list.removeEventListener('click', handler);
                 modal.querySelector('h3').textContent = "选择一个伙伴身份";
             }
         };
-        list.addEventListener('click', handler, { once: true });
+
+        // 添加新的、临时的监听器
+        list.addEventListener('click', handler);
+        
+        // 为了确保旧的监听器不被触发，我们可以在弹窗关闭时也移除它
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.attributeName === 'class' && !modal.classList.contains('visible')) {
+                    list.removeEventListener('click', handler);
+                    observer.disconnect(); // 停止观察
+                    break;
+                }
+            }
+        });
+        observer.observe(modal, { attributes: true });
     }
 
     function renderDiaryBookshelf() {
