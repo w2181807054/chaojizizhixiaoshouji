@@ -2295,7 +2295,7 @@ function injectHTML() {
         `,
         'collection-screen': `
             <header class="app-header">
-                <button class="back-btn" data-target="home-screen">‹</button>
+                <button class="back-btn" data-target="chat-room-screen">‹</button>
                 <div class="title-container"><h1 class="title">我的收藏</h1></div>
                 <div class="placeholder"></div>
             </header>
@@ -2383,11 +2383,8 @@ const defaultIcons = {
     'memory-core-screen': { name: '记忆', url: 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/vKfO/1440X1191/IMG_20250731_170537.jpg' },
     'beautify-screen': { name: '美化', url: 'https://tc.z.wiki/autoupload/f/OzKndMK49LVR62VsqvAE3XljXEeVtjg7lTJFugegT_eyl5f0KlZfm6UsKj-HyTuv/20250731/ol5R/1440X1236/IMG_20250731_170455.jpg' },
     'diary-bookshelf-screen': { name: '日记本', url: 'https://i.postimg.cc/k4yYd1Y3/IMG-20250912-211438.jpg'},
-    'toggle-mode-app': {
-        name: '模式',
-        dayIconUrl: 'https://i.postimg.cc/Jz0tYqnT/chan-145.png',
-        nightIconUrl: 'https://i.postimg.cc/htYvkdQK/chan-146.png'
-    }
+    'day-mode-btn': { name: '日间模式', url: 'https://i.postimg.cc/Jz0tYqnT/chan-145.png' },
+    'night-mode-btn': { name: '夜间模式', url: 'https://i.postimg.cc/htYvkdQK/chan-146.png' }
 };
 
 let db = {};
@@ -2403,6 +2400,7 @@ let longPressJustFired = false;
 let currentPlayingSongIndex = -1;
 let islandHideTimeout = null;
 let currentDiaryCoverTarget = null;
+let currentLyrics = null;
 
 
 let videoCallState = {
@@ -2693,7 +2691,7 @@ const init = () => {
         }
 
         const navLink = e.target.closest('.app-icon');
-        if (navLink && !navLink.id.includes('-mode-btn')) { 
+        if (navLink && !navLink.id.includes('mode-toggle-btn')) { 
             e.preventDefault(); 
             const targetScreen = navLink.getAttribute('data-target');
             if(targetScreen === 'music-screen'){
@@ -2777,8 +2775,6 @@ function updateClock() {
 
 function setupHomeScreen() {
     const getIcon = (id) => db.customIcons[id] || defaultIcons[id]?.url;
-    const modeIconUrl = db.homeScreenMode === 'day' ? defaultIcons['toggle-mode-app'].dayIconUrl : defaultIcons['toggle-mode-app'].nightIconUrl;
-
     const homeScreenHTML = `
         <div class="time-widget">
             <div class="time" id="time-display"></div>
@@ -2797,7 +2793,7 @@ function setupHomeScreen() {
             </div>
         </div>
         <div class="dock">
-            <a href="#" class="app-icon" id="toggle-mode-btn"><img id="toggle-mode-icon" src="${modeIconUrl}" alt="切换模式" class="icon-img"></a>
+            <a href="#" class="app-icon" id="mode-toggle-btn"><img src="" alt="模式切换" class="icon-img"></a>
             <a href="#" class="app-icon" data-target="api-settings-screen"><img src="${getIcon('api-settings-screen')}" alt="项圈" class="icon-img"></a>
             <a href="#" class="app-icon" data-target="beautify-screen"><img src="${getIcon('beautify-screen')}" alt="美化" class="icon-img"></a>
         </div>`;
@@ -2805,16 +2801,15 @@ function setupHomeScreen() {
     
     updateClock();
     applyWallpaper(db.wallpaper);
-    applyHomeScreenMode(db.homeScreenMode);
+    applyHomeScreenMode(db.homeScreenMode || 'night');
+    updateModeToggleIcon();
     
-    getEl('toggle-mode-btn')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        const newMode = db.homeScreenMode === 'day' ? 'night' : 'day';
+    getEl('mode-toggle-btn')?.addEventListener('click', (e) => { 
+        e.preventDefault(); 
+        const newMode = (db.homeScreenMode === 'day') ? 'night' : 'day';
         applyHomeScreenMode(newMode);
-        const iconEl = getEl('toggle-mode-icon');
-        if(iconEl) iconEl.src = newMode === 'day' ? defaultIcons['toggle-mode-app'].dayIconUrl : defaultIcons['toggle-mode-app'].nightIconUrl;
+        updateModeToggleIcon();
     });
-
     document.querySelector('[data-target="world-book-screen"]')?.addEventListener('click', () => renderWorldBookList());
     document.querySelector('[data-target="beautify-screen"]')?.addEventListener('click', () => renderCustomizeForm());
     document.querySelector('[data-target="memory-core-screen"]')?.addEventListener('click', () => renderMemoryCoreList());
@@ -2828,7 +2823,25 @@ function setupHomeScreen() {
 }
     
 function applyWallpaper(url) { getEl('home-screen').style.backgroundImage = `url(${url})`; }
-function applyHomeScreenMode(mode) { getEl('home-screen').classList.toggle('day-mode', mode === 'day'); db.homeScreenMode = mode; saveData(); }
+function applyHomeScreenMode(mode) { 
+    getEl('home-screen').classList.remove('day-mode', 'night-mode');
+    getEl('home-screen').classList.add(mode + '-mode');
+    db.homeScreenMode = mode; 
+    saveData(); 
+}
+function updateModeToggleIcon() {
+    const btn = getEl('mode-toggle-btn');
+    if (!btn) return;
+    const img = btn.querySelector('img');
+    const currentMode = db.homeScreenMode || 'night';
+        if (currentMode === 'day') {
+        img.src = db.customIcons['night-mode-btn'] || defaultIcons['night-mode-btn'].url;
+        img.alt = '切换夜间模式';
+    } else { // If current mode is 'night', show the icon to switch to 'day'
+        img.src = db.customIcons['day-mode-btn'] || defaultIcons['day-mode-btn'].url;
+        img.alt = '切换日间模式';
+    }
+}
 
 
     function setupBeautifyApp() {
@@ -2956,7 +2969,7 @@ function applyHomeScreenMode(mode) { getEl('home-screen').classList.toggle('day-
         });
     }
 }
-  function applyThemeColor(hexColor) {
+function applyThemeColor(hexColor) {
         if (!hexColor) return;
         const root = document.documentElement;
         const primaryColor = hexColor;
@@ -4245,9 +4258,11 @@ function renderPlusMenu() {
     function openChatRoom(chatId, type) {
         const chat = (type === 'private') ? db.characters.find(c => c.id === chatId) : db.groups.find(g => g.id === chatId);
         
+        // --- 来自新版本的、更健壮的检查逻辑 ---
         if (!chat || (type === 'group' && !Array.isArray(chat.members))) {
             console.error("严重错误：尝试打开的聊天数据不存在或已损坏。", "Chat ID:", chatId, "Type:", type);
             showToast("错误：无法打开聊天界面，数据可能已损坏或被删除。");
+            // 强制返回并刷新列表，清除无效条目
             renderChatList();
             switchScreen('chat-list-screen');
             return; 
@@ -4268,14 +4283,13 @@ function renderPlusMenu() {
         
         const subtitle = getEl('chat-room-subtitle');
         const heartVoiceBtn = getEl('show-heart-voice-btn');
-
         if (type === 'private') {
             subtitle.style.display = 'flex';
             getEl('chat-room-status-text').textContent = chat.status || '在线';
-            if (heartVoiceBtn) heartVoiceBtn.style.display = 'block'; // **心声图标修复**
+            heartVoiceBtn.style.display = 'block';
         } else {
-            subtitle.style.display = 'none'; 
-            if (heartVoiceBtn) heartVoiceBtn.style.display = 'none'; // **心声图标修复**
+            subtitle.style.display = 'none';
+            heartVoiceBtn.style.display = 'none';
         }
 
         const defaultChatBg = 'https://i.postimg.cc/sgLhthHy/IMG-20250804-223920.jpg';
@@ -4995,11 +5009,13 @@ async function extractAndStoreMemory(characterId) {
 
 
 function generatePrivateSystemPrompt(character) {
+        // --- 终极修复代码 V4 ---
         if (!character) {
             console.error("严重错误：generatePrivateSystemPrompt 接收到的 character 对象为 null。");
             return `[系统紧急通知：角色数据丢失，无法生成回复。]`;
         }
 
+        // 极其重要：对所有可能为 null 的全局 db 数组进行防御性检查
         const getBooksContent = (position) => {
             if (!Array.isArray(db.worldBooks) || !Array.isArray(character.worldBookIds)) return '';
             return character.worldBookIds
@@ -5017,6 +5033,7 @@ function generatePrivateSystemPrompt(character) {
         const characterMemoryEntry = Array.isArray(db.memoryEntries)
             ? db.memoryEntries.find(m => m.type === 'character' && m.characterId === character.id)
             : null;
+        // --- 修复结束 ---
 
         const currentTime = new Date().toLocaleString('zh-CN');
         const userProfile = db.userProfiles.find(p => p.id === character.userProfileId) || db.userProfiles[0];
@@ -5043,6 +5060,7 @@ function generatePrivateSystemPrompt(character) {
         
         prompt += memoryPrompt; 
 
+        // --- 终极修复代码 V4：同样对 db.moments 进行检查 ---
         let momentsContext = "\n--- 朋友圈动态摘要 (请注意区分发布者是你还是我) ---\n";
         if (Array.isArray(db.moments) && db.moments.length > 0) {
             db.moments.slice(0, 5).forEach(moment => {
@@ -5057,6 +5075,7 @@ function generatePrivateSystemPrompt(character) {
         } else {
             momentsContext += "最近朋友圈没有新动态。\n";
         }
+        // --- 修复结束 ---
         prompt += momentsContext;
         
         prompt += `角色和对话规则：\n`;
@@ -5066,6 +5085,7 @@ function generatePrivateSystemPrompt(character) {
         if (worldBooksAfter) prompt += `${worldBooksAfter}\n`;
         if (userProfile.persona) prompt += `3. 关于我的人设：${userProfile.persona}\n`;
             
+        // ... (后续的 prompt += ... 内容保持不变，这里省略以保持简洁)
         prompt += `4. 我的消息中可能会出现特殊格式，请根据其内容和你的角色设定进行回应：
     - [${userProfile.name}的消息：xxx]：这是我发送的普通文本消息。
     - [我在回复“xxx: xxx”时说：xxx]：这是我引用了别人消息的回复。
@@ -5126,6 +5146,7 @@ function generatePrivateSystemPrompt(character) {
 }
 
 function generateGroupSystemPrompt(group) {
+        // --- 终极修复代码 V4 ---
         if (!group) {
             console.error("严重错误：generateGroupSystemPrompt 接收到的 group 对象为 null。");
             return `[系统紧急通知：群聊数据丢失，无法生成回复。]`;
@@ -5134,6 +5155,7 @@ function generateGroupSystemPrompt(group) {
             group.members = []; 
         }
 
+        // 极其重要：防御性地处理 worldBooks 和其他全局数组
         const worldBooksContent = (() => {
             if (!Array.isArray(db.worldBooks) || !Array.isArray(group.worldBookIds)) return '';
             return group.worldBookIds.map(id => db.worldBooks.find(wb => wb.id === id)).filter(Boolean).map(wb => wb.content).join('\n\n');
@@ -5142,6 +5164,7 @@ function generateGroupSystemPrompt(group) {
         const globalMemories = Array.isArray(db.memoryEntries)
             ? db.memoryEntries.filter(m => m.type === 'global').map(m => `- ${m.topic}: ${m.content}`).join('\n')
             : '';
+        // --- 修复结束 ---
         
         let memoryPrompt = "";
         if (globalMemories) {
@@ -5159,9 +5182,11 @@ function generateGroupSystemPrompt(group) {
             prompt += `   - 人设: ${member.persona || '无特定人设'}\n`;
             const charData = db.characters.find(c => c.id === member.originalCharId);
             if (charData) {
+                // --- 终极修复代码 V4：在这里也加上检查 ---
                 const characterMemory = Array.isArray(db.memoryEntries)
                     ? db.memoryEntries.find(m => m.type === 'character' && m.characterId === charData.id)
                     : null;
+                // --- 修复结束 ---
                 if (characterMemory && characterMemory.content) {
                     prompt += `   - 与“我”(${userProfile.name})的专属记忆:\n${characterMemory.content}\n`;
                 } else {
@@ -5172,6 +5197,7 @@ function generateGroupSystemPrompt(group) {
 
         prompt += `\n${memoryPrompt}`;
 
+        // --- 终极修复代码 V4：同样对 db.moments 进行检查 ---
         let momentsContext = "\n--- 朋友圈动态摘要 (请注意区分发布者是你还是我) ---\n";
         if (Array.isArray(db.moments) && db.moments.length > 0) {
             db.moments.slice(0, 5).forEach(moment => {
@@ -5187,11 +5213,13 @@ function generateGroupSystemPrompt(group) {
         } else {
             momentsContext += "最近朋友圈没有新动态。\n";
         }
+        // --- 修复结束 ---
         prompt += momentsContext;
         
         if (worldBooksContent) {
             prompt += `--- 群聊共享设定 (爪印书) ---\n${worldBooksContent}\n\n`;
         }
+        // ... (后续的 prompt += ... 内容保持不变)
         prompt += `3. **输出格式**: 你生成的每一条消息都 **必须** 严格遵循格式 \`[{成员真名}的消息：{消息内容}]\`。这是唯一的合法格式。请用成员的 **真名** 填充。\n`;
         prompt += `   - 正确示例: [张三的消息：大家好啊！]\n\n`;
         prompt += `4. **模拟群聊氛围**: 为了让群聊看起来真实、活跃且混乱，你的每一次回复都必须遵循以下随机性要求：\n`;
@@ -6986,7 +7014,7 @@ function getContrastYIQ(hexcolor){
         const { enabled, frequency, lastPostTime } = db.momentsSettings;
         if (!enabled || (db.characters || []).length === 0) return;
         const now = Date.now();
-        const oneHour = 3600000;
+                const oneHour = 3600000;
         
         const freqMap = { 'high': [0.5, 1.5], 'medium': [2, 5], 'low': [6, 12] };
         const [minHours, maxHours] = freqMap[frequency] || freqMap['medium'];
@@ -7604,8 +7632,8 @@ function getContrastYIQ(hexcolor){
         const handleMemoryLongPress = (e) => {
             const item = e.target.closest('.list-item');
             if (!item) return;
-            e.preventDefault();
-                         longPressJustFired = true;
+             e.preventDefault();
+             longPressJustFired = true;
              const memoryId = item.dataset.id;
              const memory = (db.memoryEntries || []).find(m => m.id === memoryId);
              if (!memory) return;
